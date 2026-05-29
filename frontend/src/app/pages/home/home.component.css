@@ -1,0 +1,432 @@
+main {
+  /*Positioning stuff*/
+  position: relative;
+  top: 5.4rem;
+}
+
+main .container {
+  /*Display stuff*/
+  display: grid;
+  grid-template-columns: 15vw 60vw 0vw; /* Adjust middle column width */
+  /*  grid-template-columns: 15vw 40vw 20vw; /* Adjust middle column width */
+  position: relative;
+  column-gap: 2rem;
+}
+
+main .container .left {
+  /*Positioning stuff*/
+  position: sticky;
+  top: var(--sticky-top-left);
+  /*Box model stuff*/
+  height: max-content;
+}
+
+main .container .left .profile {
+  /*Display stuff*/
+  display: flex;
+  align-items: center;
+  /*Box model stuff*/
+  width: 100%;
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  background: var(--color-default-nav);
+  /*Miscellaneous*/
+  column-gap: 1rem;
+}
+/* SIDE BAR */
+
+.left .sidebar {
+  /*Box model stuff*/
+  margin-top: 1rem;
+  border-radius: var(--card-border-radius);
+  background-color: var(--color-default-nav);
+}
+
+.left .sidebar .menu-item {
+  /*Display stuff*/
+  display: flex;
+  align-items: center;
+  /*Positioning stuff*/
+  position: relative;
+  /*Box model stuff*/
+  height: 4rem;
+  /*Manipulations stuff*/
+  transition: all 300ms ease;
+  /*Miscellaneous*/
+  cursor: pointer;
+}
+
+.left .sidebar .menu-item:hover {
+  /*Box model stuff*/
+  background-color: var(--color-default-hover);
+}
+
+.left .sidebar i {
+  /*Positioning stuff*/
+  position: relative;
+  /*Box model stuff*/
+  margin-left: 2rem;
+  /*Typography stuff*/
+  font-size: 1.4rem;
+  color: var(--color-gray);
+}
+
+.left .sidebar i .notification-count {
+  /*Positioning stuff*/
+  position: absolute;
+  right: -0.3rem;
+  top: -0.2rem;
+  /*Box model stuff*/
+  width: fit-content;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.8rem;
+  background-color: var(--color-default-red);
+  /*Typography stuff*/
+  font-size: 0.7rem;
+  color: var(--color-light);
+}
+
+.left .sidebar h3 {
+  /*Box model stuff*/
+  margin-left: 1.5rem;
+  /*Typography stuff*/
+  font-size: 1rem;
+}
+
+.left .sidebar .active {
+  /*Box model stuff*/
+  background-color: var(--color-default);
+}
+
+.left .sidebar .active i,
+.left .sidebar .active h3 {
+  /*Typography stuff*/
+  color: var(--color-default-red);
+}
+
+.left .sidebar .active::before {
+  /*Display stuff*/
+  content: "";
+  display: block;
+  /*Positioning stuff*/
+  position: absolute;
+  /*Box model stuff*/
+  width: 0.5rem;
+  height: 100%;
+  background: var(--color-default-red);
+}
+
+.left .sidebar .menu-item:first-child.active {
+  /*Box model stuff*/
+  border-top-left-radius: var(--card-border-radius);
+  /*Miscellaneous*/
+  overflow: hidden;
+}
+
+.left .sidebar .menu-item:last-child.active {
+  /*Box model stuff*/
+  border-bottom-left-radius: var(--card-border-radius);
+  /*Miscellaneous*/
+  overflow: hidden;
+}
+
+.left .btn {
+  /*Box model stuff*/
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem 0;
+  /*Typography stuff*/
+  text-align: center;
+}
+
+/**** notification popups ****/
+
+.left .notification-popup {
+  /*Display stuff*/
+  display: none;
+  /*Positioning stuff*/
+  position: absolute;
+  left: 110%;
+  top: 0;
+  z-index: 8;
+  /*Box model stuff*/
+  width: 30rem;
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  background-color: var(--color-default-nav);
+  /*Miscellaneous*/
+  box-shadow: 0 0 2rem hsl(var(--color-default-nav), 75%, 60%, 25%);
+}
+
+.left .notification-popup::before {
+  /*Display stuff*/
+  content: "";
+  display: block;
+  /*Positioning stuff*/
+  position: absolute;
+  left: -0.6rem;
+  /*Box model stuff*/
+  width: 1.2rem;
+  height: 1.2rem;
+  background: red;
+  /*Manipulations stuff*/
+  transform: rotate(45deg);
+}
+
+.left .notification-popup > div {
+  /*Display stuff*/
+  display: flex;
+  align-items: flex-start;
+  /*Box model stuff*/
+  margin-bottom: 1rem;
+  /*Miscellaneous*/
+  gap: 1rem;
+}
+
+.left .notification-popup small {
+  /*Display stuff*/
+  display: block;
+}
+
+/** MIDDLE SECTION **/
+
+.middle .stories {
+  /*Display stuff*/
+  display: flex;
+  justify-content: space-between;
+  /*Box model stuff*/
+  height: 12rem;
+  /*Miscellaneous*/
+  gap: 0.5rem;
+}
+
+.middle .stories .story {
+  /*Display stuff*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /*Positioning stuff*/
+  position: relative;
+  /*Box model stuff*/
+  width: 100%;
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  /*Typography stuff*/
+  font-size: 0.75;
+  color: white;
+  /*Miscellaneous*/
+  overflow: hidden;
+}
+
+/* carousel */
+/* carousel */
+
+.carousel-container {
+  /*Positioning stuff*/
+  position: relative;
+  /*Box model stuff*/
+  width: 100%;
+  margin: 2px;
+  /*Miscellaneous*/
+  overflow-x: scroll;
+}
+
+.carousel {
+  /*Display stuff*/
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.carousel-slide {
+  /*Display stuff*/
+  flex: 0 0 calc(100% / 3); /* Display three slides at a time */
+
+  /*Box model stuff*/
+  max-width: calc(100% / 3);
+  padding: 5px;
+  /*Miscellaneous*/
+  flex: 0 0 calc(100% / 3); /* Display three slides at a time */
+}
+
+.story {
+  /*Display stuff*/
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /*Positioning stuff*/
+  position: relative;
+  /*Box model stuff*/
+  width: 100%;
+  height: 200px; /* Adjust the height as needed */
+  padding: 10px;
+  border-radius: var(--card-border-radius);
+  background-position: center;
+  background-repeat: no-repeat; /* Prevent repeating of small images */
+  background-size: cover; /* Change back to 'cover' for the background */
+  /*Typography stuff*/
+  color: white;
+  /*Manipulations stuff*/
+  filter: blur(0.2px) brightness(0.95) opacity(1);
+  /*Miscellaneous*/
+  /* Apply filters to the background image */
+  background-repeat: no-repeat; /* Prevent repeating of small images */
+  background-size: cover; /* Change back to 'cover' for the background */
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  height: 200px; /* Adjust the height as needed */
+  overflow: hidden;
+}
+
+.story:hover {
+  /*Manipulations stuff*/
+  filter: blur(0px) brightness(1) opacity();
+  transition: all 1s ease;
+  /*Miscellaneous*/
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -webkit-filter: brightness(110%);
+  -webkit-transition: all 1s ease;
+}
+
+.name {
+  /*Positioning stuff*/
+  margin-top: 5px;
+  /*Typography stuff*/
+  font-weight: bold;
+  /*Miscellaneous*/
+  z-index: 1; /* Ensure title appears above the background */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow to the text */
+}
+
+/* Middle section - Create Post */
+
+.middle .create-post {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  background: var(--color-default-nav);
+  padding: 0.4rem var(--card-padding);
+  border-radius: var(--border-radius);
+}
+
+.middle .create-post input[type="text"] {
+  justify-self: start;
+  width: 100%;
+  padding-left: 1rem;
+  background: transparent;
+  color: var(--color-light);
+  margin-right: 1rem;
+  font-weight: semibold;
+}
+
+/** FEEDS **/
+
+.feeds {
+  overflow-y: auto;
+  height: calc(100vh - 430px) !important;
+}
+
+/* Reaction buttons - like, dislike */
+.interaction-buttons {
+  display: flex;
+  width: 100%;
+  overflow: scroll;
+}
+
+.reaction-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 2px;
+  padding: 0 4px;
+  cursor: pointer;
+  background: var(--color-default-nav);
+  border: 2px solid var(--color-default);
+  border-radius: 50px;
+  transition: 0.2s ease;
+}
+
+.reaction-button .like,
+.reaction-button .bookmark,
+.reaction-button .comment {
+  border-right: 2px solid var(--color-default);
+  padding: 0 6px 0 8px;
+  pointer-events: none;
+}
+.reaction-button:last-child {
+  margin-left: auto;
+}
+
+.reaction-button i {
+  box-sizing: content-box;
+  padding: 5px;
+  transition: 0.2 ease;
+  color: var(--color-grey);
+  transform: scale(1);
+}
+.reaction-button i:active {
+  transform: scale(1.3);
+}
+
+.photo {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 1);
+}
+
+.overlay-for-movie-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.8) 15%,
+
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.2) 80%,
+    rgba(0, 0, 0, 0.8) 85%,
+
+    rgba(0, 0, 0, 1) 100%
+  );
+  z-index: 5; /* Place the overlay between the image and the text */
+}
+
+.movie-title {
+  position: absolute;
+  font-size: 30px;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  color: white;
+}
+
+.user-info {
+  position: absolute;
+  top: 55px;
+  left: 12px;
+  z-index: 10;
+  color: white;
+  border-radius: 50%;
+}
+
+.review-text {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  z-index: 10;
+  color: var(--color-gray);
+  border-radius: 5px;
+
+  width: 90%;
+  overflow: hidden;
+  display: inline-block;
+  /*text-overflow: ellipsis;*/
+  white-space: wrap;
+}
+
+/***/

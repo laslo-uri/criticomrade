@@ -1,0 +1,15 @@
+# Backend (Maven / Spring Boot)
+backend/target/
+backend/.idea/
+backend/*.iml
+
+# Frontend (Angular)
+frontend/node_modules/
+frontend/.angular/
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+
+# IDE
+.idea/
+*.iml

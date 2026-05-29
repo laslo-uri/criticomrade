@@ -1,0 +1,66 @@
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--color-default-red);
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+
+@media (min-resolution: 200dpi) or (max-width: 700px) {
+  .logo-title {
+    display: none;
+  }
+}
+
+/*-------------------*/
+
+.logo-cube-rotation {
+  /*Positioning stuff*/
+  z-index: -1;
+  /*Box model stuff*/
+  margin: 0;
+  padding: 0.4em 0.4em;
+  /*Typography stuff*/
+  font-family: helvetica, arial, sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  color: #fffbf1;
+  /*Manipulations stuff*/
+  transform: translateX(0%) translateY(0%);
+  /*Miscellaneous*/
+  letter-spacing: -2.5px;
+}
+
+.logo-cube-rotation:before,
+.logo-cube-rotation:after {
+  /*Display stuff*/
+  content: "";
+  display: block;
+  /*Positioning stuff*/
+  position: absolute;
+  top: 50%;
+  /*Box model stuff*/
+  width: 100%;
+  padding: 1em 0.4em;
+  border: 5px solid red;
+  /*Manipulations stuff*/
+  transform: translateX(-50%) translateY(-50%) rotate(0deg);
+  animation: 10s infinite alternate ease-in-out tipsy;
+}
+
+.logo-cube-rotation:before {
+  /*Positioning stuff*/
+  z-index: -1;
+  /*Box model stuff*/
+  border-color: var(--color-default) var(--color-default) rgba(0, 0, 0, 0)
+    rgba(0, 0, 0, 0);
+}
+
+.logo-cube-rotation:after {
+  /*Positioning stuff*/
+  z-index: 1;
+  /*Box model stuff*/
+  border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) var(--color-default)
+    var(--color-default);
+}

@@ -1,0 +1,19 @@
+.profile {
+  /*Display stuff*/
+  display: flex;
+  align-items: center;
+  /*Box model stuff*/
+  width: 100%;
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  background: var(--color-default-nav);
+  /*Miscellaneous*/
+  column-gap: 1rem;
+}
+
+.handle {
+  font-size: clamp(0.8rem, 2vw, 1.6rem);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

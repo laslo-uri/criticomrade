@@ -1,0 +1,40 @@
+.search-bar {
+  /*Display stuff*/
+  display: flex;
+  /*Box model stuff*/
+  padding: var(--search-padding);
+  border-radius: var(--border-radius);
+  background-color: var(--color-default);
+  width: 400px;
+}
+
+@media (min-resolution: 300dpi) or (max-width: 600px) {
+  .search-bar {
+    display: none;
+  }
+}
+
+/*-------------------*/
+
+.search-bar input {
+  /*Box model stuff*/
+  width: 100%;
+  margin-left: 1rem;
+  border: none;
+  background-color: transparent;
+  /*Typography stuff*/
+  font-size: 0.9rem;
+  color: var(--color-light);
+}
+
+.search-bar i {
+  color: var(--color-gray);
+}
+
+.search-bar input[type="search"]::placeholder {
+  /*Display stuff*/
+  display: flex;
+  align-items: center;
+  /*Miscellaneous*/
+  gap: 2rem;
+}

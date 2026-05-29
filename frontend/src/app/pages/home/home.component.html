@@ -1,0 +1,303 @@
+<main>
+  <div class="container">
+    <!-- LEFT -->
+    <div class="left">
+      <app-profile-header></app-profile-header>
+      <!--
+
+        PROFILE HEADER
+
+      <a class="profile">
+        <div class="profile-picture">
+          <img src="../assets/imgs/profile-picture-placeholder.jpg" />
+        </div>
+        <div class="handle">
+          <h4>Laslo Uri</h4>
+          <p class="text-muted">@laslo_uri</p>
+        </div>
+      </a>
+
+      --->
+
+      <!--------------------SIDEBAR-->
+      <div class="sidebar">
+        <a class="menu-item">
+          <span> <i class="uil uil-home"></i></span>
+          <h3>Home</h3>
+        </a>
+        <a class="menu-item">
+          <span> <i class="uil uil-compass"></i></span>
+          <h3>Explore</h3>
+        </a>
+        <a class="menu-item" id="notifications">
+          <span>
+            <i class="uil uil-bell">
+              <small class="notification-count">9+</small></i
+            >
+          </span>
+          <h3>Notifications</h3>
+          <!--- Notification pop-ups-->
+          <div class="notification-popup">
+            <div>
+              <div class="profile-picture">
+                <img src="../assets/imgs/profile-picture-placeholder-2.jpg" />
+              </div>
+              <div class="notification-body">
+                <b> Margot Robbie </b> accepted your firend request
+                <small class="text-muted"> 2 DAYS AGO</small>
+              </div>
+            </div>
+            <div>
+              <div class="profile-picture">
+                <img src="../assets/imgs/profile-picture-placeholder-2.jpg" />
+              </div>
+              <div class="notification-body">
+                <b> Margot Robbie </b> accepted your firend request
+                <small class="text-muted"> 2 DAYS AGO</small>
+              </div>
+            </div>
+            <div>
+              <div class="profile-picture">
+                <img src="../assets/imgs/profile-picture-placeholder-2.jpg" />
+              </div>
+              <div class="notification-body">
+                <b> Margot Robbie </b> accepted your firend request
+                <small class="text-muted"> 2 DAYS AGO</small>
+              </div>
+            </div>
+            <div>
+              <div class="profile-picture">
+                <img src="../assets/imgs/profile-picture-placeholder-2.jpg" />
+              </div>
+              <div class="notification-body">
+                <b> Margot Robbie </b> accepted your firend request
+                <small class="text-muted"> 2 DAYS AGO</small>
+              </div>
+            </div>
+          </div>
+        </a>
+        <a class="menu-item">
+          <span> <i class="uil uil-bookmark"></i></span>
+          <h3>Watchlist</h3>
+        </a>
+        <a class="menu-item">
+          <span> <i class="uil uil-diary"></i></span>
+          <h3>Diary</h3>
+        </a>
+        <a class="menu-item active">
+          <span> <i class="uil uil-book"></i></span>
+          <h3>My Lists</h3>
+        </a>
+        <a class="menu-item">
+          <span> <i class="uil uil-palette"></i></span>
+          <h3>Preferences</h3>
+        </a>
+        <a class="menu-item">
+          <span> <i class="uil uil-setting"></i></span>
+          <h3>Settings</h3>
+        </a>
+        <!--- Notification pop-ups-->
+      </div>
+      <label for="create-post" class="btn btn-primary">Write a Review</label>
+    </div>
+    <!-- MIDDLE -->
+    <div class="middle">
+      <!-- STORIES // POPULAR MOVIES-->
+      <div class="popular-movies" style="overflow-y: hidden">
+        <div
+          class="trending-title"
+          style="
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 0.5px solid var(--color-default-red);
+            font-size: 12px;
+            color: var(--color-danger);
+          "
+        >
+          <p>POPULAR FILMS THIS WEEK</p>
+          <p>MORE</p>
+        </div>
+
+        <div
+          class="trending-container"
+          style="display: flex; align-items: center"
+        >
+          <div
+            *ngIf="!isAtBeginning()"
+            class="arrow right-arrow"
+            (click)="scrollCarousel(-1)"
+          >
+            <i class="uil uil-arrow-left"></i>
+          </div>
+          <div class="carousel-container" #carouselContainer>
+            <div class="carousel">
+              <div class="carousel-slide" *ngFor="let movie of movies">
+                <div
+                  class="story"
+                  [ngStyle]="{
+                    'background-image':
+                      'linear-gradient(0deg, var(--color-default-nav) 0.5%, transparent 50%), url(' +
+                      getBackdropPath(movie.backdrop_path) +
+                      ')'
+                  }"
+                >
+                  <p class="name" style="text-shadow: 0 2px #000">
+                    {{ movie.title }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="!isAtEnd()"
+            class="arrow right-arrow"
+            (click)="scrollCarousel(1)"
+          >
+            <i class="uil uil-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="create-review">
+        <form action="" class="create-post" style="margin-bottom: 10px">
+          <div class="profile-picture">
+            <img src="../assets/imgs/profile-picture-placeholder.jpg" />
+          </div>
+          <input
+            type="text"
+            placeholder="What did you watch lately, Laslo?"
+            id="create-post"
+          />
+          <input type="submit" value="Review" class="btn btn-primary" />
+        </form>
+      </div>
+
+      <div
+        class="feeds-title"
+        style="
+          display: flex;
+          justify-content: space-between;
+          margin-top: 15px;
+          border-bottom: 0.5px solid var(--color-default-red);
+          font-size: 12px;
+          color: var(--color-danger);
+        "
+      >
+        <p>POPULAR REVIEWS BY YOUR FOLLOWERS</p>
+        <p>FILTER</p>
+      </div>
+      <!--
+      <div class="feeds">
+        <div
+          class="feed"
+          style="
+            padding: var(--card-padding);
+            border-radius: var(--card-border-radius);
+            background-color: var(--color-default-nav);
+            margin: 5px 0px;
+          "
+        >
+          <div
+            class="photo-wrapper"
+            style="position: relative; margin-bottom: 10px; overflow: hidden"
+          >
+            <div>
+              <p class="movie-title name">
+                Oppenheimer
+                <small style="font-size: 18px; font-weight: 300"> 2023</small>
+              </p>
+            </div>
+            <div class="user-info" style="display: flex; gap: 5px">
+              <div>
+                <img
+                  src="../assets/imgs/profile-picture-placeholder.jpg"
+                  class="profile-picture"
+                  style="width: 25px; height: 25px"
+                />
+              </div>
+              <div>
+                <p class="name">Laslo Uri</p>
+              </div>
+
+              <div style="display: flex">
+                <img
+                  style="align-self: flex-st"
+                  width="15px"
+                  src="../assets/svgs/star.svg"
+                />
+                <img
+                  style="align-self: flex-st"
+                  width="15px"
+                  src="../assets/svgs/star.svg"
+                />
+                <img
+                  style="align-self: flex-st"
+                  width="15px"
+                  src="../assets/svgs/star.svg"
+                />
+                <img
+                  style="align-self: flex-st"
+                  width="15px"
+                  src="../assets/svgs/star.svg"
+                />
+                <img
+                  style="align-self: flex-st"
+                  width="15px"
+                  src="../assets/svgs/half-star.svg"
+                />
+              </div>
+              <div style="display: flex; align-self: center">
+                <small class="text-muted"> 2 DAYS AGO</small>
+              </div>
+            </div>
+            <div class="review-text" style="color: white; padding: 10px">
+              This movie was an incredible experience. The storytelling was
+              captivating and the visuals were stunning. Highly recommended!
+            </div>
+            <img
+              class="photo"
+              src="../assets/imgs/movie-placeholder.jpg"
+              alt=""
+              width="100%"
+            />
+
+            <div class="overlay-for-movie-title"></div>
+             Review Text
+          </div>
+
+          <div class="action-button">
+            <div class="interaction-buttons">
+              <div class="reaction-button">
+                <span class="like" id="likeCount">0</span>
+                <i class="uil uil-thumbs-up" id="likeBtn"></i>
+              </div>
+              <div class="reaction-button">
+                <i class="uil uil-thumbs-down" id="dislikeBtn"></i>
+              </div>
+              <div class="reaction-button">
+                <span class="comment" id="commentCount">0</span>
+                <i class="uil uil-comment" id="commentBtn"></i>
+              </div>
+
+              <div class="reaction-button bookmark-button">
+                <span><i class="uil uil-bookmark" id="bookmarkBtn"></i> </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="reacted-by">
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+    --></div>
+
+    <!-- RIGHT -->
+    <!--
+    <div class="right">AS</div>
+
+
+    -->
+  </div>
+</main>
