@@ -6,27 +6,31 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Data //@Getter, @Setter, and @RequiredArgsConstructor IN ONE!
+@Data
+@Table(name = "recommendations")
 public class Recommendation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "from_user_id")
+    private User fromUser;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "to_user_id")
+    private User toUser;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    private RecommendationStatus status; // Enum: ACCEPTED, REJECTED, PENDING, SOLVED
+    @Enumerated(EnumType.STRING)
+    private RecommendationStatus status;
 
     private LocalDateTime creationTime;
-    private int challengeDuration;
+    private int challengeDurationDays;
     private LocalDateTime endTime;
-
-    private int challengePoints; // Points awarded for completing the challenge
-
+    private int challengePoints;
 }

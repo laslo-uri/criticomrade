@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.Serial;
 
 @Entity
-@Table(name = "Role")
+@Table(name = "role")
 public class Role implements GrantedAuthority {
 
     @Serial

@@ -1,13 +1,19 @@
 package com.ftn.laslouri.criticomrade;
 
+import com.ftn.laslouri.criticomrade.config.DotEnvLoader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class CriticomradeApplication {
+@ConfigurationPropertiesScan
+@EnableScheduling
+public class CritiComradeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CriticomradeApplication.class, args);
+		DotEnvLoader.load();
+		SpringApplication.run(CritiComradeApplication.class, args);
 	}
 
 }

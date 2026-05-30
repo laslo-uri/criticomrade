@@ -1,7 +1,9 @@
 package com.ftn.laslouri.criticomrade.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,26 +13,40 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data //@Getter, @Setter, and @RequiredArgsConstructor IN ONE!
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "Users")
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String username;
-    private String email;
-    private String password;
-    private boolean isProfilePublic;
 
-    // For Authority - Which roles have authority for some actions?
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    private String fullName;
+    private String bio;
+    private String avatarUrl;
+
+    @Column(nullable = false)
+    private String password;
+
+    private boolean isProfilePublic = true;
+    private int gainedChallengePoints;
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "USER_ROLE",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "authority_id"))
-    private List<Role> authorities;
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
+    private List<Role> roles;
 
     @ManyToMany
     @JoinTable(
@@ -64,8 +80,11 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "receiver")
     private Set<FollowRequest> receivedFollowRequests;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Recommendation> recommendations;
+    @OneToMany(mappedBy = "fromUser")
+    private Set<Recommendation> sentRecommendations;
+
+    @OneToMany(mappedBy = "toUser")
+    private Set<Recommendation> receivedRecommendations;
 
     @ManyToMany
     @JoinTable(
@@ -73,40 +92,40 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private Set<Movie> watchlist;
+    private Set<Movie> watchlist = new HashSet<>();
 
+    @Override
+    public String getUsername() {
+        return username;
+    }
 
-
-    private int gainedChallengePoints; // Total challenge points earned by the user
-
-
-
-
-    // ------------------------ UserDetails ------------------------
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles == null ? List.of() : roles;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
-

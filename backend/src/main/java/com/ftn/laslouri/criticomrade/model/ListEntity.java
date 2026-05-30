@@ -1,12 +1,17 @@
 package com.ftn.laslouri.criticomrade.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Data
+@EqualsAndHashCode(of = "id")
 public abstract class ListEntity {
 
     @Id
@@ -19,10 +24,16 @@ public abstract class ListEntity {
     private int numberOfElements;
     private boolean isPrivateList;
 
-    @OneToMany(mappedBy = "list")
-    private Set<ListReaction> reactions;
+    @Enumerated(EnumType.STRING)
+    private ListType listType;
 
-    @OneToMany(mappedBy = "list")
-    private Set<ListComment> comments;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ListReaction> reactions = new HashSet<>();
+
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ListComment> comments = new HashSet<>();
 }

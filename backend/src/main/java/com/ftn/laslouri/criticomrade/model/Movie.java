@@ -6,23 +6,30 @@ import lombok.Data;
 import java.util.Set;
 
 @Entity
-@Data //@Getter, @Setter, and @RequiredArgsConstructor IN ONE!
+@Data
+@Table(name = "movies")
 public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private Long tmdbId;
+
     private String title;
     private String description;
     private String genre;
+
+    @Column(name = "release_year")
+    private String year;
     private String letterboxdLink;
     private String imdbLink;
     private String rottenTomatoesLink;
     private String youtubeTrailerLink;
     private String posterApiLink;
-
-    // Add other fields as needed
+    private Double imdbRating;
+    private Double rottenTomatoesRating;
 
     @OneToMany(mappedBy = "movie")
     private Set<Review> reviews;
@@ -32,7 +39,4 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie")
     private Set<MovieReaction> reactions;
-
-    // Add other relationships and methods as needed
 }
-

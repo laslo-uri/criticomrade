@@ -1,137 +1,298 @@
-@import "https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  /*Miscellaneous*/
-  --color-white: hsl(252, 30%, 100%);
-  --color-light: hsl(252, 38%, 95%);
-  --color-gray: hsl(252, 15%, 65%);
-  --color-primary: hsl(252, 75%, 60%);
-  --color-secondary: hsl(252, 100%, 90%);
-  --color-success: hsl(120, 95%, 65%);
-  --color-danger: hsl(0, 95%, 65%);
-  --color-dark: hsl(252, 30%, 17%);
-  --color-black: hsl(252, 30%, 16%);
-  --border-radius: 2rem;
-  --card-border-radius: 1rem;
-  --btn-padding: 0.6rem 2rem;
-  --search-padding: 0.6rem 1rem;
-  --card-padding: 1rem;
-  --sticky-top-left: 5.4rem;
-  --sticky-top-right: -18rem;
+  --color-bg: #0B0B0F;
+  --color-surface: #12131A;
+  --color-elevated: #1A1D28;
+  --color-border: #232533;
+  --color-input-bg: #0F1117;
+  --color-accent: #8F1818;
+  --color-accent-hover: #A81F1F;
+  --color-accent-light: #C42828;
+  --color-secondary: #FFB347;
+  --color-secondary-deep: #E89B35;
+  --color-text: #F5F7FA;
+  --color-muted: #9AA4B2;
   --color-default: #2e2e31;
-  --color-default-nav: #202022;
-  --color-default-hover: #121213;
-  --color-default-red: #d9524a;
+  --color-default-red: #8F1818;
+
+  /* Logo animation — tied to brand tokens */
+  --logo-critic: var(--color-accent);
+  --logo-critic-light: var(--color-accent-light);
+  --logo-comrade: var(--color-secondary);
+  --logo-comrade-deep: var(--color-secondary-deep);
 }
 
-*,
-::before,
-::after {
-  /*Box model stuff*/
-  margin: 0;
-  padding: 0;
-  border: none;
-  outline: 0;
-  /*Typography stuff*/
-  text-decoration: none;
-  /*Miscellaneous*/
-  box-sizing: border-box;
-  list-style: none;
+[data-theme="light"] {
+  --color-bg: #F4F5F8;
+  --color-surface: #FFFFFF;
+  --color-elevated: #EEF0F5;
+  --color-border: #D8DCE6;
+  --color-input-bg: #FFFFFF;
+  --color-text: #12131A;
+  --color-muted: #5C6573;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  /*Box model stuff*/
-  width: 8px;
-  height: 8px;
+[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse 80% 55% at 50% -15%, rgba(143, 24, 24, 0.07), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 179, 71, 0.05), transparent 50%),
+    var(--color-bg);
 }
 
-::-webkit-scrollbar-thumb {
-  /*Box model stuff*/
-  border-radius: 4px;
-  background-color: #888;
+[data-theme="light"] .card {
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  /*Box model stuff*/
-  background-color: #555;
+[data-theme="light"] .card-interactive:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-::-webkit-scrollbar-track {
-  /*Box model stuff*/
-  background-color: transparent;
+[data-theme="light"] .prompt-card {
+  background: linear-gradient(135deg, rgba(143, 24, 24, 0.06) 0%, rgba(255, 255, 255, 0.98) 50%);
 }
 
-::-webkit-scrollbar-corner {
-  background: rgba(0, 0, 0, 0);
+[data-theme="light"] .empty-state-box {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
 }
 
-body {
-  /*Box model stuff*/
-  background-color: var(--color-default);
-  /*Typography stuff*/
-  font-family: Poppins, sans-serif;
-  color: var(--color-light);
-  /*Miscellaneous*/
-  overflow: hidden;
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply text-text font-sans antialiased min-h-screen;
+    background:
+      radial-gradient(ellipse 80% 55% at 50% -15%, rgba(143, 24, 24, 0.08), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 179, 71, 0.04), transparent 50%),
+      var(--color-bg);
+  }
+
+  a {
+    @apply text-inherit no-underline;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    @apply font-sans;
+  }
 }
 
-.container {
-  /*Box model stuff*/
-  width: 80%;
-  margin: 0 auto;
-  /*Miscellaneous*/
-  gap: 2rem;
-}
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-50;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  }
 
-.profile-picture {
-  min-height: 15px;
-  min-width: 15px;
-  /*Display stuff*/
-  display: flex;
-  flex-direction: row;
-  /*Box model stuff*/
-  width: 2.7rem;
-  border-radius: 50%;
-  border: 1px solid var(--color-default-hover) ;
-  /*Miscellaneous*/
-  aspect-ratio: 1/1;
-  overflow: hidden;
-}
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-accent-hover), var(--color-accent-light));
+  }
 
-.btn {
-  /*Display stuff*/
-  display: inline-block;
-  /*Box model stuff*/
-  padding: var(--btn-padding);
-  border-radius: var(--border-radius);
-  /*Typography stuff*/
-  font-size: 0.9rem;
-  /*Manipulations stuff*/
-  transition: all 300ms ease;
-  /*Miscellaneous*/
-  cursor: pointer;
-}
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-text transition hover:bg-elevated disabled:cursor-not-allowed disabled:opacity-50;
+  }
 
-.btn:hover {
-  /*Manipulations stuff*/
-  opacity: 0.8;
-}
+  .input-field {
+    @apply w-full rounded-xl border border-border px-3 py-3.5 text-sm text-text placeholder:text-muted transition duration-200 ease-in-out focus:border-accent focus:outline-none;
+    background-color: var(--color-input-bg);
+    box-shadow: none;
+  }
 
-.btn-primary {
-  /*Box model stuff*/
-  background-color: var(--color-default-red);
-  /*Typography stuff*/
-  font-weight: 500;
-  color: var(--color-white);
-}
+  .input-field:-webkit-autofill,
+  .input-field:-webkit-autofill:hover,
+  .input-field:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-input-bg) inset;
+    -webkit-text-fill-color: var(--color-text);
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: var(--color-text);
+  }
 
-.text-bold {
-  /*Typography stuff*/
-  font-weight: 500;
-}
+  .input-field:focus {
+    background-color: var(--color-elevated);
+    box-shadow: 0 0 0 4px rgba(143, 24, 24, 0.18);
+  }
 
-.text-muted {
-  /*Typography stuff*/
-  color: var(--color-gray);
+  .card {
+    @apply rounded-xl border bg-surface p-4 transition duration-200;
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  .card-interactive {
+    @apply card cursor-pointer;
+  }
+
+  .card-interactive:hover {
+    border-color: rgba(143, 24, 24, 0.35);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .page-header {
+    @apply mb-8;
+  }
+
+  .page-title {
+    @apply text-2xl font-semibold tracking-tight text-text;
+  }
+
+  .page-subtitle {
+    @apply mt-1.5 text-sm leading-relaxed text-muted;
+  }
+
+  .section-heading {
+    @apply mb-5 flex items-end justify-between gap-4;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold tracking-tight text-text;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition duration-150;
+  }
+
+  .nav-link:hover {
+    @apply bg-elevated text-text;
+  }
+
+  .nav-link-active {
+    @apply bg-accent/10 text-accent;
+    box-shadow: inset 3px 0 0 var(--color-accent);
+  }
+
+  .prompt-card {
+    @apply card-interactive flex w-full items-center gap-4 text-left;
+    background: linear-gradient(135deg, rgba(143, 24, 24, 0.1) 0%, rgba(18, 19, 26, 0.95) 45%);
+  }
+
+  .empty-state-box {
+    @apply flex flex-col items-center rounded-2xl border px-8 py-14 text-center;
+    border-color: rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, transparent 100%);
+  }
+
+  .empty-state-icon {
+    @apply mb-5 flex h-16 w-16 items-center justify-center rounded-2xl text-accent;
+    background: rgba(143, 24, 24, 0.14);
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-elevated;
+  }
+
+  .avatar-ring {
+    @apply ring-2 ring-accent/25 ring-offset-2 ring-offset-bg;
+  }
+
+  .bottom-nav-item {
+    @apply flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-[11px] font-medium text-muted transition;
+  }
+
+  .bottom-nav-active {
+    @apply bg-accent/10 text-accent;
+  }
+
+  .root-route-host {
+    @apply relative min-h-dvh w-full;
+  }
+
+  .shell-route-host {
+    @apply relative w-full;
+    min-height: calc(100dvh - 8rem);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .root-route-host *,
+    .shell-route-host *,
+    .toast-item {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  .toast-item {
+    animation: toast-slide-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes toast-slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(1.25rem) translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0);
+    }
+  }
+
+  .theme-toggle {
+    @apply flex gap-2;
+  }
+
+  .theme-option {
+    @apply flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-medium text-muted transition;
+  }
+
+  .theme-option:hover {
+    @apply bg-elevated text-text;
+  }
+
+  .theme-option-active {
+    @apply border-accent/40 bg-accent/10 text-accent;
+  }
+
+  .modal-close {
+    @apply flex shrink-0 items-center justify-center rounded-lg border border-border bg-elevated text-text transition;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .modal-close:hover {
+    @apply border-accent/40 bg-accent/10 text-accent;
+  }
+
+  .modal-close:focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-surface;
+  }
+
+  .auth-page {
+    @apply flex min-h-dvh items-center justify-center px-4 py-10;
+  }
+
+  .auth-page-inner {
+    @apply flex w-full max-w-sm flex-col items-center;
+  }
+
+  .auth-form {
+    @apply mt-6 w-full;
+  }
+
+  .auth-title {
+    @apply mb-4 text-center text-lg font-medium tracking-normal text-muted;
+  }
+
+  .auth-subtitle {
+    @apply mb-5 text-center text-sm leading-relaxed text-muted;
+  }
+
+  .auth-fields {
+    @apply space-y-4;
+  }
+
+  .auth-label {
+    @apply mb-1 block text-sm font-medium text-muted;
+  }
+
+  .auth-footer {
+    @apply mt-6 text-center text-sm text-muted;
+  }
 }

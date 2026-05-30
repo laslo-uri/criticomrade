@@ -1,0 +1,2 @@
+-- Baseline migration; schema is managed by Hibernate ddl-auto=update.
+-- Role seeding is handled by RoleDataInitializer.

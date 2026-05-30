@@ -20,6 +20,6 @@ public class CommentList extends ListEntity {
             joinColumns = @JoinColumn(name = "list_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id")
     )
-    private Set<Comment> comments;
+    private Set<Comment> listedComments;
 
 }

@@ -1,17 +1,21 @@
 package com.ftn.laslouri.criticomrade.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@Data
+@EqualsAndHashCode(of = "id")
 public abstract class Reaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -20,6 +24,4 @@ public abstract class Reaction {
 
     @Enumerated(EnumType.STRING)
     private ReactionType reactionType;
-
-    // Constructors, getters, setters
 }

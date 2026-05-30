@@ -3,33 +3,43 @@ package com.ftn.laslouri.criticomrade.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Data //@Getter, @Setter, and @RequiredArgsConstructor IN ONE!
+@Data
+@Table(name = "reviews")
 public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating;
+    private Integer rating;
     private String text;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
+
+    private LocalDate dateWatched;
+    private boolean seenBefore;
+    private boolean isContainedSpoiler;
 
     @Column(name = "review_time")
     private LocalDateTime reviewTime;
 
-    @OneToMany(mappedBy = "review")
-    private Set<ReviewReaction> reactions;
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 
-    // Add other relationships and methods as needed
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReviewReaction> reactions;
 }

@@ -1,0 +1,22 @@
+<button
+  type="button"
+  class="logo"
+  [class.logo--nav]="variant() === 'nav'"
+  [class.logo--hero]="variant() === 'hero'"
+  (click)="openAbout()"
+  [attr.aria-label]="'brand.aboutAria' | translate"
+>
+  <span class="logo-mark-wrap" aria-hidden="true">
+    <span class="logo-mark"></span>
+  </span>
+  <span class="logo-body">
+      <span class="logo-text">
+        <span class="logo-criti">Criti</span><span class="logo-bridge"><span class="logo-bridge-mark"></span></span><span class="logo-comrade">omrade</span>
+      </span>
+    @if (variant() === 'hero') {
+      <span class="logo-tagline">{{ 'brand.tagline' | translate }}</span>
+    }
+  </span>
+</button>
+
+<app-about-modal [open]="aboutOpen()" (closed)="aboutOpen.set(false)" />
