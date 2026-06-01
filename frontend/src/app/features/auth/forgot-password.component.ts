@@ -9,10 +9,9 @@ import { PasswordFieldComponent } from '../../shared/components/password-field/p
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-forgot-password',
-  standalone: true,
-  imports: [FormsModule, RouterLink, TranslatePipe, LogoComponent],
-  template: `
+    selector: 'app-forgot-password',
+    imports: [FormsModule, RouterLink, TranslatePipe, LogoComponent],
+    template: `
     <div class="auth-page">
       <div class="auth-page-inner">
         <app-logo variant="hero" />
@@ -49,7 +48,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class ForgotPasswordComponent implements OnInit {
   private readonly auth = inject(AuthService);

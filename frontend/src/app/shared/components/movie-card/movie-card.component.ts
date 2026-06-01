@@ -7,14 +7,9 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 
 @Component({
-
-  selector: 'app-movie-card',
-
-  standalone: true,
-
-  imports: [RouterLink, TranslatePipe],
-
-  template: `
+    selector: 'app-movie-card',
+    imports: [RouterLink, TranslatePipe],
+    template: `
 
     <a
 
@@ -64,8 +59,7 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
     </a>
 
-  `,
-
+  `
 })
 
 export class MovieCardComponent {

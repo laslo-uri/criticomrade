@@ -9,10 +9,9 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-watchlist',
-  standalone: true,
-  imports: [TranslatePipe, LucideBookmark, MovieCardComponent, EmptyStateComponent],
-  template: `
+    selector: 'app-watchlist',
+    imports: [TranslatePipe, LucideBookmark, MovieCardComponent, EmptyStateComponent],
+    template: `
     <div class="space-y-6">
       <div>
         <h1 class="text-2xl font-semibold">{{ 'watchlist.title' | translate }}</h1>
@@ -51,7 +50,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
         <p class="text-center text-muted">{{ 'common.loading' | translate }}</p>
       }
     </div>
-  `,
+  `
 })
 export class WatchlistComponent {
   private readonly listService = inject(ListService);

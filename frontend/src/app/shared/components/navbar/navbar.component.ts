@@ -29,34 +29,19 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 
 @Component({
-
-  selector: 'app-navbar',
-
-  standalone: true,
-
-  imports: [
-
-    RouterLink,
-
-    FormsModule,
-
-    TranslatePipe,
-
-    LucideSearch,
-
-    LucideBell,
-
-    LucideUser,
-
-    LucideSettings,
-
-    LucideLogOut,
-
-    LogoComponent,
-
-  ],
-
-  template: `
+    selector: 'app-navbar',
+    imports: [
+        RouterLink,
+        FormsModule,
+        TranslatePipe,
+        LucideSearch,
+        LucideBell,
+        LucideUser,
+        LucideSettings,
+        LucideLogOut,
+        LogoComponent,
+    ],
+    template: `
 
     <header
 
@@ -264,8 +249,7 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
     </header>
 
-  `,
-
+  `
 })
 
 export class NavbarComponent {

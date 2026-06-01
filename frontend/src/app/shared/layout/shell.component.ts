@@ -7,17 +7,16 @@ import { ToastComponent } from '../components/toast/toast.component';
 import { shellRouteAnimations } from '../animations/route.animations';
 
 @Component({
-  selector: 'app-shell',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    NavbarComponent,
-    SidebarComponent,
-    BottomNavComponent,
-    ToastComponent,
-  ],
-  animations: [shellRouteAnimations],
-  template: `
+    selector: 'app-shell',
+    imports: [
+        RouterOutlet,
+        NavbarComponent,
+        SidebarComponent,
+        BottomNavComponent,
+        ToastComponent,
+    ],
+    animations: [shellRouteAnimations],
+    template: `
     <div class="flex min-h-screen flex-col">
       <app-navbar />
       <div class="grid flex-1 md:grid-cols-[15rem_1fr]">
@@ -33,7 +32,7 @@ import { shellRouteAnimations } from '../animations/route.animations';
       <app-bottom-nav />
       <app-toast />
     </div>
-  `,
+  `
 })
 export class ShellComponent {
   private readonly router = inject(Router);

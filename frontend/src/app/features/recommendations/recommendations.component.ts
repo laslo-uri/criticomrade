@@ -27,14 +27,9 @@ type RecTab = 'incoming' | 'outgoing';
 
 
 @Component({
-
-  selector: 'app-recommendations',
-
-  standalone: true,
-
-  imports: [FormsModule, TranslatePipe, LucideGift, EmptyStateComponent],
-
-  template: `
+    selector: 'app-recommendations',
+    imports: [FormsModule, TranslatePipe, LucideGift, EmptyStateComponent],
+    template: `
 
     <div class="space-y-6">
 
@@ -270,8 +265,7 @@ type RecTab = 'incoming' | 'outgoing';
 
     </div>
 
-  `,
-
+  `
 })
 
 export class RecommendationsComponent {

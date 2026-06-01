@@ -41,38 +41,21 @@ interface NavItem {
 
 
 @Component({
-
-  selector: 'app-sidebar',
-
-  standalone: true,
-
-  imports: [
-
-    RouterLink,
-
-    RouterLinkActive,
-
-    TranslatePipe,
-
-    LucideHouse,
-
-    LucideCompass,
-
-    LucideBookOpen,
-
-    LucideBookmark,
-
-    LucideList,
-
-    LucideGift,
-
-    LucideBell,
-
-    LucideSettings,
-
-  ],
-
-  template: `
+    selector: 'app-sidebar',
+    imports: [
+        RouterLink,
+        RouterLinkActive,
+        TranslatePipe,
+        LucideHouse,
+        LucideCompass,
+        LucideBookOpen,
+        LucideBookmark,
+        LucideList,
+        LucideGift,
+        LucideBell,
+        LucideSettings,
+    ],
+    template: `
 
     <aside class="hidden h-full flex-col border-r border-border bg-surface/50 md:flex">
 
@@ -158,8 +141,7 @@ interface NavItem {
 
     </aside>
 
-  `,
-
+  `
 })
 
 export class SidebarComponent {

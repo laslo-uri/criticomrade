@@ -10,10 +10,9 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-my-lists',
-  standalone: true,
-  imports: [RouterLink, FormsModule, TranslatePipe, LucideList, LucidePlus, EmptyStateComponent],
-  template: `
+    selector: 'app-my-lists',
+    imports: [RouterLink, FormsModule, TranslatePipe, LucideList, LucidePlus, EmptyStateComponent],
+    template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
         <div>
@@ -76,7 +75,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
         <p class="text-center text-muted">{{ 'common.loading' | translate }}</p>
       }
     </div>
-  `,
+  `
 })
 export class MyListsComponent {
   private readonly listService = inject(ListService);

@@ -9,10 +9,9 @@ import { PasswordFieldComponent } from '../../shared/components/password-field/p
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [FormsModule, RouterLink, TranslatePipe, LogoComponent, PasswordFieldComponent],
-  template: `
+    selector: 'app-login',
+    imports: [FormsModule, RouterLink, TranslatePipe, LogoComponent, PasswordFieldComponent],
+    template: `
     <div class="auth-page">
       <div class="auth-page-inner">
         <app-logo variant="hero" />
@@ -69,7 +68,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class LoginComponent implements OnInit {
   private readonly auth = inject(AuthService);

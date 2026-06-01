@@ -9,14 +9,9 @@ import { TranslationService } from '../../../core/services/translation.service';
 
 
 @Component({
-
-  selector: 'app-password-field',
-
-  standalone: true,
-
-  imports: [LucideEye, LucideEyeOff],
-
-  template: `
+    selector: 'app-password-field',
+    imports: [LucideEye, LucideEyeOff],
+    template: `
 
     <div class="relative">
 
@@ -69,21 +64,13 @@ import { TranslationService } from '../../../core/services/translation.service';
     </div>
 
   `,
-
-  providers: [
-
-    {
-
-      provide: NG_VALUE_ACCESSOR,
-
-      useExisting: forwardRef(() => PasswordFieldComponent),
-
-      multi: true,
-
-    },
-
-  ],
-
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => PasswordFieldComponent),
+            multi: true,
+        },
+    ]
 })
 
 export class PasswordFieldComponent implements ControlValueAccessor {

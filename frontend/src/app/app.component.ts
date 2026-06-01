@@ -4,16 +4,15 @@ import { rootRouteAnimations } from './shared/animations/route.animations';
 import { RouteProgressComponent } from './shared/components/route-progress/route-progress.component';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, RouteProgressComponent],
-  animations: [rootRouteAnimations],
-  template: `
+    selector: 'app-root',
+    imports: [RouterOutlet, RouteProgressComponent],
+    animations: [rootRouteAnimations],
+    template: `
     <app-route-progress />
     <div class="root-route-host" [@rootRouteAnimations]="routeKey(outlet)">
       <router-outlet #outlet="outlet" />
     </div>
-  `,
+  `
 })
 export class AppComponent {
   private readonly router = inject(Router);

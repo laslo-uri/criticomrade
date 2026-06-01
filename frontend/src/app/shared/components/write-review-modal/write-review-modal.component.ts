@@ -21,14 +21,9 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 
 @Component({
-
-  selector: 'app-write-review-modal',
-
-  standalone: true,
-
-  imports: [FormsModule, TranslatePipe, ModalComponent, StarRatingComponent],
-
-  template: `
+    selector: 'app-write-review-modal',
+    imports: [FormsModule, TranslatePipe, ModalComponent, StarRatingComponent],
+    template: `
 
     <app-modal [open]="open()" [title]="'reviewModal.title' | translate" (closed)="closed.emit()">
 
@@ -222,8 +217,7 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
     </app-modal>
 
-  `,
-
+  `
 })
 
 export class WriteReviewModalComponent {

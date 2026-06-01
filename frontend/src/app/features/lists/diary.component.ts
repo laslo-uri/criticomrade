@@ -8,10 +8,9 @@ import { StarRatingComponent } from '../../shared/components/star-rating/star-ra
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-diary',
-  standalone: true,
-  imports: [RouterLink, TranslatePipe, LucideBookOpen, EmptyStateComponent, StarRatingComponent],
-  template: `
+    selector: 'app-diary',
+    imports: [RouterLink, TranslatePipe, LucideBookOpen, EmptyStateComponent, StarRatingComponent],
+    template: `
     <div class="space-y-6">
       <div>
         <h1 class="text-2xl font-semibold">{{ 'diary.title' | translate }}</h1>
@@ -62,7 +61,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
         <p class="text-center text-muted">{{ 'common.loading' | translate }}</p>
       }
     </div>
-  `,
+  `
 })
 export class DiaryComponent {
   private readonly listService = inject(ListService);

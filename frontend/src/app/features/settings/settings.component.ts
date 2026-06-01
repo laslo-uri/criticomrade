@@ -13,10 +13,9 @@ import {
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-settings',
-  standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe, LucideMoon, LucideSun],
-  template: `
+    selector: 'app-settings',
+    imports: [ReactiveFormsModule, TranslatePipe, LucideMoon, LucideSun],
+    template: `
     <div class="mx-auto max-w-lg space-y-8">
       <header class="page-header !mb-0">
         <h1 class="page-title">{{ 'settings.title' | translate }}</h1>
@@ -97,7 +96,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
         </form>
       </section>
     </div>
-  `,
+  `
 })
 export class SettingsComponent {
   private readonly fb = inject(FormBuilder);

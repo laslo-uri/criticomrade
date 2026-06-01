@@ -7,10 +7,9 @@ import { ReactionService } from '../../../core/services/reaction.service';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-review-card',
-  standalone: true,
-  imports: [RouterLink, LucideHeart, LucideMessageCircle, StarRatingComponent],
-  template: `
+    selector: 'app-review-card',
+    imports: [RouterLink, LucideHeart, LucideMessageCircle, StarRatingComponent],
+    template: `
     <article class="card flex gap-4 transition hover:border-accent/20">
       @if (review().movie?.posterApiLink) {
         <a [routerLink]="['/movies', review().movie!.id]" class="shrink-0">
@@ -69,7 +68,7 @@ import { AuthService } from '../../../core/services/auth.service';
         </div>
       </div>
     </article>
-  `,
+  `
 })
 export class ReviewCardComponent implements OnInit {
   review = input.required<Review>();

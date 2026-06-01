@@ -27,14 +27,9 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 
 @Component({
-
-  selector: 'app-list-detail',
-
-  standalone: true,
-
-  imports: [FormsModule, TranslatePipe, LucideSearch, MovieCardComponent, EmptyStateComponent],
-
-  template: `
+    selector: 'app-list-detail',
+    imports: [FormsModule, TranslatePipe, LucideSearch, MovieCardComponent, EmptyStateComponent],
+    template: `
 
     @if (list()) {
 
@@ -168,8 +163,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
     }
 
-  `,
-
+  `
 })
 
 export class ListDetailComponent {

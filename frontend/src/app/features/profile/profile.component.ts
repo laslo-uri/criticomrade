@@ -33,14 +33,9 @@ type ProfileTab = 'reviews' | 'followers' | 'following';
 
 
 @Component({
-
-  selector: 'app-profile',
-
-  standalone: true,
-
-  imports: [RouterLink, TranslatePipe, LucideUser, ReviewCardComponent, EmptyStateComponent],
-
-  template: `
+    selector: 'app-profile',
+    imports: [RouterLink, TranslatePipe, LucideUser, ReviewCardComponent, EmptyStateComponent],
+    template: `
 
     @if (user()) {
 
@@ -244,8 +239,7 @@ type ProfileTab = 'reviews' | 'followers' | 'following';
 
     }
 
-  `,
-
+  `
 })
 
 export class ProfileComponent {

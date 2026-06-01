@@ -47,36 +47,20 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 
 @Component({
-
-  selector: 'app-home',
-
-  standalone: true,
-
-  imports: [
-
-    RouterLink,
-
-    TranslatePipe,
-
-    LucidePenLine,
-
-    LucideFilm,
-
-    LucideCompass,
-
-    LucideChevronRight,
-
-    ReviewCardComponent,
-
-    MovieCardComponent,
-
-    EmptyStateComponent,
-
-    WriteReviewModalComponent,
-
-  ],
-
-  template: `
+    selector: 'app-home',
+    imports: [
+        RouterLink,
+        TranslatePipe,
+        LucidePenLine,
+        LucideFilm,
+        LucideCompass,
+        LucideChevronRight,
+        ReviewCardComponent,
+        MovieCardComponent,
+        EmptyStateComponent,
+        WriteReviewModalComponent,
+    ],
+    template: `
 
     <header class="page-header">
 
@@ -288,8 +272,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
     />
 
-  `,
-
+  `
 })
 
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {

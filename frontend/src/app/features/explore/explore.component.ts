@@ -19,26 +19,15 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 
 @Component({
-
-  selector: 'app-explore',
-
-  standalone: true,
-
-  imports: [
-
-    FormsModule,
-
-    TranslatePipe,
-
-    LucideSearch,
-
-    MovieCardComponent,
-
-    EmptyStateComponent,
-
-  ],
-
-  template: `
+    selector: 'app-explore',
+    imports: [
+        FormsModule,
+        TranslatePipe,
+        LucideSearch,
+        MovieCardComponent,
+        EmptyStateComponent,
+    ],
+    template: `
 
     <div class="space-y-8">
 
@@ -166,8 +155,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
     </div>
 
-  `,
-
+  `
 })
 
 export class ExploreComponent {

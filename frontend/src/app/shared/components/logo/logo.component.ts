@@ -5,11 +5,10 @@ import { AboutModalComponent } from '../about-modal/about-modal.component';
 export type LogoVariant = 'nav' | 'hero';
 
 @Component({
-  selector: 'app-logo',
-  standalone: true,
-  imports: [TranslatePipe, AboutModalComponent],
-  templateUrl: './logo.component.html',
-  styleUrl: './logo.component.css',
+    selector: 'app-logo',
+    imports: [TranslatePipe, AboutModalComponent],
+    templateUrl: './logo.component.html',
+    styleUrl: './logo.component.css'
 })
 export class LogoComponent {
   readonly variant = input<LogoVariant>('hero');

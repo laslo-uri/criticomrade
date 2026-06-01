@@ -39,32 +39,18 @@ interface NavItem {
 
 
 @Component({
-
-  selector: 'app-bottom-nav',
-
-  standalone: true,
-
-  imports: [
-
-    RouterLink,
-
-    RouterLinkActive,
-
-    TranslatePipe,
-
-    LucideHouse,
-
-    LucideCompass,
-
-    LucideList,
-
-    LucideBell,
-
-    LucideUser,
-
-  ],
-
-  template: `
+    selector: 'app-bottom-nav',
+    imports: [
+        RouterLink,
+        RouterLinkActive,
+        TranslatePipe,
+        LucideHouse,
+        LucideCompass,
+        LucideList,
+        LucideBell,
+        LucideUser,
+    ],
+    template: `
 
     <nav
 
@@ -112,8 +98,7 @@ interface NavItem {
 
     </nav>
 
-  `,
-
+  `
 })
 
 export class BottomNavComponent {

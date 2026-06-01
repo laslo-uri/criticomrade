@@ -2,10 +2,9 @@ import { Component, input, output } from '@angular/core';
 import { LucideStar } from '@lucide/angular';
 
 @Component({
-  selector: 'app-star-rating',
-  standalone: true,
-  imports: [LucideStar],
-  template: `
+    selector: 'app-star-rating',
+    imports: [LucideStar],
+    template: `
     <div class="flex items-center gap-0.5" [class.cursor-pointer]="mode() === 'input'">
       @for (star of stars; track star) {
         <button
@@ -24,7 +23,7 @@ import { LucideStar } from '@lucide/angular';
         </button>
       }
     </div>
-  `,
+  `
 })
 export class StarRatingComponent {
   readonly stars = [1, 2, 3, 4, 5];

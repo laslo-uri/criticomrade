@@ -20,18 +20,17 @@ import { WriteReviewModalComponent } from '../../shared/components/write-review-
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-movie-detail',
-  standalone: true,
-  imports: [
-    TranslatePipe,
-    LucidePenLine,
-    LucideHeart,
-    LucideExternalLink,
-    ReviewCardComponent,
-    EmptyStateComponent,
-    WriteReviewModalComponent,
-  ],
-  template: `
+    selector: 'app-movie-detail',
+    imports: [
+        TranslatePipe,
+        LucidePenLine,
+        LucideHeart,
+        LucideExternalLink,
+        ReviewCardComponent,
+        EmptyStateComponent,
+        WriteReviewModalComponent,
+    ],
+    template: `
     @if (movie()) {
       <div class="space-y-8">
         <section class="flex flex-col gap-6 md:flex-row">
@@ -123,7 +122,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
       (closed)="reviewModalOpen.set(false)"
       (submitted)="loadReviews()"
     />
-  `,
+  `
 })
 export class MovieDetailComponent {
   private readonly route = inject(ActivatedRoute);

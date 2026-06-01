@@ -3,10 +3,9 @@ import { Component, inject } from '@angular/core';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
-  selector: 'app-toast',
-  standalone: true,
-  imports: [NgClass],
-  template: `
+    selector: 'app-toast',
+    imports: [NgClass],
+    template: `
     <div class="fixed bottom-20 right-4 z-[100] flex flex-col gap-2 md:bottom-4">
       @for (toast of toastService.toasts(); track toast.id) {
         <div
@@ -28,7 +27,7 @@ import { ToastService } from '../../../core/services/toast.service';
         </div>
       }
     </div>
-  `,
+  `
 })
 export class ToastComponent {
   readonly toastService = inject(ToastService);

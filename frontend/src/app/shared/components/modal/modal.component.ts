@@ -12,38 +12,34 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
 @Component({
-  selector: 'app-modal',
-  standalone: true,
-  imports: [LucideX, TranslatePipe],  animations: [
-    trigger('modalOverlay', [
-      transition(':enter', [
-        group([
-          query('.modal-backdrop', [
-            style({ opacity: 0 }),
-            animate('220ms ease-out', style({ opacity: 1 })),
-          ]),
-          query('.modal-panel', [
-            style({ opacity: 0, transform: 'scale(0.96) translateY(16px)' }),
-            animate(`360ms ${ease}`, style({ opacity: 1, transform: 'scale(1) translateY(0)' })),
-          ]),
+    selector: 'app-modal',
+    imports: [LucideX, TranslatePipe], animations: [
+        trigger('modalOverlay', [
+            transition(':enter', [
+                group([
+                    query('.modal-backdrop', [
+                        style({ opacity: 0 }),
+                        animate('220ms ease-out', style({ opacity: 1 })),
+                    ]),
+                    query('.modal-panel', [
+                        style({ opacity: 0, transform: 'scale(0.96) translateY(16px)' }),
+                        animate(`360ms ${ease}`, style({ opacity: 1, transform: 'scale(1) translateY(0)' })),
+                    ]),
+                ]),
+            ]),
+            transition(':leave', [
+                group([
+                    query('.modal-backdrop', [
+                        animate('180ms ease-in', style({ opacity: 0 })),
+                    ]),
+                    query('.modal-panel', [
+                        animate('200ms ease-in', style({ opacity: 0, transform: 'scale(0.98) translateY(8px)' })),
+                    ]),
+                ]),
+            ]),
         ]),
-      ]),
-      transition(':leave', [
-        group([
-          query('.modal-backdrop', [
-            animate('180ms ease-in', style({ opacity: 0 })),
-          ]),
-          query('.modal-panel', [
-            animate(
-              '200ms ease-in',
-              style({ opacity: 0, transform: 'scale(0.98) translateY(8px)' })
-            ),
-          ]),
-        ]),
-      ]),
-    ]),
-  ],
-  template: `
+    ],
+    template: `
     @if (open()) {
       <div
         class="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -78,7 +74,7 @@ const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
           </div>
         </div>      </div>
     }
-  `,
+  `
 })
 export class ModalComponent {
   open = input(false);

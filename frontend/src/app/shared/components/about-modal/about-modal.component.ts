@@ -12,10 +12,9 @@ const LOCALE_MAP: Record<Locale, string> = {
 };
 
 @Component({
-  selector: 'app-about-modal',
-  standalone: true,
-  imports: [ModalComponent, TranslatePipe],
-  template: `
+    selector: 'app-about-modal',
+    imports: [ModalComponent, TranslatePipe],
+    template: `
     <app-modal
       [open]="open()"
       [title]="'about.title' | translate"
@@ -41,7 +40,7 @@ const LOCALE_MAP: Record<Locale, string> = {
         <p class="text-center text-[11px] text-muted">{{ 'about.footer' | translate }}</p>
       </div>
     </app-modal>
-  `,
+  `
 })
 export class AboutModalComponent {
   private readonly i18n = inject(TranslationService);

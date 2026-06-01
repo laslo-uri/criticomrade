@@ -9,10 +9,9 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-notifications',
-  standalone: true,
-  imports: [DatePipe, NgClass, TranslatePipe, LucideBell, EmptyStateComponent],
-  template: `
+    selector: 'app-notifications',
+    imports: [DatePipe, NgClass, TranslatePipe, LucideBell, EmptyStateComponent],
+    template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
         <div>
@@ -64,7 +63,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
         <p class="text-center text-muted">{{ 'common.loading' | translate }}</p>
       }
     </div>
-  `,
+  `
 })
 export class NotificationsComponent {
   private readonly notificationService = inject(NotificationService);
