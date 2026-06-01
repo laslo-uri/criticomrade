@@ -6,12 +6,12 @@ Social movie reviews and lists — diploma thesis prototype (FTN).
 | | |
 |---|---|
 | **Backend** | Spring Boot 3.1, Java 17, JWT, PostgreSQL, Flyway |
-| **Frontend** | Angular 18, Tailwind, standalone components |
+| **Frontend** | Angular 21, Tailwind, standalone components |
 | **Integrations** | TMDB & OMDb (proxied; API keys via `.env`) |
 
 ## Prerequisites
 
-- Java 17+, Node 18+, PostgreSQL
+- Java 17+, Node 20+ (tested on Node 22), PostgreSQL
 - Database: `criticomrade` (lowercase)
 
 ## Setup
@@ -47,8 +47,10 @@ App: http://localhost:4200
 
 ```powershell
 cd backend; .\mvnw test
-cd frontend; npm run build
+cd frontend; npm install; npm audit; npm run build
 ```
+
+`npm audit` should report **0 vulnerabilities** (Dependabot scans `frontend/package-lock.json` on GitHub).
 
 Smoke-test: register/login → popular movies → review → feed/diary → follow → watchlist → notifications.
 
