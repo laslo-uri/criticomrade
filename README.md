@@ -19,6 +19,7 @@ Social movie reviews and lists — diploma thesis prototype (FTN).
 ```powershell
 # repo root
 copy .env.example .env   # DB, JWT_SECRET, TMDB_API_KEY, OMDB_API_KEY; optional MAIL_*
+git config core.hooksPath .githooks   # strips AI co-author trailers from commits (once per clone)
 ```
 
 **Backend** — loads `.env` from repo root (or `backend/`):

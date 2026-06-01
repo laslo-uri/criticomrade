@@ -1,0 +1,6 @@
+#!/bin/sh
+# Strip Cursor attribution trailers from commit messages (local hook).
+MSG_FILE="$1"
+[ -f "$MSG_FILE" ] || exit 0
+grep -v -i 'cursoragent@cursor.com' "$MSG_FILE" | grep -v -i 'Co-authored-by: Cursor' | grep -v -i 'Made-with: Cursor' > "${MSG_FILE}.tmp"
+mv "${MSG_FILE}.tmp" "$MSG_FILE"
