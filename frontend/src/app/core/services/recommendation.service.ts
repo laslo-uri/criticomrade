@@ -1,16 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import {
-  Recommendation,
-  RecommendationCreateRequest,
-} from '../models/recommendation.model';
+import { Recommendation, RecommendationCreateRequest } from '../models/recommendation.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class RecommendationService {
-  constructor(private api: ApiService) {}
+  private readonly api = inject(ApiService);
 
   create(request: RecommendationCreateRequest): Observable<Recommendation> {
     return this.api.post<Recommendation>('/recommendations', request);

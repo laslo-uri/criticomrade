@@ -49,6 +49,8 @@ async function route(method, path, query, body, viewer) {
       commentCount: state.comments.length,
       reactionCount: state.reactions.length,
       recommendationCount: state.recommendations.length,
+      // Lets the frontend show the demo sign-in hint.
+      demo: true,
     };
   }
 
@@ -131,6 +133,7 @@ async function route(method, path, query, body, viewer) {
     const list = state.lists.find((entry) => entry.id === Number(oneList[1]));
     return list ? listDto(list, viewer) : fail(404, 'Not found');
   }
+  if (oneList && method === 'DELETE') return viewer ? deleteList(viewer, Number(oneList[1])) : denied();
 
   if (path === '/notifications' && method === 'GET') return viewer ? page(myNotes(viewer), query) : denied();
   if (path === '/notifications/unread-count' && method === 'GET') return viewer ? state.notifications.filter((note) => note.userId === viewer.id && !note.read).length : denied();
@@ -356,6 +359,14 @@ function removeMovieFromList(viewer, listId, movieId) {
   const list = ownedList(viewer, listId);
   if (!list) return fail(404, 'Not found');
   list.movieIds = list.movieIds.filter((id) => id !== movieId);
+  return empty();
+}
+
+function deleteList(viewer, listId) {
+  const list = ownedList(viewer, listId);
+  if (!list) return fail(404, 'Not found');
+  if (list.listType !== 'CUSTOM') return fail(400, 'The diary and watchlist cannot be deleted.');
+  state.lists = state.lists.filter((entry) => entry.id !== listId);
   return empty();
 }
 

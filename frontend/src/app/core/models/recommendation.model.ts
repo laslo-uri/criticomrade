@@ -21,7 +21,10 @@ export interface Recommendation {
 
 export interface RecommendationCreateRequest {
   toUsername: string;
-  tmdbId: number;
+  tmdbId?: number;
+  /** Demo backend: recommend any title by catalogue key. */
+  externalKey?: string;
+  mediaType?: string;
   challengeDurationDays?: number;
   challengePoints?: number;
 }

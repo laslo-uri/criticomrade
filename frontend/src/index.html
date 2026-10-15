@@ -1,24 +1,59 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <title>CritiComrade</title>
+    <title>CritiComrade — log it, rate it, argue it out</title>
     <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='2' y='16' width='24' height='20' rx='4' fill='%23E8A838'/%3E%3Cpolygon points='8,36 6,44 16,36' fill='%23E8A838'/%3E%3Crect x='14' y='4' width='30' height='26' rx='5' fill='%23C42332'/%3E%3Cpolygon points='36,30 40,38 28,30' fill='%23C42332'/%3E%3Cpolygon points='29,10 31.1,16.5 38,16.5 32.5,20.5 34.5,27 29,23 23.5,27 25.5,20.5 20,16.5 26.9,16.5' fill='white'/%3E%3C/svg%3E" />
-    <meta name="theme-color" content="#1A1A1E" />
-    <meta name="description" content="Rate films, shows, books and albums — together. A shared diary for everything you watch, read and listen to." />
-    <meta property="og:title" content="CritiComrade" />
-    <meta property="og:description" content="Rate films, shows, books and albums — together." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="A shared diary for films, shows, books and albums. Rate what you finished in half stars, follow friends, and challenge them to watch what you love." />
+    <meta name="theme-color" content="#151011" />
+    <meta name="color-scheme" content="dark light" />
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+
     <meta property="og:type" content="website" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <meta property="og:site_name" content="CritiComrade" />
+    <meta property="og:title" content="CritiComrade — log it, rate it, argue it out" />
+    <meta property="og:description" content="A shared diary for films, shows, books and albums." />
+    <meta property="og:image" content="/brand/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" href="fonts/big-shoulders-display.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="fonts/instrument-sans.woff" as="font" type="font/woff" crossorigin />
+
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('criticomrade_theme');
+        if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+      } catch (e) {}
+    </script>
+    <style>
+      /* Boot screen: shown until Angular renders. */
+      html { background: #151011; }
+      html[data-theme='light'] { background: #efece7; }
+      .boot { min-height: 100dvh; display: grid; place-items: center; }
+      .boot svg { width: 56px; height: 56px; animation: boot 1.2s ease-in-out infinite alternate; }
+      @keyframes boot { from { transform: rotate(-6deg) scale(0.96); } to { transform: rotate(4deg) scale(1.04); } }
+      @media (prefers-reduced-motion: reduce) { .boot svg { animation: none; } }
+    </style>
   </head>
   <body>
-    <app-root></app-root>
+    <app-root>
+      <div class="boot" aria-label="Loading CritiComrade">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M24 16h32a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6h-2v10l-11-10H24a6 6 0 0 1-6-6V22a6 6 0 0 1 6-6z" fill="#F2A93B" />
+          <path d="M8 4h32a6 6 0 0 1 6 6v22a6 6 0 0 1-6 6H22L11 48V38H8a6 6 0 0 1-6-6V10a6 6 0 0 1 6-6z" fill="#C8262A" />
+          <polygon points="24,9 27.06,17.29 35.89,17.64 28.95,23.11 31.35,31.61 24,26.7 16.65,31.61 19.05,23.11 12.11,17.64 20.94,17.29" fill="#FBF5EE" />
+        </svg>
+      </div>
+    </app-root>
+    <noscript>CritiComrade needs JavaScript to run.</noscript>
   </body>
 </html>

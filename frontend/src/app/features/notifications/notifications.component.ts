@@ -1,141 +1,145 @@
-import { Component, inject, signal } from '@angular/core';
-import { DatePipe, NgClass } from '@angular/common';
-import { LucideBell } from '@lucide/angular';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { LucideBell, LucideCheck } from '@lucide/angular';
 import { FollowService } from '../../core/services/follow.service';
 import { FollowRequest } from '../../core/models/follow-request.model';
 import { NotificationService } from '../../core/services/notification.service';
+import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { TranslationService } from '../../core/services/translation.service';
 import { Notification } from '../../core/models/notification.model';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { UserRowComponent } from '../../shared/components/user-row/user-row.component';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { TimeAgoPipe } from '../../core/pipes/time-ago.pipe';
 
 @Component({
-    selector: 'app-notifications',
-    imports: [DatePipe, NgClass, TranslatePipe, LucideBell, EmptyStateComponent],
-    template: `
-    <div class="space-y-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-semibold">{{ 'notifications.title' | translate }}</h1>
-          <p class="text-muted">{{ 'notifications.subtitle' | translate }}</p>
-        </div>
-        @if (notifications().length) {
-          <button type="button" class="btn-secondary text-sm" (click)="markAllRead()">
-            {{ 'notifications.markAllRead' | translate }}
-          </button>
-        }
+  selector: 'app-notifications',
+  imports: [TranslatePipe, TimeAgoPipe, LucideBell, LucideCheck, EmptyStateComponent, AvatarComponent, UserRowComponent],
+  template: `
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">{{ 'notifications.title' | translate }}</h1>
+        <p class="page-subtitle">{{ 'notifications.subtitle' | translate }}</p>
       </div>
+      @if (hasUnread()) {
+        <button type="button" class="btn-secondary btn-sm" (click)="markAllRead()"><svg lucideCheck [size]="15" /> {{ 'notifications.markAllRead' | translate }}</button>
+      }
+    </header>
 
-      @if (requests().length) {
-        <section class="space-y-2">
-          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Follow requests</h2>
+    @if (requests().length) {
+      <section class="mb-8 rounded-panel border border-brass/40 bg-brass/5 px-4 py-1" [attr.aria-label]="'notifications.requests' | translate">
+        <h2 class="pt-3 text-sm font-semibold text-brass-ink">{{ 'notifications.requests' | translate }}</h2>
+        <div class="divide-y divide-border/60">
           @for (request of requests(); track request.id) {
-            <div class="card flex flex-wrap items-center justify-between gap-3">
-              <p class="text-sm">{{ request.sender?.username }} wants to follow you</p>
-              <div class="flex gap-2">
-                <button type="button" class="btn-primary min-h-11" (click)="accept(request)">Accept</button>
-                <button type="button" class="btn-secondary min-h-11" (click)="reject(request)">Decline</button>
-              </div>
-            </div>
+            @if (request.sender; as sender) {
+              <app-user-row [user]="sender" [detail]="'notifications.wantsToFollow' | translate">
+                <div class="flex shrink-0 gap-1.5">
+                  <button type="button" class="btn-primary btn-sm" (click)="answer(request, true)">{{ 'notifications.accept' | translate }}</button>
+                  <button type="button" class="btn-ghost btn-sm" (click)="answer(request, false)">{{ 'notifications.decline' | translate }}</button>
+                </div>
+              </app-user-row>
+            }
           }
-        </section>
-      }
+        </div>
+      </section>
+    }
 
-      @if (notifications().length === 0 && !loading()) {
-        <app-empty-state
-          [message]="'notifications.emptyMessage' | translate"
-          [hint]="'notifications.emptyHint' | translate"
-        >
-          <svg emptyIcon lucideBell [size]="48" class="mb-4 text-muted" />
-        </app-empty-state>
-      } @else {
-        <ul class="space-y-2">
-          @for (n of notifications(); track n.id) {
-            <li
-              class="card flex items-start gap-3 transition"
-              [ngClass]="{ 'opacity-60': n.read, 'border-accent/20': !n.read }"
-            >
-              <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-elevated text-xs font-medium">
-                {{ n.actor?.username?.charAt(0)?.toUpperCase() ?? '?' }}
-              </div>
-              <div class="min-w-0 flex-1">
-                <p class="text-sm">{{ n.message }}</p>
-                <p class="text-xs text-muted">{{ n.createdAt | date: 'medium' }}</p>
-              </div>
+    @if (loading()) {
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="flex items-center gap-3 py-3.5"><div class="skeleton h-10 w-10 rounded-full"></div><div class="skeleton h-4 flex-1"></div></div>
+      }
+    } @else if (items().length === 0) {
+      <app-empty-state [message]="'notifications.emptyMessage' | translate" [hint]="'notifications.emptyHint' | translate">
+        <svg emptyIcon lucideBell [size]="26" />
+      </app-empty-state>
+    } @else {
+      <ul class="divide-y divide-border/60">
+        @for (n of items(); track n.id) {
+          <li>
+            <button type="button" class="flex w-full items-start gap-3.5 rounded-lg px-2 py-3.5 text-left transition hover:bg-surface" (click)="open(n)">
+              <app-avatar [name]="n.actor?.username ?? '?'" [url]="n.actor?.avatarUrl" [size]="40" />
+              <span class="min-w-0 flex-1">
+                <span class="block leading-snug" [class.font-semibold]="!n.read" [class.text-muted]="n.read">{{ n.message }}</span>
+                <span class="mt-0.5 block text-[13px] text-muted">{{ n.createdAt | timeAgo }}</span>
+              </span>
               @if (!n.read) {
-                <button
-                  type="button"
-                  class="shrink-0 text-xs text-accent hover:underline"
-                  (click)="markRead(n)"
-                >
-                  {{ 'notifications.markRead' | translate }}
-                </button>
+                <span class="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-accent" [attr.aria-label]="'notifications.unread' | translate"></span>
               }
-            </li>
-          }
-        </ul>
-      }
-      @if (loading()) {
-        <p class="text-center text-muted">{{ 'common.loading' | translate }}</p>
-      }
-    </div>
-  `
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  `,
 })
-export class NotificationsComponent {
-  private readonly notificationService = inject(NotificationService);
-  private readonly followService = inject(FollowService);
+export class NotificationsComponent implements OnInit {
+  private readonly notifications = inject(NotificationService);
+  private readonly follows = inject(FollowService);
+  private readonly auth = inject(AuthService);
   private readonly toast = inject(ToastService);
-  private readonly translationService = inject(TranslationService);
+  private readonly i18n = inject(TranslationService);
+  private readonly router = inject(Router);
 
-  notifications = signal<Notification[]>([]);
-  requests = signal<FollowRequest[]>([]);
-  loading = signal(true);
+  readonly items = signal<Notification[]>([]);
+  readonly requests = signal<FollowRequest[]>([]);
+  readonly loading = signal(true);
 
   ngOnInit(): void {
     this.load();
-    this.followService.getPendingRequests().subscribe({
+    this.follows.getPendingRequests().subscribe({
       next: (requests) => this.requests.set(requests),
       error: () => this.requests.set([]),
     });
   }
 
-  accept(request: FollowRequest): void {
-    this.followService.acceptRequest(request.id).subscribe(() => {
-      this.requests.update((list) => list.filter((item) => item.id !== request.id));
-    });
+  hasUnread(): boolean {
+    return this.items().some((n) => !n.read);
   }
 
-  reject(request: FollowRequest): void {
-    this.followService.rejectRequest(request.id).subscribe(() => {
-      this.requests.update((list) => list.filter((item) => item.id !== request.id));
-    });
+  open(n: Notification): void {
+    if (!n.read) {
+      this.items.update((all) => all.map((x) => (x.id === n.id ? { ...x, read: true } : x)));
+      this.notifications.markAsRead(n.id).subscribe({ error: () => undefined });
+    }
+    switch (n.type) {
+      case 'RECOMMENDATION':
+        this.router.navigate(['/recommendations']);
+        break;
+      case 'LIKE':
+      case 'COMMENT':
+        this.router.navigate(['/profile', this.auth.currentUser()?.username]);
+        break;
+      default:
+        if (n.actor?.username) this.router.navigate(['/profile', n.actor.username]);
+    }
   }
 
-  markRead(notification: Notification): void {
-    this.notificationService.markAsRead(notification.id).subscribe(() => {
-      this.notifications.update((items) =>
-        items.map((n) => (n.id === notification.id ? { ...n, read: true } : n))
-      );
+  answer(request: FollowRequest, accept: boolean): void {
+    const action = accept ? this.follows.acceptRequest(request.id) : this.follows.rejectRequest(request.id);
+    action.subscribe({
+      next: () => {
+        this.requests.update((list) => list.filter((item) => item.id !== request.id));
+        this.toast.success(this.i18n.translate(accept ? 'notifications.accepted' : 'notifications.declined', { username: request.sender?.username ?? '' }));
+        this.load();
+        this.notifications.refreshUnread();
+      },
+      error: () => this.toast.error(this.i18n.translate('common.actionFailed')),
     });
   }
 
   markAllRead(): void {
-    this.notificationService.markAllAsRead().subscribe({
-      next: () => {
-        this.notifications.update((items) =>
-          items.map((n) => ({ ...n, read: true }))
-        );
-        this.toast.success(this.translationService.translate('notifications.allMarkedRead'));
-      },
+    this.notifications.markAllAsRead().subscribe({
+      next: () => this.items.update((items) => items.map((n) => ({ ...n, read: true }))),
+      error: () => this.toast.error(this.i18n.translate('common.actionFailed')),
     });
   }
 
   private load(): void {
-    this.loading.set(true);
-    this.notificationService.getAll().subscribe({
+    this.notifications.getAll().subscribe({
       next: (items) => {
-        this.notifications.set(items);
+        this.items.set(items);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

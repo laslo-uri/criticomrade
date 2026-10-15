@@ -10,4 +10,6 @@ export interface User {
   followerCount?: number;
   followingCount?: number;
   following?: boolean;
+  /** Set when a follow request to a private profile is pending. */
+  followRequested?: boolean;
 }

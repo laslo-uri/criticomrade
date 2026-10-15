@@ -1,43 +1,7 @@
 import { Provider } from '@angular/core';
-import {
-  provideLucideIcons,
-  LucideBell,
-  LucideBookOpen,
-  LucideBookmark,
-  LucideCompass,
-  LucideExternalLink,
-  LucideFilm,
-  LucideGift,
-  LucideHeart,
-  LucideHouse,
-  LucideList,
-  LucideLogOut,
-  LucideMessageCircle,
-  LucidePenLine,
-  LucidePlus,
-  LucideSearch,
-  LucideSettings,
-  LucideStar,
-  LucideUser,
-} from '@lucide/angular';
 
-export const appIconsProvider: Provider = provideLucideIcons(
-  LucideBell,
-  LucideBookOpen,
-  LucideBookmark,
-  LucideCompass,
-  LucideExternalLink,
-  LucideFilm,
-  LucideGift,
-  LucideHeart,
-  LucideHouse,
-  LucideList,
-  LucideLogOut,
-  LucideMessageCircle,
-  LucidePenLine,
-  LucidePlus,
-  LucideSearch,
-  LucideSettings,
-  LucideStar,
-  LucideUser
-);
+/**
+ * Icons are imported per component (tree-shakeable standalone Lucide components),
+ * so no global registration is needed. Kept as an extension point.
+ */
+export const appIconsProvider: Provider[] = [];

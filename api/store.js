@@ -247,10 +247,11 @@ async function searchRemote(type, query) {
 
 async function popularRemote(type) {
   try {
-    if (type === 'FILM' && process.env.TMDB_API_KEY) return tmdbList('/movie/popular', 'FILM');
-    if (type === 'SHOW' && process.env.TMDB_API_KEY) return tmdbList('/tv/popular', 'SHOW');
-    if (type === 'BOOK') return openLibrarySearch('fiction');
-    if (type === 'ALBUM') return searchRemote('ALBUM', 'album');
+    // `return await` keeps a failed upstream request inside this try/catch.
+    if (type === 'FILM' && process.env.TMDB_API_KEY) return await tmdbList('/movie/popular', 'FILM');
+    if (type === 'SHOW' && process.env.TMDB_API_KEY) return await tmdbList('/tv/popular', 'SHOW');
+    if (type === 'BOOK') return await openLibrarySearch('fiction');
+    if (type === 'ALBUM') return await searchRemote('ALBUM', 'album');
   } catch {
     return [];
   }
@@ -340,6 +341,7 @@ async function spotifyAccessToken() {
     method: 'POST',
     headers: { Authorization: `Basic ${auth}`, 'Content-Type': 'application/x-www-form-urlencoded' },
     body,
+    signal: AbortSignal.timeout(4500),
   });
   if (!response.ok) return '';
   const payload = await response.json();
@@ -369,7 +371,8 @@ async function creditsFor(item) {
 }
 
 async function getJson(url, headers = {}) {
-  const response = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'application/json', ...headers } });
+  // A slow upstream must not use up the whole serverless time limit; the seed catalog is the fallback.
+  const response = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'application/json', ...headers }, signal: AbortSignal.timeout(4500) });
   if (!response.ok) throw new Error(String(response.status));
   return response.json();
 }

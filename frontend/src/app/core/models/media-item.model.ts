@@ -24,4 +24,5 @@ export interface MediaItem {
   episodeNumber?: number;
   pageCount?: number;
   trackCount?: number;
+  reviewCount?: number;
 }

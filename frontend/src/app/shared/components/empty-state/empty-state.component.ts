@@ -1,29 +1,20 @@
 import { Component, input } from '@angular/core';
 
+/** Empty screens say what to do next. Put an icon in [emptyIcon] and actions as content. */
 @Component({
   selector: 'app-empty-state',
-  standalone: true,
   template: `
     <div class="empty-state-box">
-      @if (hasIcon()) {
-        <div class="empty-state-icon">
-          <ng-content select="[emptyIcon]" />
-        </div>
-      } @else {
-        <ng-content select="[emptyIcon]" />
-      }
-      <p class="text-lg font-semibold tracking-tight text-text">{{ message() }}</p>
+      <div class="empty-state-icon"><ng-content select="[emptyIcon]" /></div>
+      <p class="font-display text-2xl font-bold uppercase leading-none tracking-[0.02em] text-text">{{ message() }}</p>
       @if (hint()) {
-        <p class="mt-2 max-w-md text-sm leading-relaxed text-muted">{{ hint() }}</p>
+        <p class="mt-2 max-w-sm text-sm leading-relaxed text-muted">{{ hint() }}</p>
       }
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <ng-content />
-      </div>
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-2 empty:hidden"><ng-content /></div>
     </div>
   `,
 })
 export class EmptyStateComponent {
-  message = input.required<string>();
-  hint = input<string>();
-  hasIcon = input(true);
+  readonly message = input.required<string>();
+  readonly hint = input<string>();
 }

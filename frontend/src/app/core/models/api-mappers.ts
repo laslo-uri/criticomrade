@@ -1,6 +1,7 @@
 import { Review } from './review.model';
 import { User } from './user.model';
 import { MovieList } from './list.model';
+import { MediaType } from './media-item.model';
 
 export interface ReactionSummaryDto {
   type: string;
@@ -57,7 +58,7 @@ export function mapReview(dto: ReviewDto): Review {
       ? {
           id: dto.movie.id,
           tmdbId: dto.movie.tmdbId,
-          mediaType: dto.movie.mediaType as 'FILM' | 'SHOW' | 'EPISODE' | 'BOOK' | 'ALBUM' | undefined,
+          mediaType: dto.movie.mediaType as MediaType | undefined,
           externalKey: dto.movie.externalKey,
           creator: dto.movie.creator,
           title: dto.movie.title,
@@ -98,8 +99,12 @@ export function mapList(dto: ListDto): MovieList {
         ? {
             id: m.id,
             tmdbId: m.tmdbId,
+            mediaType: m.mediaType as MediaType | undefined,
+            externalKey: m.externalKey,
+            creator: m.creator,
             title: m.title,
             year: m.year,
+            genre: m.genre,
             posterApiLink: m.posterApiLink,
           }
         : { id: 0, title: '' }

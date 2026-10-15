@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, of, tap, map, catchError } from 'rxjs';
 import { ApiService } from './api.service';
 import {
@@ -8,30 +8,33 @@ import {
   RegisterRequest,
 } from '../models/auth.model';
 import { User } from '../models/user.model';
+import { storage } from '../utils/storage';
 
 const TOKEN_KEY = 'criticomrade_token';
 const USER_KEY = 'criticomrade_user';
 const REMEMBER_KEY = 'criticomrade_remember_me';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly currentUserSignal = signal<User | null>(this.loadStoredUser());
+  private readonly api = inject(ApiService);
+
+  private readonly tokenSignal = signal<string | null>(
+    storage.get(TOKEN_KEY) ?? storage.get(TOKEN_KEY, 'session')
+  );
+  private readonly currentUserSignal = signal<User | null>(
+    storage.getJson<User>(USER_KEY) ?? storage.getJson<User>(USER_KEY, 'session')
+  );
 
   readonly currentUser = this.currentUserSignal.asReadonly();
-  readonly isLoggedIn = computed(() => !!this.token);
-
-  constructor(private api: ApiService) {}
+  /** Reactive: updates on login, logout and expired sessions. */
+  readonly isLoggedIn = computed(() => !!this.tokenSignal());
 
   get token(): string | null {
-    return (
-      localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY)
-    );
+    return this.tokenSignal();
   }
 
   get rememberMePreference(): boolean {
-    return localStorage.getItem(REMEMBER_KEY) !== 'false';
+    return storage.get(REMEMBER_KEY) !== 'false';
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
@@ -51,31 +54,21 @@ export class AuthService {
     return this.api.post<MessageResponse>('/auth/forgot-password', { email });
   }
 
-  resetPassword(
-    email: string,
-    code: string,
-    newPassword: string
-  ): Observable<MessageResponse> {
-    return this.api.post<MessageResponse>('/auth/reset-password', {
-      email,
-      code,
-      newPassword,
-    });
+  resetPassword(email: string, code: string, newPassword: string): Observable<MessageResponse> {
+    return this.api.post<MessageResponse>('/auth/reset-password', { email, code, newPassword });
   }
 
   logout(): void {
     this.clearStoredSession();
-    localStorage.removeItem(REMEMBER_KEY);
+    storage.remove(REMEMBER_KEY);
+    this.tokenSignal.set(null);
     this.currentUserSignal.set(null);
   }
 
   refreshCurrentUser(): Observable<User> {
     return this.api.get<AuthResponse>('/auth/me').pipe(
       map((response) => response.user),
-      tap((user) => {
-        this.sessionStorage().setItem(USER_KEY, JSON.stringify(user));
-        this.currentUserSignal.set(user);
-      })
+      tap((user) => this.updateCurrentUser(user))
     );
   }
 
@@ -83,12 +76,7 @@ export class AuthService {
     if (!this.token) {
       return of(null);
     }
-    return this.api.get<AuthResponse>('/auth/me').pipe(
-      map((response) => response.user),
-      tap((user) => {
-        this.sessionStorage().setItem(USER_KEY, JSON.stringify(user));
-        this.currentUserSignal.set(user);
-      }),
+    return this.refreshCurrentUser().pipe(
       catchError(() => {
         this.logout();
         return of(null);
@@ -97,44 +85,24 @@ export class AuthService {
   }
 
   updateCurrentUser(user: User): void {
-    this.sessionStorage().setItem(USER_KEY, JSON.stringify(user));
+    storage.setJson(USER_KEY, user, this.rememberMePreference ? 'local' : 'session');
     this.currentUserSignal.set(user);
   }
 
   private setSession(response: AuthResponse, rememberMe: boolean): void {
     this.clearStoredSession();
-    localStorage.setItem(REMEMBER_KEY, String(rememberMe));
-    const storage = this.storageFor(rememberMe);
-    storage.setItem(TOKEN_KEY, response.token);
-    storage.setItem(USER_KEY, JSON.stringify(response.user));
+    storage.set(REMEMBER_KEY, String(rememberMe));
+    const kind = rememberMe ? 'local' : 'session';
+    storage.set(TOKEN_KEY, response.token, kind);
+    storage.setJson(USER_KEY, response.user, kind);
+    this.tokenSignal.set(response.token);
     this.currentUserSignal.set(response.user);
   }
 
-  private loadStoredUser(): User | null {
-    const raw =
-      localStorage.getItem(USER_KEY) ?? sessionStorage.getItem(USER_KEY);
-    if (!raw) {
-      return null;
-    }
-    try {
-      return JSON.parse(raw) as User;
-    } catch {
-      return null;
-    }
-  }
-
-  private sessionStorage(): Storage {
-    return this.storageFor(this.rememberMePreference);
-  }
-
-  private storageFor(rememberMe: boolean): Storage {
-    return rememberMe ? localStorage : sessionStorage;
-  }
-
   private clearStoredSession(): void {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-    sessionStorage.removeItem(TOKEN_KEY);
-    sessionStorage.removeItem(USER_KEY);
+    for (const kind of ['local', 'session'] as const) {
+      storage.remove(TOKEN_KEY, kind);
+      storage.remove(USER_KEY, kind);
+    }
   }
 }

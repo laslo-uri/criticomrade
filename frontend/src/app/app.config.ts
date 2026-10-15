@@ -1,54 +1,52 @@
-import { ApplicationConfig, APP_INITIALIZER, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideZoneChangeDetection,
+} from '@angular/core';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+  withViewTransitions,
+} from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { firstValueFrom } from 'rxjs';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { demoInterceptor } from './core/demo/demo.interceptor';
 import { appIconsProvider } from './shared/icons/app-icons.provider';
 import { AuthService } from './core/services/auth.service';
 import { ThemeService } from './core/services/theme.service';
 import { TranslationService } from './core/services/translation.service';
+import { RuntimeService } from './core/services/runtime.service';
 
-function bootstrapAuth(auth: AuthService) {
-  return () => firstValueFrom(auth.bootstrapSession());
-}
+/** Startup order matters: theme → backend detection → language → session. */
+async function bootstrap(): Promise<void> {
+  const theme = inject(ThemeService);
+  const runtime = inject(RuntimeService);
+  const i18n = inject(TranslationService);
+  const auth = inject(AuthService);
 
-function bootstrapTheme(theme: ThemeService) {
-  return () => {
-    theme.init();
-  };
-}
-
-function bootstrapI18n(i18n: TranslationService) {
-  return () => i18n.init();
+  theme.init();
+  await Promise.all([runtime.init(), i18n.init()]);
+  await firstValueFrom(auth.bootstrapSession());
+  document.documentElement.classList.add('app-ready');
 }
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    provideAnimations(),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
+      withViewTransitions({ skipInitialTransition: true })
+    ),
+    // authInterceptor runs first so the demo backend sees the bearer token.
+    provideHttpClient(withInterceptors([authInterceptor, demoInterceptor])),
     appIconsProvider,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: bootstrapTheme,
-      deps: [ThemeService],
-      multi: true,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: bootstrapI18n,
-      deps: [TranslationService],
-      multi: true,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: bootstrapAuth,
-      deps: [AuthService],
-      multi: true,
-    },
+    provideAppInitializer(bootstrap),
   ],
 };

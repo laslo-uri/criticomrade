@@ -15,8 +15,10 @@ export interface MediaCredits {
 export class MediaService {
   constructor(private api: ApiService) {}
 
-  search(type: MediaType, query: string): Observable<MediaItem[]> {
-    const params = new HttpParams().set('type', type).set('q', query);
+  /** Pass `null` as the type to search every kind of title (demo backend). */
+  search(type: MediaType | null, query: string): Observable<MediaItem[]> {
+    let params = new HttpParams().set('q', query);
+    if (type) params = params.set('type', type);
     return this.api.get<MediaItem[]>('/media/search', params);
   }
 

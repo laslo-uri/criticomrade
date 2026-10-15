@@ -8,16 +8,15 @@ export interface Toast {
   type: ToastType;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ToastService {
   private nextId = 0;
   readonly toasts = signal<Toast[]>([]);
 
   show(message: string, type: ToastType = 'info', durationMs = 4000): void {
     const id = ++this.nextId;
-    this.toasts.update((items) => [...items, { id, message, type }]);
+    // Keep at most three on screen; the newest wins.
+    this.toasts.update((items) => [...items.slice(-2), { id, message, type }]);
     setTimeout(() => this.dismiss(id), durationMs);
   }
 
@@ -26,7 +25,11 @@ export class ToastService {
   }
 
   error(message: string): void {
-    this.show(message, 'error');
+    this.show(message, 'error', 5500);
+  }
+
+  info(message: string): void {
+    this.show(message, 'info');
   }
 
   dismiss(id: number): void {

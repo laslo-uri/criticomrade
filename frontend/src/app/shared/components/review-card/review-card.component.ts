@@ -1,146 +1,290 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { LucideHeart, LucideMessageCircle, LucidePencil, LucideTrash2 } from '@lucide/angular';
+import {
+  LucideHeart,
+  LucideMessageCircle,
+  LucidePencil,
+  LucideRotateCcw,
+  LucideTrash2,
+} from '@lucide/angular';
 import { Review } from '../../../core/models/review.model';
 import { Comment } from '../../../core/models/comment.model';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
+import { PosterComponent } from '../poster/poster.component';
+import { AvatarComponent } from '../avatar/avatar.component';
 import { ReactionService } from '../../../core/services/reaction.service';
 import { CommentService } from '../../../core/services/comment.service';
 import { ReviewService } from '../../../core/services/review.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { TranslationService } from '../../../core/services/translation.service';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
+import { TimeAgoPipe } from '../../../core/pipes/time-ago.pipe';
+import { LocalDatePipe } from '../../../core/pipes/local-date.pipe';
+import { mediaLink } from '../../../core/utils/media-link';
+import { errorMessage } from '../../../core/utils/http-error';
 
 interface CommentView extends Comment {
-  author?: { username?: string };
+  author?: { username?: string; avatarUrl?: string };
 }
 
 @Component({
   selector: 'app-review-card',
-  imports: [RouterLink, FormsModule, LucideHeart, LucideMessageCircle, LucidePencil, LucideTrash2, StarRatingComponent],
+  imports: [
+    RouterLink,
+    FormsModule,
+    TranslatePipe,
+    TimeAgoPipe,
+    LocalDatePipe,
+    LucideHeart,
+    LucideMessageCircle,
+    LucidePencil,
+    LucideTrash2,
+    LucideRotateCcw,
+    StarRatingComponent,
+    PosterComponent,
+    AvatarComponent,
+  ],
   template: `
-    <article class="card flex gap-4 transition hover:border-accent/20">
-      @if (review().movie?.posterApiLink) {
-        <a [routerLink]="['/media', review().movie!.id]" class="hidden shrink-0 sm:block">
-          <img [src]="review().movie!.posterApiLink" [alt]="review().movie!.title" class="h-24 w-16 rounded object-cover" />
+    <article class="flex gap-4" [class]="boxed() ? 'card' : 'border-b border-border/60 py-5 first:pt-1 last:border-b-0'" [attr.aria-label]="ariaLabel()">
+      @if (showMedia() && review().movie; as media) {
+        <a [routerLink]="link().commands" [queryParams]="link().queryParams" class="hidden w-[68px] shrink-0 sm:block">
+          <app-poster
+            class="aspect-[2/3] overflow-hidden rounded-[4px] shadow-poster"
+            [title]="media.title"
+            [src]="media.posterApiLink"
+            [mediaType]="media.mediaType"
+            [year]="media.year"
+          />
         </a>
       }
+
       <div class="min-w-0 flex-1">
-        <div class="mb-2 flex items-start justify-between gap-2">
-          <div class="min-w-0">
-            @if (review().user) {
-              <a [routerLink]="['/profile', review().user!.username]" class="font-medium hover:text-accent">
-                {{ review().user!.username }}
-              </a>
-            }
-            @if (review().movie) {
-              <a [routerLink]="['/media', review().movie!.id]" class="block truncate text-sm text-muted hover:text-accent">
-                {{ review().movie!.title }}
-                @if (review().movie!.year) { ({{ review().movie!.year }}) }
-              </a>
-            }
-          </div>
-          @if (!editing()) {
-            @if (review().rating) {
-              <app-star-rating mode="display" [value]="review().rating!" />
-            }
+        <header class="flex items-start gap-3">
+          @if (showAuthor() && review().user; as author) {
+            <a [routerLink]="['/profile', author.username]" class="shrink-0" tabindex="-1" aria-hidden="true">
+              <app-avatar [name]="author.username" [url]="author.avatarUrl" [size]="36" />
+            </a>
           }
-        </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[14px] leading-snug">
+              @if (showAuthor() && review().user; as author) {
+                <a [routerLink]="['/profile', author.username]" class="font-semibold text-text hover:text-accent-ink">{{ author.username }}</a>
+                @if (showMedia() && review().movie) {
+                  <span class="text-muted"> {{ 'review.on' | translate }} </span>
+                }
+              }
+              @if (showMedia() && review().movie; as media) {
+                <a [routerLink]="link().commands" [queryParams]="link().queryParams" class="font-semibold text-text hover:text-accent-ink">{{ media.title }}</a>
+                @if (media.year) {
+                  <span class="text-muted"> ({{ media.year }})</span>
+                }
+              }
+            </p>
+            <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-muted">
+              @if (!editing() && review().rating) {
+                <app-star-rating [value]="review().rating!" [size]="14" />
+              }
+              @if (review().dateWatched) {
+                <span>{{ 'review.watched' | translate: { date: (review().dateWatched | localDate) } }}</span>
+              } @else if (review().reviewTime) {
+                <span>{{ review().reviewTime | timeAgo }}</span>
+              }
+              @if (review().seenBefore) {
+                <span class="inline-flex items-center gap-1"><svg lucideRotateCcw [size]="12" /> {{ 'review.rewatch' | translate }}</span>
+              }
+            </div>
+          </div>
+        </header>
+
         @if (editing()) {
-          <app-star-rating mode="input" [value]="editRating()" (valueChange)="editRating.set($event)" />
-          <textarea class="input-field mt-2 min-h-24" [(ngModel)]="editText"></textarea>
-          <div class="mt-2 flex gap-2">
-            <button type="button" class="btn-primary min-h-11" (click)="saveEdit()">Save</button>
-            <button type="button" class="btn-secondary min-h-11" (click)="editing.set(false)">Cancel</button>
+          <div class="mt-4 space-y-3">
+            <app-star-rating mode="input" [size]="26" [value]="editRating()" (valueChange)="editRating.set($event)" [label]="'reviewModal.rating' | translate" />
+            <textarea class="input-field min-h-28" [(ngModel)]="editText" [attr.aria-label]="'reviewModal.review' | translate"></textarea>
+            <div class="flex gap-2">
+              <button type="button" class="btn-primary btn-sm" [disabled]="!editRating() || busy()" (click)="saveEdit()">{{ 'common.save' | translate }}</button>
+              <button type="button" class="btn-ghost btn-sm" (click)="editing.set(false)">{{ 'common.cancel' | translate }}</button>
+            </div>
           </div>
         } @else if (review().text) {
-          <p class="text-sm leading-relaxed text-text/90">{{ review().text }}</p>
-        }
-        <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
-          <button type="button" class="inline-flex min-h-11 items-center gap-1 hover:text-accent" [class.text-accent]="liked()" [disabled]="!auth.isLoggedIn()" (click)="toggleLike()">
-            <svg lucideHeart [size]="16" [class.fill-accent]="liked()" />
-            {{ likeCount() }}
-          </button>
-          <button type="button" class="inline-flex min-h-11 items-center gap-1 hover:text-accent" (click)="toggleComments()">
-            <svg lucideMessageCircle [size]="16" />
-            {{ review().commentCount ?? comments().length }}
-          </button>
-          @if (ownReview()) {
-            <button type="button" class="inline-flex min-h-11 items-center gap-1 hover:text-accent" (click)="startEdit()">
-              <svg lucidePencil [size]="16" />
+          @if (review().isContainedSpoiler && !spoilerShown()) {
+            <button type="button" class="mt-3 block w-full text-left" (click)="spoilerShown.set(true)">
+              <span class="tag mb-1.5 bg-accent/15 text-accent-ink">{{ 'review.spoiler' | translate }}</span>
+              <span class="block text-[15px] leading-relaxed text-text/90 spoiler-blur" aria-hidden="true">{{ review().text }}</span>
+              <span class="mt-1 block text-[13px] font-semibold text-accent-ink">{{ 'review.showSpoiler' | translate }}</span>
             </button>
-            <button type="button" class="inline-flex min-h-11 items-center gap-1 hover:text-accent" (click)="remove()">
-              <svg lucideTrash2 [size]="16" />
-            </button>
+          } @else {
+            <p class="mt-3 whitespace-pre-line text-[15px] leading-relaxed text-text/90" [class.line-clamp-5]="compact() && !expanded()">{{ review().text }}</p>
+            @if (compact() && !expanded() && (review().text?.length ?? 0) > 320) {
+              <button type="button" class="mt-1 text-[13px] font-semibold text-accent-ink hover:underline" (click)="expanded.set(true)">{{ 'review.readMore' | translate }}</button>
+            }
           }
-        </div>
+        }
+
+        <footer class="-ml-2 mt-2 flex flex-wrap items-center gap-1 text-[13px] text-muted">
+          <button
+            type="button"
+            class="btn-ghost btn-sm gap-1.5 !px-2"
+            [class.text-accent-ink]="liked()"
+            [attr.aria-pressed]="liked()"
+            [attr.aria-label]="(liked() ? 'review.unlike' : 'review.like') | translate"
+            (click)="toggleLike()"
+          >
+            <svg lucideHeart [size]="16" [class.fill-current]="liked()" />
+            <span class="tabular-nums">{{ likeCount() }}</span>
+          </button>
+          <button
+            type="button"
+            class="btn-ghost btn-sm gap-1.5 !px-2"
+            [attr.aria-expanded]="commentsOpen()"
+            [attr.aria-label]="'review.comments' | translate"
+            (click)="toggleComments()"
+          >
+            <svg lucideMessageCircle [size]="16" />
+            <span class="tabular-nums">{{ commentCount() }}</span>
+          </button>
+          @if (ownReview() && !editing()) {
+            <span class="flex-1"></span>
+            @if (confirmingDelete()) {
+              <span class="mr-1 text-[13px] text-text">{{ 'review.confirmDelete' | translate }}</span>
+              <button type="button" class="btn-sm btn !bg-danger/15 !text-danger hover:!bg-danger/25" (click)="remove()">{{ 'common.delete' | translate }}</button>
+              <button type="button" class="btn-ghost btn-sm" (click)="confirmingDelete.set(false)">{{ 'common.cancel' | translate }}</button>
+            } @else {
+              <button type="button" class="icon-btn h-9 w-9" (click)="startEdit()" [attr.aria-label]="'review.edit' | translate">
+                <svg lucidePencil [size]="15" />
+              </button>
+              <button type="button" class="icon-btn h-9 w-9" (click)="confirmingDelete.set(true)" [attr.aria-label]="'common.delete' | translate">
+                <svg lucideTrash2 [size]="15" />
+              </button>
+            }
+          }
+        </footer>
+
         @if (commentsOpen()) {
-          <div class="mt-3 space-y-2 border-t border-border pt-3">
+          <section class="mt-2 space-y-3 border-t border-border/70 pt-3" [attr.aria-label]="'review.comments' | translate">
+            @if (loadingComments()) {
+              <div class="skeleton h-4 w-2/3"></div>
+            }
             @for (comment of comments(); track comment.id) {
-              <div class="flex items-start justify-between gap-2 text-sm">
-                <p><span class="font-medium">{{ commentAuthor(comment) }}</span> {{ comment.text }}</p>
-                @if (commentAuthor(comment) === auth.currentUser()?.username) {
-                  <button type="button" class="text-xs text-muted hover:text-accent" (click)="removeComment(comment.id)">Delete</button>
+              <div class="flex items-start gap-2.5 text-sm">
+                <app-avatar [name]="commentAuthor(comment)" [size]="26" />
+                <div class="min-w-0 flex-1">
+                  <p class="leading-snug">
+                    <a [routerLink]="['/profile', commentAuthor(comment)]" class="font-semibold hover:text-accent-ink">{{ commentAuthor(comment) }}</a>
+                    <span class="ml-1.5 text-xs text-muted">{{ comment.createdAt | timeAgo }}</span>
+                  </p>
+                  <p class="mt-0.5 whitespace-pre-line text-text/90">{{ comment.text }}</p>
+                </div>
+                @if (canDeleteComment(comment)) {
+                  <button type="button" class="text-xs font-medium text-muted hover:text-danger" (click)="removeComment(comment.id)">{{ 'common.delete' | translate }}</button>
                 }
               </div>
+            } @empty {
+              @if (!loadingComments()) {
+                <p class="text-sm text-muted">{{ 'review.noComments' | translate }}</p>
+              }
             }
             @if (auth.isLoggedIn()) {
               <form class="flex gap-2" (submit)="addComment($event)">
-                <input class="input-field min-h-11" name="comment" [(ngModel)]="draft" placeholder="Add a comment" />
-                <button type="submit" class="btn-secondary min-h-11" [disabled]="!draft.trim()">Send</button>
+                <input class="input-field !min-h-10 !py-2 text-sm" name="comment" [(ngModel)]="draft" [placeholder]="'review.commentPlaceholder' | translate" maxlength="1000" autocomplete="off" />
+                <button type="submit" class="btn-secondary btn-sm" [disabled]="!draft.trim() || busy()">{{ 'common.send' | translate }}</button>
               </form>
+            } @else {
+              <p class="text-sm text-muted">
+                <a routerLink="/auth/login" class="link-quiet">{{ 'nav.logIn' | translate }}</a> {{ 'review.toComment' | translate }}
+              </p>
             }
-          </div>
+          </section>
         }
       </div>
     </article>
   `,
 })
-export class ReviewCardComponent implements OnInit {
-  review = input.required<Review>();
-  likedChange = output<boolean>();
-  deleted = output<void>();
-  updated = output<void>();
+export class ReviewCardComponent {
+  readonly review = input.required<Review>();
+  readonly showMedia = input(true);
+  readonly showAuthor = input(true);
+  readonly compact = input(true);
+  /** Boxed card, or a ruled diary entry for long lists. */
+  readonly boxed = input(false);
+  readonly deleted = output<void>();
+  readonly updated = output<void>();
 
   private readonly reactionService = inject(ReactionService);
   private readonly commentService = inject(CommentService);
   private readonly reviewService = inject(ReviewService);
   private readonly toast = inject(ToastService);
+  private readonly i18n = inject(TranslationService);
   readonly auth = inject(AuthService);
 
-  likeCount = signal(0);
-  liked = signal(false);
-  commentsOpen = signal(false);
-  comments = signal<CommentView[]>([]);
-  editing = signal(false);
-  editRating = signal(0);
+  readonly likeCount = signal(0);
+  readonly liked = signal(false);
+  readonly commentCount = signal(0);
+  readonly commentsOpen = signal(false);
+  readonly loadingComments = signal(false);
+  readonly comments = signal<CommentView[]>([]);
+  readonly editing = signal(false);
+  readonly editRating = signal(0);
+  readonly confirmingDelete = signal(false);
+  readonly spoilerShown = signal(false);
+  readonly expanded = signal(false);
+  readonly busy = signal(false);
   editText = '';
   draft = '';
 
-  ngOnInit(): void {
-    this.likeCount.set(this.review().likeCount ?? 0);
-    this.liked.set(this.review().likedByCurrentUser ?? false);
-    this.editRating.set(this.review().rating ?? 0);
-    this.editText = this.review().text ?? '';
-  }
+  readonly link = computed(() => mediaLink(this.review().movie));
+  readonly ownReview = computed(
+    () => !!this.auth.currentUser() && this.auth.currentUser()?.username === this.review().user?.username
+  );
+  readonly ariaLabel = computed(() => {
+    const r = this.review();
+    return [r.user?.username, r.movie?.title].filter(Boolean).join(' — ');
+  });
 
-  ownReview(): boolean {
-    return !!this.auth.currentUser() && this.auth.currentUser()?.username === this.review().user?.username;
+  constructor() {
+    // Keep counters in sync if the parent hands us a refreshed review.
+    effect(() => {
+      const r = this.review();
+      this.likeCount.set(r.likeCount ?? 0);
+      this.liked.set(r.likedByCurrentUser ?? false);
+      this.commentCount.set(r.commentCount ?? 0);
+    });
   }
 
   toggleLike(): void {
-    this.reactionService.toggle('review', this.review().id).subscribe((reactions) => {
-      this.likeCount.set(this.reactionService.getLikeCount(reactions));
-      this.liked.set(this.reactionService.isLikedByCurrentUser(reactions));
-      this.likedChange.emit(this.liked());
+    if (!this.auth.isLoggedIn()) {
+      this.toast.info(this.i18n.translate('review.signInToLike'));
+      return;
+    }
+    // Optimistic: flip now, reconcile with the server answer.
+    const wasLiked = this.liked();
+    this.liked.set(!wasLiked);
+    this.likeCount.update((n) => n + (wasLiked ? -1 : 1));
+    this.reactionService.toggle('review', this.review().id).subscribe({
+      next: (reactions) => {
+        this.likeCount.set(this.reactionService.getLikeCount(reactions));
+        this.liked.set(this.reactionService.isLikedByCurrentUser(reactions));
+      },
+      error: () => {
+        this.liked.set(wasLiked);
+        this.likeCount.update((n) => n + (wasLiked ? 1 : -1));
+        this.toast.error(this.i18n.translate('common.actionFailed'));
+      },
     });
   }
 
   toggleComments(): void {
     this.commentsOpen.update((open) => !open);
     if (this.commentsOpen() && this.comments().length === 0) {
-      this.commentService.getForReview(this.review().id).subscribe((comments) => {
-        this.comments.set(comments as CommentView[]);
+      this.loadingComments.set(true);
+      this.commentService.getForReview(this.review().id).subscribe({
+        next: (comments) => {
+          this.comments.set(comments as CommentView[]);
+          this.commentCount.set(comments.length);
+          this.loadingComments.set(false);
+        },
+        error: () => this.loadingComments.set(false),
       });
     }
   }
@@ -148,21 +292,39 @@ export class ReviewCardComponent implements OnInit {
   addComment(event: Event): void {
     event.preventDefault();
     const text = this.draft.trim();
-    if (!text) return;
-    this.commentService.add(this.review().id, { text }).subscribe((comment) => {
-      this.comments.update((list) => [...list, comment as CommentView]);
-      this.draft = '';
+    if (!text || this.busy()) return;
+    this.busy.set(true);
+    this.commentService.add(this.review().id, { text }).subscribe({
+      next: (comment) => {
+        this.comments.update((list) => [...list, comment as CommentView]);
+        this.commentCount.update((n) => n + 1);
+        this.draft = '';
+        this.busy.set(false);
+      },
+      error: (err) => {
+        this.toast.error(errorMessage(err, this.i18n.translate('review.commentFailed')));
+        this.busy.set(false);
+      },
     });
   }
 
   removeComment(id: number): void {
-    this.commentService.delete(id).subscribe(() => {
-      this.comments.update((list) => list.filter((comment) => comment.id !== id));
+    this.commentService.delete(id).subscribe({
+      next: () => {
+        this.comments.update((list) => list.filter((c) => c.id !== id));
+        this.commentCount.update((n) => Math.max(0, n - 1));
+      },
+      error: () => this.toast.error(this.i18n.translate('common.actionFailed')),
     });
   }
 
   commentAuthor(comment: CommentView): string {
     return comment.author?.username ?? comment.user?.username ?? '';
+  }
+
+  canDeleteComment(comment: CommentView): boolean {
+    const me = this.auth.currentUser()?.username;
+    return !!me && (this.commentAuthor(comment) === me || this.ownReview());
   }
 
   startEdit(): void {
@@ -173,27 +335,39 @@ export class ReviewCardComponent implements OnInit {
 
   saveEdit(): void {
     const movie = this.review().movie;
-    this.reviewService.update(this.review().id, {
-      tmdbId: movie?.tmdbId,
-      externalKey: movie?.externalKey,
-      mediaType: movie?.mediaType,
-      rating: this.editRating(),
-      text: this.editText,
-    }).subscribe({
-      next: () => {
-        this.editing.set(false);
-        this.updated.emit();
-        this.toast.success('Review updated');
-      },
-      error: () => this.toast.error('Could not update review'),
-    });
+    this.busy.set(true);
+    this.reviewService
+      .update(this.review().id, {
+        tmdbId: movie?.tmdbId,
+        externalKey: movie?.externalKey,
+        mediaType: movie?.mediaType,
+        rating: this.editRating(),
+        text: this.editText.trim(),
+      })
+      .subscribe({
+        next: () => {
+          this.editing.set(false);
+          this.busy.set(false);
+          this.updated.emit();
+          this.toast.success(this.i18n.translate('review.updated'));
+        },
+        error: (err) => {
+          this.busy.set(false);
+          this.toast.error(errorMessage(err, this.i18n.translate('review.updateFailed')));
+        },
+      });
   }
 
   remove(): void {
-    if (!confirm('Delete this review?')) return;
     this.reviewService.delete(this.review().id).subscribe({
-      next: () => this.deleted.emit(),
-      error: () => this.toast.error('Could not delete review'),
+      next: () => {
+        this.toast.success(this.i18n.translate('review.deleted'));
+        this.deleted.emit();
+      },
+      error: (err) => {
+        this.confirmingDelete.set(false);
+        this.toast.error(errorMessage(err, this.i18n.translate('review.deleteFailed')));
+      },
     });
   }
 }

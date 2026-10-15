@@ -1,97 +1,65 @@
-import { Component, input, output } from '@angular/core';
+import { Component, ElementRef, effect, input, output, viewChild } from '@angular/core';
 import { LucideX } from '@lucide/angular';
-import {
-  trigger,
-  transition,
-  style,
-  animate,
-  query,
-  group,
-} from '@angular/animations';
 import { TranslatePipe } from '../../../core/pipes/translate.pipe';
-const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
+/**
+ * Accessible dialog: bottom sheet on phones, centred panel on larger screens.
+ * Built on <dialog> so focus trapping, Escape and the backdrop come from the browser.
+ */
 @Component({
-    selector: 'app-modal',
-    imports: [LucideX, TranslatePipe], animations: [
-        trigger('modalOverlay', [
-            transition(':enter', [
-                group([
-                    query('.modal-backdrop', [
-                        style({ opacity: 0 }),
-                        animate('220ms ease-out', style({ opacity: 1 })),
-                    ]),
-                    query('.modal-panel', [
-                        style({ opacity: 0, transform: 'scale(0.96) translateY(16px)' }),
-                        animate(`360ms ${ease}`, style({ opacity: 1, transform: 'scale(1) translateY(0)' })),
-                    ]),
-                ]),
-            ]),
-            transition(':leave', [
-                group([
-                    query('.modal-backdrop', [
-                        animate('180ms ease-in', style({ opacity: 0 })),
-                    ]),
-                    query('.modal-panel', [
-                        animate('200ms ease-in', style({ opacity: 0, transform: 'scale(0.98) translateY(8px)' })),
-                    ]),
-                ]),
-            ]),
-        ]),
-    ],
-    template: `
-    @if (open()) {
-      <div
-        class="fixed inset-0 z-50 flex items-end justify-center p-0 md:items-center md:p-4"
-        @modalOverlay
-        (click)="onBackdropClick($event)"
-      >
-        <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-        <div
-          class="modal-panel relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-t-2xl border border-border bg-surface shadow-2xl md:rounded-xl"
-          [class]="panelClass()"
-          (click)="$event.stopPropagation()"
-        >
-          <div class="mx-auto mt-2 h-1.5 w-10 rounded-full bg-border md:hidden" aria-hidden="true"></div>
-          <div
-            class="flex items-center gap-2 border-b border-border"
-            [class]="headerClass()"
-            [class.justify-end]="!title()"
-          >
-            @if (title()) {
-              <h2 class="min-w-0 flex-1 pr-2 text-lg font-semibold leading-tight">{{ title() }}</h2>
-            }
-            <button
-              type="button"
-              class="modal-close"
-              (click)="close()"
-              [attr.aria-label]="'common.close' | translate"
-            >
-              <svg lucideX [size]="20" strokeWidth="2.5" />
-            </button>
-          </div>
-          <div class="px-6 py-4">
-            <ng-content />
-          </div>
-        </div>      </div>
-    }
-  `
+  selector: 'app-modal',
+  imports: [LucideX, TranslatePipe],
+  template: `
+    <dialog
+      #dialog
+      class="modal-dialog"
+      [class]="panelClass()"
+      [attr.aria-label]="title()"
+      (cancel)="$event.preventDefault(); closed.emit()"
+      (click)="onBackdrop($event)"
+    >
+      <div class="flex max-h-[inherit] flex-col">
+        <header class="flex items-center gap-3 border-b border-border/70 px-5 py-3.5">
+          @if (title()) {
+            <h2 class="min-w-0 flex-1 font-display text-2xl font-bold uppercase leading-none tracking-[0.02em]">{{ title() }}</h2>
+          } @else {
+            <span class="flex-1"></span>
+          }
+          <button type="button" class="icon-btn -mr-2" (click)="closed.emit()" [attr.aria-label]="'common.close' | translate">
+            <svg lucideX [size]="20" />
+          </button>
+        </header>
+        <div class="overflow-y-auto overscroll-contain px-5 py-5">
+          <ng-content />
+        </div>
+      </div>
+    </dialog>
+  `,
 })
 export class ModalComponent {
-  open = input(false);
-  title = input<string>();
-  panelClass = input('max-w-lg');
-  headerClass = input('px-4 py-3 sm:px-6 sm:py-4');
-  bodyClass = input('px-6 py-4');
-  closed = output<void>();
+  readonly open = input(false);
+  readonly title = input<string>();
+  readonly panelClass = input('sm:max-w-lg');
+  readonly closed = output<void>();
 
-  onBackdropClick(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('fixed')) {
-      this.closed.emit();
-    }
+  private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
+
+  constructor() {
+    effect(() => {
+      const el = this.dialog().nativeElement;
+      if (this.open() && !el.open) {
+        el.showModal();
+        document.documentElement.classList.add('overflow-hidden');
+      } else if (!this.open() && el.open) {
+        el.close();
+        document.documentElement.classList.remove('overflow-hidden');
+      }
+    });
   }
 
-  close(): void {
-    this.closed.emit();
+  onBackdrop(event: MouseEvent): void {
+    if (event.target === this.dialog().nativeElement) {
+      this.closed.emit();
+    }
   }
 }

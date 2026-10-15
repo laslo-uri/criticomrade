@@ -40,11 +40,11 @@ import {
       transform: scaleX(0);
       background: linear-gradient(
         90deg,
-        var(--color-accent),
-        var(--color-secondary)
+        rgb(var(--c-accent)),
+        rgb(var(--c-brass))
       );
       transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-      box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent) 45%, transparent);
+      box-shadow: 0 0 12px rgb(var(--c-accent) / 0.45);
     }
   `,
 })
