@@ -42,16 +42,17 @@ const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
     template: `
     @if (open()) {
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 z-50 flex items-end justify-center p-0 md:items-center md:p-4"
         @modalOverlay
         (click)="onBackdropClick($event)"
       >
         <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
         <div
-          class="modal-panel relative z-10 w-full rounded-xl border border-border bg-surface shadow-2xl"
+          class="modal-panel relative z-10 max-h-[90vh] w-full overflow-y-auto rounded-t-2xl border border-border bg-surface shadow-2xl md:rounded-xl"
           [class]="panelClass()"
           (click)="$event.stopPropagation()"
         >
+          <div class="mx-auto mt-2 h-1.5 w-10 rounded-full bg-border md:hidden" aria-hidden="true"></div>
           <div
             class="flex items-center gap-2 border-b border-border"
             [class]="headerClass()"

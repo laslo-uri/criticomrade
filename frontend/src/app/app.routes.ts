@@ -35,7 +35,6 @@ export const routes: Routes = [
         path: '',
         loadComponent: () =>
           import('./features/home/home.component').then((m) => m.HomeComponent),
-        canActivate: [authGuard],
       },
       {
         path: 'explore',
@@ -43,11 +42,37 @@ export const routes: Routes = [
           import('./features/explore/explore.component').then((m) => m.ExploreComponent),
       },
       {
+        path: 'movies/tmdb/:tmdbId',
+        loadComponent: () =>
+          import('./features/media-detail/media-detail.component').then(
+            (m) => m.MediaDetailComponent
+          ),
+      },
+      {
         path: 'movies/:id',
         loadComponent: () =>
-          import('./features/movie/movie-detail.component').then(
-            (m) => m.MovieDetailComponent
+          import('./features/media-detail/media-detail.component').then(
+            (m) => m.MediaDetailComponent
           ),
+      },
+      {
+        path: 'media/resolve',
+        loadComponent: () =>
+          import('./features/media-detail/media-detail.component').then(
+            (m) => m.MediaDetailComponent
+          ),
+      },
+      {
+        path: 'media/:id',
+        loadComponent: () =>
+          import('./features/media-detail/media-detail.component').then(
+            (m) => m.MediaDetailComponent
+          ),
+      },
+      {
+        path: 'stats',
+        loadComponent: () =>
+          import('./features/stats/stats.component').then((m) => m.StatsComponent),
       },
       {
         path: 'profile/:username',

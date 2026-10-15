@@ -225,6 +225,9 @@ export class WriteReviewModalComponent {
   open = input(false);
 
   preselectedTmdbId = input<number>();
+  preselectedExternalKey = input<string>();
+  preselectedMediaType = input<string>();
+  preselectedTitle = input<string>();
 
   closed = output<void>();
 
@@ -266,16 +269,25 @@ export class WriteReviewModalComponent {
 
     effect(() => {
 
-      const tmdbId = this.preselectedTmdbId();
-
-      if (tmdbId && this.open()) {
-
-        this.movieService.getMovieByTmdbId(tmdbId).subscribe((movie) => {
-
-          this.selectedMovie.set(movie);
-
+      if (!this.open()) {
+        return;
+      }
+      const title = this.preselectedTitle();
+      const externalKey = this.preselectedExternalKey();
+      if (title && (externalKey || this.preselectedTmdbId())) {
+        this.selectedMovie.set({
+          title,
+          tmdbId: this.preselectedTmdbId(),
+          externalKey,
+          mediaType: (this.preselectedMediaType() as Movie['mediaType']) ?? 'FILM',
         });
-
+        return;
+      }
+      const tmdbId = this.preselectedTmdbId();
+      if (tmdbId) {
+        this.movieService.getMovieByTmdbId(tmdbId).subscribe((movie) => {
+          this.selectedMovie.set(movie);
+        });
       }
 
     });
@@ -320,10 +332,8 @@ export class WriteReviewModalComponent {
 
     const movie = this.selectedMovie();
 
-    if (!movie?.tmdbId || !this.rating()) {
-
+    if ((!movie?.tmdbId && !movie?.externalKey) || !this.rating()) {
       return;
-
     }
 
     this.submitting.set(true);
@@ -333,6 +343,10 @@ export class WriteReviewModalComponent {
       .create({
 
         tmdbId: movie.tmdbId,
+
+        externalKey: movie.externalKey,
+
+        mediaType: movie.mediaType,
 
         rating: this.rating(),
 

@@ -9,11 +9,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableScheduling
-public class CritiComradeApplication {
+public class CriticomradeApplication {
 
 	public static void main(String[] args) {
 		DotEnvLoader.load();
-		SpringApplication.run(CritiComradeApplication.class, args);
+		SpringApplication.run(CriticomradeApplication.class, args);
 	}
 
 }

@@ -24,10 +24,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserProfileDto getProfile(String username) {
-        User viewer = securityUtils.getCurrentUser();
+        User viewer = securityUtils.getCurrentUserOptional().orElse(null);
         User user = findByUsername(username);
-        if (!user.isProfilePublic() && !user.getId().equals(viewer.getId())
-                && (user.getFollowers() == null || user.getFollowers().stream().noneMatch(f -> f.getId().equals(viewer.getId())))) {
+        boolean self = viewer != null && user.getId().equals(viewer.getId());
+        boolean followed = viewer != null && user.getFollowers() != null
+                && user.getFollowers().stream().anyMatch(f -> f.getId().equals(viewer.getId()));
+        if (!user.isProfilePublic() && !self && !followed) {
             throw new ForbiddenException("Profile is private");
         }
         return DtoMapper.toUserProfile(user, viewer);

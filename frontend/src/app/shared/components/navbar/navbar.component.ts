@@ -81,7 +81,7 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
               class="input-field !py-2.5 pl-9"
 
-              [placeholder]="'common.searchMovies' | translate"
+              [placeholder]="'common.searchMedia' | translate"
 
               [(ngModel)]="searchQuery"
 
@@ -247,6 +247,18 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
       </div>
 
+      <nav class="chip-row mx-auto max-w-7xl px-4 pb-2 lg:px-6" [attr.aria-label]="'nav.mediaTypes' | translate">
+        @for (tab of mediaTabs; track tab.type) {
+          <a
+            [routerLink]="['/explore']"
+            [queryParams]="{ type: tab.type }"
+            class="inline-flex min-h-11 shrink-0 items-center rounded-full px-3 text-sm text-muted hover:text-text"
+          >
+            {{ tab.labelKey | translate }}
+          </a>
+        }
+      </nav>
+
     </header>
 
   `
@@ -261,6 +273,13 @@ export class NavbarComponent {
   private readonly notificationService = inject(NotificationService);
 
 
+
+  readonly mediaTabs = [
+    { type: 'FILM', labelKey: 'nav.films' },
+    { type: 'SHOW', labelKey: 'nav.shows' },
+    { type: 'BOOK', labelKey: 'nav.books' },
+    { type: 'ALBUM', labelKey: 'nav.music' },
+  ];
 
   searchQuery = '';
 

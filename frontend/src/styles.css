@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #0B0B0F;
-  --color-surface: #12131A;
-  --color-elevated: #1A1D28;
-  --color-border: #232533;
-  --color-input-bg: #0F1117;
-  --color-accent: #8F1818;
-  --color-accent-hover: #A81F1F;
-  --color-accent-light: #C42828;
-  --color-secondary: #FFB347;
-  --color-secondary-deep: #E89B35;
-  --color-text: #F5F7FA;
+  --color-bg: #1A1A1E;
+  --color-surface: #222228;
+  --color-elevated: #2A2A32;
+  --color-border: #333340;
+  --color-input-bg: #1E1E24;
+  --color-accent: #C42332;
+  --color-accent-hover: #D42B3A;
+  --color-accent-light: #E03545;
+  --color-secondary: #E8A838;
+  --color-secondary-deep: #D49530;
+  --color-text: #F5F5F0;
   --color-muted: #9AA4B2;
   --color-default: #2e2e31;
-  --color-default-red: #8F1818;
+  --color-default-red: #C42332;
 
   /* Logo animation — tied to brand tokens */
   --logo-critic: var(--color-accent);
@@ -26,10 +26,10 @@
 }
 
 [data-theme="light"] {
-  --color-bg: #F4F5F8;
+  --color-bg: #F4F5F0;
   --color-surface: #FFFFFF;
-  --color-elevated: #EEF0F5;
-  --color-border: #D8DCE6;
+  --color-elevated: #EEEEE8;
+  --color-border: #D8DCE0;
   --color-input-bg: #FFFFFF;
   --color-text: #12131A;
   --color-muted: #5C6573;
@@ -37,8 +37,8 @@
 
 [data-theme="light"] body {
   background:
-    radial-gradient(ellipse 80% 55% at 50% -15%, rgba(143, 24, 24, 0.07), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 179, 71, 0.05), transparent 50%),
+    radial-gradient(ellipse 80% 55% at 50% -15%, rgba(196, 35, 50, 0.07), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(232, 168, 56, 0.05), transparent 50%),
     var(--color-bg);
 }
 
@@ -52,7 +52,7 @@
 }
 
 [data-theme="light"] .prompt-card {
-  background: linear-gradient(135deg, rgba(143, 24, 24, 0.06) 0%, rgba(255, 255, 255, 0.98) 50%);
+  background: linear-gradient(135deg, rgba(196, 35, 50, 0.06) 0%, rgba(255, 255, 255, 0.98) 50%);
 }
 
 [data-theme="light"] .empty-state-box {
@@ -68,8 +68,8 @@
   body {
     @apply text-text font-sans antialiased min-h-screen;
     background:
-      radial-gradient(ellipse 80% 55% at 50% -15%, rgba(143, 24, 24, 0.08), transparent 55%),
-      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 179, 71, 0.04), transparent 50%),
+      radial-gradient(ellipse 80% 55% at 50% -15%, rgba(196, 35, 50, 0.08), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(232, 168, 56, 0.04), transparent 50%),
       var(--color-bg);
   }
 
@@ -116,7 +116,7 @@
 
   .input-field:focus {
     background-color: var(--color-elevated);
-    box-shadow: 0 0 0 4px rgba(143, 24, 24, 0.18);
+    box-shadow: 0 0 0 4px rgba(196, 35, 50, 0.18);
   }
 
   .card {
@@ -130,7 +130,7 @@
   }
 
   .card-interactive:hover {
-    border-color: rgba(143, 24, 24, 0.35);
+    border-color: rgba(196, 35, 50, 0.35);
     transform: translateY(-1px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   }
@@ -170,7 +170,7 @@
 
   .prompt-card {
     @apply card-interactive flex w-full items-center gap-4 text-left;
-    background: linear-gradient(135deg, rgba(143, 24, 24, 0.1) 0%, rgba(18, 19, 26, 0.95) 45%);
+    background: linear-gradient(135deg, rgba(196, 35, 50, 0.1) 0%, rgba(26, 26, 30, 0.95) 45%);
   }
 
   .empty-state-box {
@@ -181,7 +181,7 @@
 
   .empty-state-icon {
     @apply mb-5 flex h-16 w-16 items-center justify-center rounded-2xl text-accent;
-    background: rgba(143, 24, 24, 0.14);
+    background: rgba(196, 35, 50, 0.14);
   }
 
   .skeleton {
@@ -294,5 +294,56 @@
 
   .auth-footer {
     @apply mt-6 text-center text-sm text-muted;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .chip-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .motion-rise {
+    animation: motion-rise 280ms ease both;
+  }
+
+  .motion-pop {
+    animation: motion-pop 180ms ease both;
+  }
+}
+
+@keyframes motion-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes motion-pop {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-rise,
+  .motion-pop,
+  .card-interactive,
+  .prompt-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .toast-host,
+  app-toast {
+    bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
   }
 }

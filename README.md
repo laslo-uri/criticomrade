@@ -1,13 +1,15 @@
 # CritiComrade
 
-Social movie reviews and lists — diploma thesis prototype (FTN).  
+Social diary for films, shows, books, and albums — diploma thesis prototype (FTN).  
 **Repo:** [github.com/laslo-uri/CritiComrade](https://github.com/laslo-uri/CritiComrade)
 
 | | |
 |---|---|
 | **Backend** | Spring Boot 3.1, Java 17, JWT, PostgreSQL, Flyway |
 | **Frontend** | Angular 21, Tailwind, standalone components |
-| **Integrations** | TMDB & OMDb (proxied; API keys via `.env`) |
+| **Integrations** | TMDB (films, shows, episodes), OMDb (ratings), Open Library (books), MusicBrainz and optional Spotify (albums) |
+
+Public pages (a title, a profile, reviews) can be opened without an account. Logging in is still required to rate, follow, or keep a diary. A title is stored the first time someone opens it, so explore cards and the detail page use the same record. Taste bars and a compatibility score come from overlapping ratings.
 
 ## Prerequisites
 
@@ -48,12 +50,20 @@ App: http://localhost:4200
 
 ```powershell
 cd backend; .\mvnw test
-cd frontend; npm install; npm audit; npm run build
+cd frontend; npm install; npm audit; npm run ci:local
 ```
 
 `npm audit` should report **0 vulnerabilities** (Dependabot scans `frontend/package-lock.json` on GitHub).
 
-Smoke-test: register/login → popular movies → review → feed/diary → follow → watchlist → notifications.
+Smoke-test: register/login → explore films, shows, books, and albums → open a title → review → feed/diary → follow → watchlist → notifications → stats.
+
+## Deploy
+
+Vercel serves the Angular app and a same-origin demo API. The project root is this repo, not `frontend`. Leave the framework preset unset (not Angular or Vite). `vercel.json` builds the production frontend and publishes `frontend/dist/frontend/browser`.
+
+The demo API keeps its data in memory. Reviews, follows, and lists last only as long as that warm instance, then the seed catalog comes back. Sign in with `demo` / `criticomrade`. Optional environment variables: `TMDB_API_KEY` for live films and shows, `DEMO_TOKEN_SECRET` so login tokens stay valid across instances. Books use Open Library and albums use MusicBrainz without a key. Spotify album art is used only when `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` are set.
+
+Local Spring Boot and `npm start` are unchanged.
 
 ## API
 
@@ -64,6 +74,8 @@ REST under `/api`. OpenAPI/Swagger documents routes. Main areas: auth, users, fo
 ```
 criticomrade/
 ├── .env.example
+├── api/         Vercel demo API
 ├── backend/     Spring Boot API
-└── frontend/    Angular SPA
+├── frontend/    Angular SPA
+└── vercel.json
 ```

@@ -16,6 +16,8 @@ import {
 
   LucideHouse,
 
+  LucideChartColumn,
+
   LucideList,
 
   LucideSettings,
@@ -32,7 +34,7 @@ interface NavItem {
 
   route: string;
 
-  icon: 'home' | 'compass' | 'book' | 'bookmark' | 'list' | 'gift' | 'bell' | 'settings';
+  icon: 'home' | 'compass' | 'book' | 'bookmark' | 'list' | 'gift' | 'bell' | 'settings' | 'chart';
 
   exact?: boolean;
 
@@ -54,6 +56,7 @@ interface NavItem {
         LucideGift,
         LucideBell,
         LucideSettings,
+        LucideChartColumn,
     ],
     template: `
 
@@ -94,6 +97,7 @@ interface NavItem {
               @case ('list') { <svg lucideList [size]="18" /> }
 
               @case ('gift') { <svg lucideGift [size]="18" /> }
+              @case ('chart') { <svg lucideChartColumn [size]="18" /> }
 
             }
 
@@ -159,6 +163,7 @@ export class SidebarComponent {
     { labelKey: 'nav.lists', route: '/lists', icon: 'list' },
 
     { labelKey: 'nav.recommendations', route: '/recommendations', icon: 'gift' },
+    { labelKey: 'nav.stats', route: '/stats', icon: 'chart' },
 
   ];
 

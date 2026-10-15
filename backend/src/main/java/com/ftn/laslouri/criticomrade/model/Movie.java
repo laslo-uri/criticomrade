@@ -17,6 +17,26 @@ public class Movie {
     @Column(unique = true)
     private Long tmdbId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MediaType mediaType = MediaType.FILM;
+
+    @Column(length = 160)
+    private String externalKey;
+
+    private String creator;
+    private String backdropApiLink;
+    private String network;
+    private Integer seasonCount;
+    private Integer seasonNumber;
+    private Integer episodeNumber;
+    private Integer pageCount;
+    private Integer trackCount;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Movie parent;
+
     private String title;
     private String description;
     private String genre;

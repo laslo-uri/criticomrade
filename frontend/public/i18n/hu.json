@@ -10,19 +10,20 @@
     "searchMovies": "Filmek keresése...",
     "passwordShow": "Jelszó megjelenítése",
     "passwordHide": "Jelszó elrejtése",
-    "noPoster": "Nincs poszter"
+    "noPoster": "Nincs poszter",
+    "searchMedia": "Search films, shows, books, albums..."
   },
   "brand": {
     "homeAria": "CritiComrade kezdőlap",
     "aboutAria": "A CritiComrade névjegye",
-    "tagline": "Filmértékelések, együtt"
+    "tagline": "Értékeld a filmeket, sorozatokat, könyveket és albumokat -- együtt"
   },
   "about": {
     "title": "A CritiComrade-ról",
-    "description": "Közösségi filmnapló értékelések, megtekintendő listák és ajánlások megosztásához barátokkal.",
+    "description": "Közösségi napló filmek, sorozatok, könyvek és albumok értékeléseinek megosztásához barátokkal.",
     "version": "Verzió",
     "lastUpdated": "Utolsó frissítés",
-    "footer": "Filmrajongóknak, filmrajongóktól."
+    "footer": "Médiakedvelőknek, médiakedvelőktől."
   },
   "nav": {
     "home": "Kezdőlap",
@@ -40,7 +41,13 @@
     "logIn": "Bejelentkezés",
     "signUp": "Regisztráció",
     "logOut": "Kijelentkezés",
-    "notificationsAria": "Értesítések"
+    "notificationsAria": "Értesítések",
+    "stats": "Statisztika",
+    "films": "Filmek",
+    "shows": "Sorozatok",
+    "books": "Könyvek",
+    "music": "Zene",
+    "mediaTypes": "Médiatípusok"
   },
   "auth": {
     "login": {
@@ -112,7 +119,11 @@
     "emptyMessage": "Még nincsenek értékelések",
     "emptyHint": "Kövess barátokat vagy írd meg az első értékelésedet.",
     "writeReview": "Értékelés írása",
-    "exploreMovies": "Filmek felfedezése"
+    "exploreMovies": "Filmek felfedezése",
+    "becauseYouLiked": "Mert ezt szeretted",
+    "popularShows": "Népszerű sorozatok",
+    "popularBooks": "Népszerű könyvek",
+    "popularAlbums": "Népszerű albumok"
   },
   "explore": {
     "title": "Felfedezés",
@@ -121,7 +132,23 @@
     "popularMovies": "Népszerű filmek",
     "titleCount": "{{count}} cím",
     "emptyMessage": "Nem található film",
-    "emptyHint": "Próbálj más keresési kifejezést."
+    "emptyHint": "Próbálj más keresési kifejezést.",
+    "films": "Filmek",
+    "shows": "Sorozatok",
+    "books": "Könyvek",
+    "albums": "Albumok",
+    "popularNow": "Popular now",
+    "allGenres": "Mind",
+    "genre": {
+      "action": "Akció",
+      "comedy": "Vígjáték",
+      "drama": "Dráma",
+      "scifi": "Sci-fi",
+      "horror": "Horror",
+      "romance": "Romantikus",
+      "fantasy": "Fantasy",
+      "thriller": "Thriller"
+    }
   },
   "movie": {
     "writeReview": "Értékelés írása",
@@ -133,7 +160,9 @@
     "reviewsEmptyMessage": "Még nincsenek értékelések",
     "reviewsEmptyHint": "Légy te az első, aki értékeli ezt a filmet.",
     "addedToWatchlist": "Hozzáadva a megtekintendőkhöz",
-    "couldNotAddToWatchlist": "Nem sikerült hozzáadni"
+    "couldNotAddToWatchlist": "Nem sikerült hozzáadni",
+    "cast": "Szereplők",
+    "tracks": "Számok"
   },
   "reviewModal": {
     "title": "Értékelés írása",
@@ -164,7 +193,15 @@
     "emptyFollowing": "Még senkit nem követsz",
     "unfollowed": "Követés megszüntetve",
     "followRequestSent": "Követési kérelem elküldve",
-    "actionFailed": "A művelet sikertelen"
+    "actionFailed": "A művelet sikertelen",
+    "tabWatched": "Watched",
+    "tasteTitle": "Taste profile",
+    "tasteSummary": "{{count}} logged · average {{average}}",
+    "tasteEmpty": "Rate a few titles and your taste shows up here.",
+    "compatibility": "taste match",
+    "recent": "Recently logged",
+    "tabWatchlist": "Figyelőlista",
+    "emptyWatchlist": "A figyelőlistád üres"
   },
   "settings": {
     "title": "Beállítások",
@@ -196,13 +233,13 @@
   },
   "diary": {
     "title": "Napló",
-    "subtitle": "Filmnézési idővonalad",
+    "subtitle": "A nézési és olvasási idővonalad",
     "emptyMessage": "A napló üres",
     "emptyHint": "Az általad írt értékelések időrendben jelennek meg itt."
   },
   "watchlist": {
     "title": "Megtekintendők",
-    "subtitle": "Filmek, amiket tervezel megnézni",
+    "subtitle": "Címek, amiket élvezni szeretnél",
     "emptyMessage": "A megtekintendők listája üres",
     "emptyHint": "Adj hozzá filmeket a részletező oldalakról.",
     "removed": "Eltávolítva a megtekintendőkből",
@@ -255,5 +292,19 @@
     "rejected": "Elutasítva",
     "markedComplete": "Befejezettnek jelölve",
     "failed": "Sikertelen"
+  },
+  "stats": {
+    "title": "Statisztika",
+    "subtitle": "Az egész napló, és a tiéd",
+    "people": "Emberek",
+    "titles": "Címek",
+    "reviews": "Értékelések",
+    "comments": "Hozzászólások",
+    "reactions": "Reakciók",
+    "challenges": "Kihívások",
+    "yearInReview": "{{year}} áttekintés",
+    "yearCount": "{{count}} bejegyzés · átlag {{average}}",
+    "distribution": "Értékelések eloszlása",
+    "mediaMix": "Típus szerint"
   }
 }

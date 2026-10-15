@@ -8,6 +8,7 @@
     "create": "Create",
     "send": "Send",
     "searchMovies": "Search movies...",
+    "searchMedia": "Search films, shows, books, albums...",
     "passwordShow": "Show password",
     "passwordHide": "Hide password",
     "noPoster": "No poster"
@@ -15,14 +16,14 @@
   "brand": {
     "homeAria": "CritiComrade home",
     "aboutAria": "About CritiComrade",
-    "tagline": "Film reviews, together"
+    "tagline": "Rate films, shows, books and albums -- together"
   },
   "about": {
     "title": "About CritiComrade",
-    "description": "A social film diary for sharing reviews, watchlists, and recommendations with friends.",
+    "description": "A social diary for sharing reviews of films, shows, books, and albums with friends.",
     "version": "Version",
     "lastUpdated": "Last updated",
-    "footer": "Built for film lovers, by film lovers."
+    "footer": "Built for media lovers, by media lovers."
   },
   "nav": {
     "home": "Home",
@@ -33,6 +34,12 @@
     "recommendations": "Recommendations",
     "notifications": "Notifications",
     "settings": "Settings",
+    "stats": "Stats",
+    "films": "Films",
+    "shows": "Shows",
+    "books": "Books",
+    "music": "Music",
+    "mediaTypes": "Media types",
     "alerts": "Alerts",
     "profile": "Profile",
     "menu": "Menu",
@@ -112,12 +119,32 @@
     "emptyMessage": "No reviews yet",
     "emptyHint": "Follow friends or write your first review to populate your feed.",
     "writeReview": "Write a review",
-    "exploreMovies": "Explore movies"
+    "exploreMovies": "Explore movies",
+    "becauseYouLiked": "Because you liked",
+    "popularShows": "Popular shows",
+    "popularBooks": "Popular books",
+    "popularAlbums": "Popular albums"
   },
   "explore": {
     "title": "Explore",
-    "subtitle": "Discover films and find your next watch",
+    "subtitle": "Films, shows, books, and albums",
+    "films": "Films",
+    "shows": "Shows",
+    "books": "Books",
+    "albums": "Albums",
     "searchResults": "Search results",
+    "popularNow": "Popular now",
+    "allGenres": "All",
+    "genre": {
+      "action": "Action",
+      "comedy": "Comedy",
+      "drama": "Drama",
+      "scifi": "Sci-Fi",
+      "horror": "Horror",
+      "romance": "Romance",
+      "fantasy": "Fantasy",
+      "thriller": "Thriller"
+    },
     "popularMovies": "Popular movies",
     "titleCount": "{{count}} titles",
     "emptyMessage": "No movies found",
@@ -133,7 +160,9 @@
     "reviewsEmptyMessage": "No reviews yet",
     "reviewsEmptyHint": "Be the first to review this film.",
     "addedToWatchlist": "Added to watchlist",
-    "couldNotAddToWatchlist": "Could not add to watchlist"
+    "couldNotAddToWatchlist": "Could not add to watchlist",
+    "cast": "Cast",
+    "tracks": "Tracks"
   },
   "reviewModal": {
     "title": "Write a review",
@@ -157,9 +186,17 @@
     "follow": "Follow",
     "unfollow": "Unfollow",
     "tabReviews": "Reviews",
+    "tabWatched": "Watched",
+    "tabWatchlist": "Watchlist",
+    "tasteTitle": "Taste profile",
+    "tasteSummary": "{{count}} logged · average {{average}}",
+    "tasteEmpty": "Rate a few titles and your taste shows up here.",
+    "compatibility": "taste match",
+    "recent": "Recently logged",
     "tabFollowers": "Followers",
     "tabFollowing": "Following",
     "emptyReviews": "No reviews yet",
+    "emptyWatchlist": "Your watchlist is empty",
     "emptyFollowers": "No followers yet",
     "emptyFollowing": "Not following anyone yet",
     "unfollowed": "Unfollowed",
@@ -185,6 +222,20 @@
     "updated": "Profile updated",
     "saveFailed": "Could not save"
   },
+  "stats": {
+    "title": "Stats",
+    "subtitle": "The whole diary, and yours",
+    "people": "People",
+    "titles": "Titles",
+    "reviews": "Reviews",
+    "comments": "Comments",
+    "reactions": "Reactions",
+    "challenges": "Challenges",
+    "yearInReview": "{{year}} in review",
+    "yearCount": "{{count}} logged · average {{average}}",
+    "distribution": "Rating distribution",
+    "mediaMix": "By type"
+  },
   "notifications": {
     "title": "Notifications",
     "subtitle": "Stay up to date with activity",
@@ -196,13 +247,13 @@
   },
   "diary": {
     "title": "Diary",
-    "subtitle": "Your film watching timeline",
+    "subtitle": "Your watching and reading timeline",
     "emptyMessage": "Your diary is empty",
     "emptyHint": "Reviews you write will appear here chronologically."
   },
   "watchlist": {
     "title": "Watchlist",
-    "subtitle": "Films you plan to watch",
+    "subtitle": "Titles you plan to enjoy",
     "emptyMessage": "Watchlist is empty",
     "emptyHint": "Add movies from their detail pages.",
     "removed": "Removed from watchlist",

@@ -30,6 +30,12 @@ public class MovieService {
     @Value("${criticomrade.tmdb.base-url}")
     private String tmdbBaseUrl;
 
+    @Value("${criticomrade.omdb.api-key:}")
+    private String omdbApiKey;
+
+    @Value("${criticomrade.omdb.base-url:https://www.omdbapi.com}")
+    private String omdbBaseUrl;
+
     @Transactional(readOnly = true)
     public MovieDto getById(Long id) {
         Movie movie = movieRepository.findById(id)
@@ -113,7 +119,9 @@ public class MovieService {
         }
 
         Movie movie = new Movie();
+        movie.setMediaType(com.ftn.laslouri.criticomrade.model.MediaType.FILM);
         movie.setTmdbId(tmdbId);
+        movie.setExternalKey("tmdb:" + tmdbId);
         movie.setTitle((String) data.get("title"));
         movie.setDescription((String) data.get("overview"));
         if (data.get("release_date") != null) {
@@ -122,6 +130,14 @@ public class MovieService {
         }
         if (data.get("poster_path") != null) {
             movie.setPosterApiLink("https://image.tmdb.org/t/p/w500" + data.get("poster_path"));
+        }
+        if (data.get("backdrop_path") != null) {
+            movie.setBackdropApiLink("https://image.tmdb.org/t/p/w780" + data.get("backdrop_path"));
+        }
+        if (data.get("imdb_id") instanceof String imdbId && !imdbId.isBlank()) {
+            movie.setImdbLink("https://www.imdb.com/title/" + imdbId + "/");
+            movie.setLetterboxdLink("https://letterboxd.com/imdb/" + imdbId + "/");
+            enrichFromOmdb(movie, imdbId);
         }
         if (data.get("genres") instanceof List<?> genres) {
             movie.setGenre(genres.stream()
@@ -147,11 +163,43 @@ public class MovieService {
         Double rating = item.get("vote_average") instanceof Number n ? n.doubleValue() : null;
         return MovieDto.builder()
                 .tmdbId(tmdbId)
+                .mediaType(com.ftn.laslouri.criticomrade.model.MediaType.FILM.name())
+                .externalKey(tmdbId == null ? null : "tmdb:" + tmdbId)
                 .title((String) item.get("title"))
                 .description((String) item.get("overview"))
                 .year(year)
                 .posterApiLink(posterPath)
                 .imdbRating(rating)
                 .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void enrichFromOmdb(Movie movie, String imdbId) {
+        if (omdbApiKey == null || omdbApiKey.isBlank()) {
+            return;
+        }
+        try {
+            String url = UriComponentsBuilder.fromHttpUrl(omdbBaseUrl)
+                    .queryParam("apikey", omdbApiKey)
+                    .queryParam("i", imdbId)
+                    .toUriString();
+            Map<String, Object> data = restTemplate.getForObject(url, Map.class);
+            if (data == null || !"True".equals(String.valueOf(data.get("Response")))) {
+                return;
+            }
+            if (data.get("Ratings") instanceof List<?> ratings) {
+                for (Object entry : ratings) {
+                    if (entry instanceof Map<?, ?> rating
+                            && "Rotten Tomatoes".equals(rating.get("Source"))
+                            && rating.get("Value") instanceof String value
+                            && value.endsWith("%")) {
+                        movie.setRottenTomatoesRating(Double.parseDouble(value.replace("%", "")));
+                        movie.setRottenTomatoesLink("https://www.rottentomatoes.com/search?search=" + movie.getTitle());
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+            // External ratings are optional. A missing OMDb response must not block saving the film.
+        }
     }
 }

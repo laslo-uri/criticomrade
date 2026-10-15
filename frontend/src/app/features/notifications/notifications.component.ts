@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { LucideBell } from '@lucide/angular';
+import { FollowService } from '../../core/services/follow.service';
+import { FollowRequest } from '../../core/models/follow-request.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { ToastService } from '../../core/services/toast.service';
 import { TranslationService } from '../../core/services/translation.service';
@@ -24,6 +26,21 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
           </button>
         }
       </div>
+
+      @if (requests().length) {
+        <section class="space-y-2">
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Follow requests</h2>
+          @for (request of requests(); track request.id) {
+            <div class="card flex flex-wrap items-center justify-between gap-3">
+              <p class="text-sm">{{ request.sender?.username }} wants to follow you</p>
+              <div class="flex gap-2">
+                <button type="button" class="btn-primary min-h-11" (click)="accept(request)">Accept</button>
+                <button type="button" class="btn-secondary min-h-11" (click)="reject(request)">Decline</button>
+              </div>
+            </div>
+          }
+        </section>
+      }
 
       @if (notifications().length === 0 && !loading()) {
         <app-empty-state
@@ -67,14 +84,32 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 })
 export class NotificationsComponent {
   private readonly notificationService = inject(NotificationService);
+  private readonly followService = inject(FollowService);
   private readonly toast = inject(ToastService);
   private readonly translationService = inject(TranslationService);
 
   notifications = signal<Notification[]>([]);
+  requests = signal<FollowRequest[]>([]);
   loading = signal(true);
 
   ngOnInit(): void {
     this.load();
+    this.followService.getPendingRequests().subscribe({
+      next: (requests) => this.requests.set(requests),
+      error: () => this.requests.set([]),
+    });
+  }
+
+  accept(request: FollowRequest): void {
+    this.followService.acceptRequest(request.id).subscribe(() => {
+      this.requests.update((list) => list.filter((item) => item.id !== request.id));
+    });
+  }
+
+  reject(request: FollowRequest): void {
+    this.followService.rejectRequest(request.id).subscribe(() => {
+      this.requests.update((list) => list.filter((item) => item.id !== request.id));
+    });
   }
 
   markRead(notification: Notification): void {

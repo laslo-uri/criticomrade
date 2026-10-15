@@ -20,7 +20,9 @@ export interface Review {
 }
 
 export interface ReviewCreateRequest {
-  tmdbId: number;
+  tmdbId?: number;
+  externalKey?: string;
+  mediaType?: string;
   rating?: number;
   text?: string;
   dateWatched?: string;

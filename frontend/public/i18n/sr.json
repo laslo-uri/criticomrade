@@ -10,19 +10,20 @@
     "searchMovies": "Pretraži filmove...",
     "passwordShow": "Prikaži lozinku",
     "passwordHide": "Sakrij lozinku",
-    "noPoster": "Nema postera"
+    "noPoster": "Nema postera",
+    "searchMedia": "Pretraži filmove, serije, knjige, albume..."
   },
   "brand": {
     "homeAria": "CritiComrade početna",
     "aboutAria": "O CritiComrade",
-    "tagline": "Recenzije filmova, zajedno"
+    "tagline": "Oceni filmove, serije, knjige i albume -- zajedno"
   },
   "about": {
     "title": "O CritiComrade",
-    "description": "Društveni filmski dnevnik za deljenje recenzija, lista gledanja i preporuka sa prijateljima.",
+    "description": "Društveni dnevnik za deljenje recenzija filmova, serija, knjiga i albuma sa prijateljima.",
     "version": "Verzija",
     "lastUpdated": "Poslednje ažuriranje",
-    "footer": "Napravljeno za ljubitelje filma, od ljubitelja filma."
+    "footer": "Napravljeno za ljubitelje medija, od ljubitelja medija."
   },
   "nav": {
     "home": "Početna",
@@ -40,7 +41,13 @@
     "logIn": "Prijava",
     "signUp": "Registracija",
     "logOut": "Odjava",
-    "notificationsAria": "Obaveštenja"
+    "notificationsAria": "Obaveštenja",
+    "stats": "Statistika",
+    "films": "Filmovi",
+    "shows": "Serije",
+    "books": "Knjige",
+    "music": "Muzika",
+    "mediaTypes": "Vrste"
   },
   "auth": {
     "login": {
@@ -112,7 +119,11 @@
     "emptyMessage": "Još nema recenzija",
     "emptyHint": "Pratite prijatelje ili napišite prvu recenziju da popunite feed.",
     "writeReview": "Napiši recenziju",
-    "exploreMovies": "Istraži filmove"
+    "exploreMovies": "Istraži filmove",
+    "becauseYouLiked": "Zato što ti se svidelo",
+    "popularShows": "Popularne serije",
+    "popularBooks": "Popularne knjige",
+    "popularAlbums": "Popularni albumi"
   },
   "explore": {
     "title": "Istraži",
@@ -121,7 +132,23 @@
     "popularMovies": "Popularni filmovi",
     "titleCount": "{{count}} naslova",
     "emptyMessage": "Nema pronađenih filmova",
-    "emptyHint": "Pokušajte sa drugim pojmom pretrage."
+    "emptyHint": "Pokušajte sa drugim pojmom pretrage.",
+    "films": "Filmovi",
+    "shows": "Serije",
+    "books": "Knjige",
+    "albums": "Albumi",
+    "popularNow": "Popular now",
+    "allGenres": "Sve",
+    "genre": {
+      "action": "Akcija",
+      "comedy": "Komedija",
+      "drama": "Drama",
+      "scifi": "Naučna fantastika",
+      "horror": "Horor",
+      "romance": "Romansa",
+      "fantasy": "Fantazija",
+      "thriller": "Triler"
+    }
   },
   "movie": {
     "writeReview": "Napiši recenziju",
@@ -133,7 +160,9 @@
     "reviewsEmptyMessage": "Još nema recenzija",
     "reviewsEmptyHint": "Budite prvi koji će recenzirati ovaj film.",
     "addedToWatchlist": "Dodato na listu gledanja",
-    "couldNotAddToWatchlist": "Nije moguće dodati na listu gledanja"
+    "couldNotAddToWatchlist": "Nije moguće dodati na listu gledanja",
+    "cast": "Uloge",
+    "tracks": "Pesme"
   },
   "reviewModal": {
     "title": "Napiši recenziju",
@@ -164,7 +193,15 @@
     "emptyFollowing": "Još nikoga ne prati",
     "unfollowed": "Prestali ste da pratite",
     "followRequestSent": "Zahtev za praćenje poslat",
-    "actionFailed": "Akcija nije uspela"
+    "actionFailed": "Akcija nije uspela",
+    "tabWatched": "Watched",
+    "tasteTitle": "Ukus",
+    "tasteSummary": "{{count}} logged · average {{average}}",
+    "tasteEmpty": "Rate a few titles and your taste shows up here.",
+    "compatibility": "taste match",
+    "recent": "Recently logged",
+    "tabWatchlist": "Lista gledanja",
+    "emptyWatchlist": "Lista gledanja je prazna"
   },
   "settings": {
     "title": "Podešavanja",
@@ -196,13 +233,13 @@
   },
   "diary": {
     "title": "Dnevnik",
-    "subtitle": "Vaša hronologija gledanja filmova",
+    "subtitle": "Tvoja istorija gledanja i čitanja",
     "emptyMessage": "Dnevnik je prazan",
     "emptyHint": "Recenzije koje napišete pojaviće se ovde hronološki."
   },
   "watchlist": {
     "title": "Lista gledanja",
-    "subtitle": "Filmovi koje planirate da gledate",
+    "subtitle": "Naslovi koje želiš da pogledaš ili pročitaš",
     "emptyMessage": "Lista gledanja je prazna",
     "emptyHint": "Dodajte filmove sa stranica detalja.",
     "removed": "Uklonjeno sa liste gledanja",
@@ -255,5 +292,19 @@
     "rejected": "Odbijeno",
     "markedComplete": "Označeno završenim",
     "failed": "Neuspešno"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Ceo dnevnik, i tvoj",
+    "people": "Ljudi",
+    "titles": "Naslovi",
+    "reviews": "Recenzije",
+    "comments": "Komentari",
+    "reactions": "Reakcije",
+    "challenges": "Izazovi",
+    "yearInReview": "{{year}} u pregledu",
+    "yearCount": "{{count}} zabeleženo · prosek {{average}}",
+    "distribution": "Raspodela ocena",
+    "mediaMix": "Po vrsti"
   }
 }

@@ -73,6 +73,7 @@ export class WatchlistComponent {
   }
 
   remove(movie: Movie): void {
+    if (movie.id == null) return;
     this.listService.removeMovie(this.listId, movie.id).subscribe({
       next: () => {
         this.movies.update((m) => m.filter((x) => x.id !== movie.id));

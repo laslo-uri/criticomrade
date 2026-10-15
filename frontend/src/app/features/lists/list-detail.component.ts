@@ -252,7 +252,7 @@ export class ListDetailComponent {
 
     const list = this.list();
 
-    if (!list) return;
+    if (!list || movie.id == null) return;
 
     this.listService.removeMovie(list.id, movie.id).subscribe({
 

@@ -15,9 +15,14 @@ export interface ReviewDto {
   movie?: {
     id: number;
     tmdbId?: number;
+    mediaType?: string;
+    externalKey?: string;
+    creator?: string;
     title: string;
     year?: string;
+    genre?: string;
     posterApiLink?: string;
+    backdropApiLink?: string;
   };
   author?: User;
   dateWatched?: string;
@@ -52,9 +57,14 @@ export function mapReview(dto: ReviewDto): Review {
       ? {
           id: dto.movie.id,
           tmdbId: dto.movie.tmdbId,
+          mediaType: dto.movie.mediaType as 'FILM' | 'SHOW' | 'EPISODE' | 'BOOK' | 'ALBUM' | undefined,
+          externalKey: dto.movie.externalKey,
+          creator: dto.movie.creator,
           title: dto.movie.title,
           year: dto.movie.year,
+          genre: dto.movie.genre,
           posterApiLink: dto.movie.posterApiLink,
+          backdropApiLink: dto.movie.backdropApiLink,
         }
       : undefined,
     user: dto.author,

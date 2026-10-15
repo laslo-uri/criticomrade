@@ -6,6 +6,8 @@ import com.ftn.laslouri.criticomrade.dto.ReviewDto;
 import com.ftn.laslouri.criticomrade.exception.ForbiddenException;
 import com.ftn.laslouri.criticomrade.exception.ResourceNotFoundException;
 import com.ftn.laslouri.criticomrade.mapper.DtoMapper;
+import com.ftn.laslouri.criticomrade.exception.BadRequestException;
+import com.ftn.laslouri.criticomrade.model.MediaType;
 import com.ftn.laslouri.criticomrade.model.Movie;
 import com.ftn.laslouri.criticomrade.model.Review;
 import com.ftn.laslouri.criticomrade.model.User;
@@ -31,13 +33,14 @@ public class ReviewService {
     private final CommentRepository commentRepository;
     private final ReviewReactionRepository reviewReactionRepository;
     private final MovieService movieService;
+    private final MediaCatalogService mediaCatalogService;
     private final UserService userService;
     private final SecurityUtils securityUtils;
 
     @Transactional
     public ReviewDto createReview(ReviewCreateRequest request) {
         User user = securityUtils.getCurrentUser();
-        Movie movie = movieService.findOrFetchEntity(request.getTmdbId());
+        Movie movie = resolveMovie(request);
         LocalDateTime now = LocalDateTime.now();
 
         Review review = new Review();
@@ -104,8 +107,13 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public PageResponse<ReviewDto> getUserReviews(String username, int page, int size) {
-        User viewer = securityUtils.getCurrentUser();
+        User viewer = securityUtils.getCurrentUserOptional().orElse(null);
         User user = userService.findByUsername(username);
+        boolean followed = viewer != null && user.getFollowers() != null
+                && user.getFollowers().stream().anyMatch(f -> f.getId().equals(viewer.getId()));
+        if (!user.isProfilePublic() && (viewer == null || (!user.getId().equals(viewer.getId()) && !followed))) {
+            throw new ForbiddenException("Profile is private");
+        }
         Page<Review> reviews = reviewRepository.findByUserOrderByReviewTimeDesc(user, PageRequest.of(page, size));
         Page<ReviewDto> mapped = reviews.map(r -> toDto(r, viewer));
         return DtoMapper.toPageResponse(mapped);
@@ -113,11 +121,27 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public PageResponse<ReviewDto> getMovieReviews(Long movieId, int page, int size) {
-        User viewer = securityUtils.getCurrentUser();
+        User viewer = securityUtils.getCurrentUserOptional().orElse(null);
         movieService.findEntityById(movieId);
         Page<Review> reviews = reviewRepository.findByMovieIdOrderByReviewTimeDesc(movieId, PageRequest.of(page, size));
         Page<ReviewDto> mapped = reviews.map(r -> toDto(r, viewer));
         return DtoMapper.toPageResponse(mapped);
+    }
+
+    private Movie resolveMovie(ReviewCreateRequest request) {
+        if (request.getTmdbId() != null) {
+            return movieService.findOrFetchEntity(request.getTmdbId());
+        }
+        if (request.getExternalKey() == null || request.getExternalKey().isBlank()) {
+            throw new BadRequestException("A film, show, book, or album is required");
+        }
+        MediaType type = request.getMediaType() == null ? MediaType.FILM : MediaType.valueOf(request.getMediaType());
+        String key = request.getExternalKey();
+        int split = key.indexOf(':');
+        if (split >= 0) {
+            key = key.substring(split + 1);
+        }
+        return movieService.findEntityById(mediaCatalogService.resolve(type, key).getId());
     }
 
     public Review findReview(Long id) {

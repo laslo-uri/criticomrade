@@ -9,6 +9,16 @@ public class MovieDto {
 
     private Long id;
     private Long tmdbId;
+    private String mediaType;
+    private String externalKey;
+    private String creator;
+    private String backdropApiLink;
+    private String network;
+    private Integer seasonCount;
+    private Integer seasonNumber;
+    private Integer episodeNumber;
+    private Integer pageCount;
+    private Integer trackCount;
     private String title;
     private String description;
     private String genre;

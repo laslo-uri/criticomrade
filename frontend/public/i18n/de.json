@@ -10,19 +10,20 @@
     "searchMovies": "Filme suchen...",
     "passwordShow": "Passwort anzeigen",
     "passwordHide": "Passwort verbergen",
-    "noPoster": "Kein Poster"
+    "noPoster": "Kein Poster",
+    "searchMedia": "Search films, shows, books, albums..."
   },
   "brand": {
     "homeAria": "CritiComrade Startseite",
     "aboutAria": "Über CritiComrade",
-    "tagline": "Filmbewertungen, gemeinsam"
+    "tagline": "Bewerte Filme, Serien, Bücher und Alben -- gemeinsam"
   },
   "about": {
     "title": "Über CritiComrade",
-    "description": "Ein soziales Filmtagebuch zum Teilen von Bewertungen, Watchlists und Empfehlungen mit Freunden.",
+    "description": "Ein soziales Tagebuch zum Teilen von Bewertungen zu Filmen, Serien, Büchern und Alben mit Freunden.",
     "version": "Version",
     "lastUpdated": "Zuletzt aktualisiert",
-    "footer": "Für Filmfans, von Filmfans."
+    "footer": "Für Medienfans, von Medienfans."
   },
   "nav": {
     "home": "Start",
@@ -40,7 +41,13 @@
     "logIn": "Anmelden",
     "signUp": "Registrieren",
     "logOut": "Abmelden",
-    "notificationsAria": "Benachrichtigungen"
+    "notificationsAria": "Benachrichtigungen",
+    "stats": "Statistik",
+    "films": "Filme",
+    "shows": "Serien",
+    "books": "Bücher",
+    "music": "Musik",
+    "mediaTypes": "Medientypen"
   },
   "auth": {
     "login": {
@@ -112,7 +119,11 @@
     "emptyMessage": "Noch keine Bewertungen",
     "emptyHint": "Folge Freunden oder schreibe deine erste Bewertung.",
     "writeReview": "Bewertung schreiben",
-    "exploreMovies": "Filme entdecken"
+    "exploreMovies": "Filme entdecken",
+    "becauseYouLiked": "Weil dir das gefiel",
+    "popularShows": "Beliebte Serien",
+    "popularBooks": "Beliebte Bücher",
+    "popularAlbums": "Beliebte Alben"
   },
   "explore": {
     "title": "Entdecken",
@@ -121,7 +132,23 @@
     "popularMovies": "Beliebte Filme",
     "titleCount": "{{count}} Titel",
     "emptyMessage": "Keine Filme gefunden",
-    "emptyHint": "Versuche einen anderen Suchbegriff."
+    "emptyHint": "Versuche einen anderen Suchbegriff.",
+    "films": "Filme",
+    "shows": "Serien",
+    "books": "Bücher",
+    "albums": "Alben",
+    "popularNow": "Popular now",
+    "allGenres": "Alle",
+    "genre": {
+      "action": "Action",
+      "comedy": "Komödie",
+      "drama": "Drama",
+      "scifi": "Science-Fiction",
+      "horror": "Horror",
+      "romance": "Romantik",
+      "fantasy": "Fantasy",
+      "thriller": "Thriller"
+    }
   },
   "movie": {
     "writeReview": "Bewertung schreiben",
@@ -133,7 +160,9 @@
     "reviewsEmptyMessage": "Noch keine Bewertungen",
     "reviewsEmptyHint": "Sei der Erste, der diesen Film bewertet.",
     "addedToWatchlist": "Zur Watchlist hinzugefügt",
-    "couldNotAddToWatchlist": "Konnte nicht zur Watchlist hinzufügen"
+    "couldNotAddToWatchlist": "Konnte nicht zur Watchlist hinzufügen",
+    "cast": "Besetzung",
+    "tracks": "Titel"
   },
   "reviewModal": {
     "title": "Bewertung schreiben",
@@ -164,7 +193,15 @@
     "emptyFollowing": "Folgt noch niemandem",
     "unfollowed": "Entfolgt",
     "followRequestSent": "Follow-Anfrage gesendet",
-    "actionFailed": "Aktion fehlgeschlagen"
+    "actionFailed": "Aktion fehlgeschlagen",
+    "tabWatched": "Watched",
+    "tasteTitle": "Taste profile",
+    "tasteSummary": "{{count}} logged · average {{average}}",
+    "tasteEmpty": "Rate a few titles and your taste shows up here.",
+    "compatibility": "taste match",
+    "recent": "Recently logged",
+    "tabWatchlist": "Watchlist",
+    "emptyWatchlist": "Deine Watchlist ist leer"
   },
   "settings": {
     "title": "Einstellungen",
@@ -196,13 +233,13 @@
   },
   "diary": {
     "title": "Tagebuch",
-    "subtitle": "Deine Film-Chronologie",
+    "subtitle": "Deine Zeitlinie aus Gesehenem und Gelesenem",
     "emptyMessage": "Dein Tagebuch ist leer",
     "emptyHint": "Bewertungen, die du schreibst, erscheinen hier chronologisch."
   },
   "watchlist": {
     "title": "Watchlist",
-    "subtitle": "Filme, die du sehen möchtest",
+    "subtitle": "Titel, die du noch genießen willst",
     "emptyMessage": "Watchlist ist leer",
     "emptyHint": "Füge Filme von der Detailseite hinzu.",
     "removed": "Von der Watchlist entfernt",
@@ -255,5 +292,19 @@
     "rejected": "Abgelehnt",
     "markedComplete": "Als abgeschlossen markiert",
     "failed": "Fehlgeschlagen"
+  },
+  "stats": {
+    "title": "Statistik",
+    "subtitle": "Das ganze Tagebuch, und deins",
+    "people": "Personen",
+    "titles": "Titel",
+    "reviews": "Rezensionen",
+    "comments": "Kommentare",
+    "reactions": "Reaktionen",
+    "challenges": "Herausforderungen",
+    "yearInReview": "{{year}} im Rückblick",
+    "yearCount": "{{count}} eingetragen · Schnitt {{average}}",
+    "distribution": "Bewertungsverteilung",
+    "mediaMix": "Nach Art"
   }
 }

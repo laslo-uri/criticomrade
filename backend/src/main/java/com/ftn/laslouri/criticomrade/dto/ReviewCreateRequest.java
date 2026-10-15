@@ -2,7 +2,6 @@ package com.ftn.laslouri.criticomrade.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,8 +9,9 @@ import java.time.LocalDate;
 @Data
 public class ReviewCreateRequest {
 
-    @NotNull
     private Long tmdbId;
+    private String externalKey;
+    private String mediaType;
 
     @Min(1)
     @Max(10)
