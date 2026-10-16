@@ -50,15 +50,15 @@ import { errorMessage } from '../../core/utils/http-error';
             <app-user-row [user]="person" [detail]="person.bio ?? ''">
               @if (auth.isLoggedIn() && person.username !== auth.currentUser()?.username) {
                 @if (person.following) {
-                  <button type="button" class="btn-secondary btn-sm shrink-0" (click)="toggle(person)" [disabled]="busy() === person.id">
+                  <button type="button" class="btn-secondary btn-sm shrink-0" (click)="toggle(person)" [disabled]="busy() === person.id" [attr.aria-label]="'profile.following' | translate">
                     <svg lucideUserCheck [size]="15" /> <span class="hidden sm:inline">{{ 'profile.following' | translate }}</span>
                   </button>
                 } @else if (person.followRequested) {
-                  <button type="button" class="btn-secondary btn-sm shrink-0" (click)="toggle(person)" [disabled]="busy() === person.id">
+                  <button type="button" class="btn-secondary btn-sm shrink-0" (click)="toggle(person)" [disabled]="busy() === person.id" [attr.aria-label]="'profile.requested' | translate">
                     <svg lucideClock [size]="15" /> <span class="hidden sm:inline">{{ 'profile.requested' | translate }}</span>
                   </button>
                 } @else {
-                  <button type="button" class="btn-primary btn-sm shrink-0" (click)="toggle(person)" [disabled]="busy() === person.id">
+                  <button type="button" class="btn-primary btn-sm shrink-0" (click)="toggle(person)" [disabled]="busy() === person.id" [attr.aria-label]="'profile.follow' | translate">
                     <svg lucideUserPlus [size]="15" /> <span class="hidden sm:inline">{{ 'profile.follow' | translate }}</span>
                   </button>
                 }

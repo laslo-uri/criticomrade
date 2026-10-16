@@ -41,7 +41,7 @@ import { DEMO_PASSWORD, DEMO_USERNAME } from '../../core/demo/demo-seed';
     <app-demo-banner />
 
     <!-- Hero: the one loud moment. Always dark, like a poster on a wall. -->
-    <section class="relative isolate overflow-hidden bg-bg text-text" data-theme="dark">
+    <section class="relative isolate overflow-hidden bg-bg text-text" data-theme="dark" aria-labelledby="landing-title">
       <div class="rays pointer-events-none absolute -right-[40%] -top-[30%] -z-10 h-[160%] w-[120%] animate-rays-in sm:-right-[25%]" aria-hidden="true"></div>
 
       <header class="relative mx-auto flex h-16 max-w-page items-center gap-3 px-4 lg:px-6">
@@ -55,7 +55,7 @@ import { DEMO_PASSWORD, DEMO_USERNAME } from '../../core/demo/demo-seed';
 
       <div class="mx-auto grid max-w-page items-center gap-12 px-4 pb-20 pt-10 sm:pt-14 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:px-6 lg:pb-28">
         <div>
-          <h1 class="break-words font-display font-extrabold uppercase leading-[0.9] tracking-[0.004em] text-[clamp(3.4rem,10.5vw,7.4rem)]">
+          <h1 id="landing-title" class="break-words font-display font-extrabold uppercase leading-[0.9] tracking-[0.004em] text-[clamp(3.4rem,10.5vw,7.4rem)]">
             <span class="block animate-fade-up">{{ 'landing.line1' | translate }}</span>
             <span class="block animate-fade-up [animation-delay:90ms]">{{ 'landing.line2' | translate }}</span>
             <span class="block animate-fade-up [animation-delay:180ms]">{{ 'landing.line3' | translate }}</span>

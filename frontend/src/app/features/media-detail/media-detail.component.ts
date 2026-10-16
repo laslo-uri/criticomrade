@@ -110,8 +110,8 @@ type SortMode = 'recent' | 'liked';
                   </button>
                 }
                 @if (media.id) {
-                  <button type="button" class="btn-secondary" [class.text-accent-ink]="liked()" [attr.aria-pressed]="liked()" (click)="toggleLike()" [attr.aria-label]="'movie.like' | translate">
-                    <svg lucideHeart [size]="17" [class.fill-current]="liked()" /> <span class="tabular-nums">{{ likeCount() }}</span>
+                  <button type="button" class="btn-secondary" [class.text-accent-ink]="liked()" [attr.aria-pressed]="liked()" (click)="toggleLike()">
+                    <svg lucideHeart [size]="17" [class.fill-current]="liked()" /> <span class="sr-only">{{ 'movie.like' | translate }}</span> <span class="tabular-nums">{{ likeCount() }}</span>
                   </button>
                 }
                 <a routerLink="/recommendations" [queryParams]="challengeQuery()" class="btn-ghost">
@@ -250,7 +250,7 @@ type SortMode = 'recent' | 'liked';
         </div>
       </div>
     } @else {
-      <app-empty-state [message]="(notFound() ? 'movie.notFound' : 'common.loadFailed') | translate" [hint]="'movie.notFoundHint' | translate">
+      <app-empty-state [message]="(notFound() ? 'movie.notFound' : 'common.loadFailed') | translate" [hint]="'movie.notFoundHint' | translate" [pageHeading]="true">
         <svg emptyIcon lucideArrowLeft [size]="26" />
         <a routerLink="/explore" class="btn-primary">{{ 'nav.explore' | translate }}</a>
       </app-empty-state>
@@ -457,6 +457,7 @@ export class MediaDetailComponent implements OnInit {
     if (!request) {
       this.loading.set(false);
       this.notFound.set(true);
+      this.title.setTitle(`${this.i18n.translate('movie.notFound')} · CritiComrade`);
       return;
     }
     this.loading.set(true);
@@ -465,6 +466,7 @@ export class MediaDetailComponent implements OnInit {
       error: (err) => {
         this.loading.set(false);
         this.notFound.set(err?.status === 404 || err?.status === 400);
+        this.title.setTitle(`${this.i18n.translate(this.notFound() ? 'movie.notFound' : 'common.loadFailed')} · CritiComrade`);
       },
     });
   }

@@ -42,15 +42,15 @@ export function safeReturnUrl(value: string | null): string {
       <div>
         <div class="flex items-baseline justify-between">
           <label for="login-password" class="field-label">{{ 'auth.login.password' | translate }}</label>
-          <a routerLink="/auth/forgot-password" class="text-[13px] font-medium text-accent-ink hover:underline">{{ 'auth.login.forgotPassword' | translate }}</a>
+          <a routerLink="/auth/forgot-password" class="py-1 text-[13px] font-medium text-accent-ink hover:underline">{{ 'auth.login.forgotPassword' | translate }}</a>
         </div>
         <app-password-field inputId="login-password" [(ngModel)]="password" name="password" autocomplete="current-password" [required]="true" />
       </div>
       @if (error()) {
         <p class="text-sm font-medium text-danger" role="alert">{{ error() }}</p>
       }
-      <label class="flex cursor-pointer items-center gap-2.5 text-sm text-muted">
-        <input type="checkbox" class="h-4 w-4" [(ngModel)]="rememberMe" name="rememberMe" />
+      <label class="flex min-h-6 cursor-pointer items-center gap-2.5 text-sm text-muted">
+        <input type="checkbox" class="h-[18px] w-[18px]" [(ngModel)]="rememberMe" name="rememberMe" />
         {{ 'auth.login.rememberMe' | translate }}
       </label>
       <button type="submit" class="btn-primary w-full" [disabled]="loading() || !f.valid">

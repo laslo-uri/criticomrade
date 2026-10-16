@@ -12,10 +12,10 @@ import { APP_INFO } from '../../../core/constants/app-info';
   template: `
     <footer class="border-t border-border/70 pt-6 text-[13px] text-muted">
       <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
-        <a routerLink="/explore" class="hover:text-text">{{ 'nav.explore' | translate }}</a>
-        <a routerLink="/people" class="hover:text-text">{{ 'nav.people' | translate }}</a>
-        <a routerLink="/stats" class="hover:text-text">{{ 'nav.stats' | translate }}</a>
-        <button type="button" class="hover:text-text" (click)="aboutOpen.set(true)">{{ 'about.title' | translate }}</button>
+        <a routerLink="/explore" class="py-1 hover:text-text">{{ 'nav.explore' | translate }}</a>
+        <a routerLink="/people" class="py-1 hover:text-text">{{ 'nav.people' | translate }}</a>
+        <a routerLink="/stats" class="py-1 hover:text-text">{{ 'nav.stats' | translate }}</a>
+        <button type="button" class="py-1 hover:text-text" (click)="aboutOpen.set(true)">{{ 'about.title' | translate }}</button>
         <label class="ml-auto inline-flex items-center gap-2">
           <span class="sr-only">{{ 'settings.language' | translate }}</span>
           <select class="rounded-md border border-border bg-surface px-2 py-1 text-[13px] text-text" [value]="i18n.locale()" (change)="setLocale($event)">

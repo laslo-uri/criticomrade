@@ -45,6 +45,7 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
         <form
           role="search"
+          [attr.aria-label]="'common.searchMedia' | translate"
           class="flex-1 justify-center md:flex"
           [class.hidden]="!searchOpen()"
           [class.flex]="searchOpen()"

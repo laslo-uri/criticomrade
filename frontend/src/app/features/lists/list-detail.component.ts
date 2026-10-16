@@ -94,7 +94,7 @@ import { errorMessage } from '../../core/utils/http-error';
           <ol class="grid grid-cols-2 gap-x-4 gap-y-7 min-[480px]:grid-cols-3 sm:grid-cols-4 xl:grid-cols-5">
             @for (item of l.movies!; track item.id ?? $index) {
               <li class="relative">
-                <app-media-card [item]="item" />
+                <app-media-card [item]="item" [headingLevel]="2" />
                 <button
                   type="button"
                   class="absolute right-1.5 top-1.5 inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink/80 text-paper backdrop-blur-sm transition hover:bg-danger"

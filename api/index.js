@@ -271,6 +271,12 @@ function requestFollow(viewer, username) {
   const other = byUsername(username);
   if (!other || other.id === viewer.id) return fail(404, 'Not found');
   if (state.follows.some((row) => row.followerId === viewer.id && row.followingId === other.id)) return empty();
+  // Like the Spring API: a public profile is followed at once, a private one gets a request.
+  if (other.profilePublic) {
+    state.follows.push({ followerId: viewer.id, followingId: other.id });
+    notify(other.id, 'FOLLOW', `${viewer.username} started following you`, viewer.id);
+    return empty();
+  }
   if (!state.requests.some((row) => row.senderId === viewer.id && row.receiverId === other.id)) {
     const id = state.nextRequest++;
     state.requests.push({ id, senderId: viewer.id, receiverId: other.id, requestDateTime: new Date().toISOString() });
@@ -283,6 +289,8 @@ function unfollow(viewer, username) {
   const other = byUsername(username);
   if (!other) return fail(404, 'Not found');
   state.follows = state.follows.filter((row) => !(row.followerId === viewer.id && row.followingId === other.id));
+  // Unfollowing someone you only asked to follow withdraws the request.
+  state.requests = state.requests.filter((row) => !(row.senderId === viewer.id && row.receiverId === other.id));
   return empty();
 }
 

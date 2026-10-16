@@ -1,5 +1,6 @@
 {
   "common": {
+    "skipToContent": "Preskoči na sadržaj",
     "loading": "Učitavanje…",
     "searching": "Pretraga…",
     "cancel": "Otkaži",

@@ -21,6 +21,7 @@ function publicUser(user, viewer) {
     followerCount: state.follows.filter((row) => row.followingId === user.id).length,
     followingCount: state.follows.filter((row) => row.followerId === user.id).length,
     following,
+    followRequested: viewer ? state.requests.some((row) => row.senderId === viewer.id && row.receiverId === user.id) : false,
   };
   if (viewer && viewer.id === user.id) dto.email = user.email;
   return dto;
@@ -134,12 +135,12 @@ function createState() {
     makeMedia(1, 'FILM', 'Inception', '2010', 'Science Fiction', 'Christopher Nolan', 'tmdb:27205', 27205, 'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg'),
     makeMedia(2, 'FILM', 'Parasite', '2019', 'Drama', 'Bong Joon-ho', 'tmdb:496243', 496243, 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg'),
     makeMedia(3, 'FILM', 'The Grand Budapest Hotel', '2014', 'Comedy', 'Wes Anderson', 'tmdb:120467', 120467, 'https://image.tmdb.org/t/p/w500/eWdyYQreja6JGCzqHWXpWHDrrPo.jpg'),
-    makeMedia(4, 'SHOW', 'The Bear', '2022', 'Drama', 'Christopher Storer', 'tv:136315', null, 'https://image.tmdb.org/t/p/w500/sHFlbKS3WLqMnp9t2ghADIJ3n41.jpg', { network: 'FX', seasonCount: 4 }),
+    makeMedia(4, 'SHOW', 'The Bear', '2022', 'Drama', 'Christopher Storer', 'tv:136315', null, '', { network: 'FX', seasonCount: 4 }),
     makeMedia(5, 'SHOW', 'Severance', '2022', 'Science Fiction', 'Dan Erickson', 'tv:95396', null, 'https://image.tmdb.org/t/p/w500/lFf6LLrQjYldcZItzOkGmMMigP7.jpg', { network: 'Apple TV+', seasonCount: 2 }),
     makeMedia(6, 'BOOK', 'Dune', '1965', 'Science Fiction', 'Frank Herbert', 'ol:OL893576W', null, 'https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg', { pageCount: 412 }),
     makeMedia(7, 'BOOK', 'The Left Hand of Darkness', '1969', 'Science Fiction', 'Ursula K. Le Guin', 'ol:OL7353617M', null, 'https://covers.openlibrary.org/b/isbn/9780441478125-L.jpg', { pageCount: 304 }),
-    makeMedia(8, 'ALBUM', 'Rumours', '1977', 'Rock', 'Fleetwood Mac', 'mb:83d91898-7763-47d7-b03b-b92132375c47', null, 'https://coverartarchive.org/release-group/83d91898-7763-47d7-b03b-b92132375c47/front-250', { trackCount: 11 }),
-    makeMedia(9, 'ALBUM', 'Blond', '2016', 'R&B', 'Frank Ocean', 'mb:7587d7cf-8c04-49a8-a56e-5d6b0b1b1e0e', null, '', { trackCount: 17 }),
+    makeMedia(8, 'ALBUM', 'Rumours', '1977', 'Rock', 'Fleetwood Mac', 'mb:416bb5e5-c7d1-3977-8fd7-7c9daf6c2be6', null, 'https://coverartarchive.org/release-group/416bb5e5-c7d1-3977-8fd7-7c9daf6c2be6/front-250', { trackCount: 11 }),
+    makeMedia(9, 'ALBUM', 'Blond', '2016', 'R&B', 'Frank Ocean', 'mb:0da340a0-6ad7-4fc2-a272-6f94393a7831', null, 'https://coverartarchive.org/release-group/0da340a0-6ad7-4fc2-a272-6f94393a7831/front-250', { trackCount: 17 }),
   ];
   const now = '2026-10-01T12:00:00.000Z';
   const reviews = [
@@ -250,8 +251,10 @@ async function popularRemote(type) {
     // `return await` keeps a failed upstream request inside this try/catch.
     if (type === 'FILM' && process.env.TMDB_API_KEY) return await tmdbList('/movie/popular', 'FILM');
     if (type === 'SHOW' && process.env.TMDB_API_KEY) return await tmdbList('/tv/popular', 'SHOW');
-    if (type === 'BOOK') return await openLibrarySearch('fiction');
-    if (type === 'ALBUM') return await searchRemote('ALBUM', 'album');
+    // Free-text "fiction" / "album" searches return box sets and albums literally called "Album";
+    // ask for well-rated fiction and a fixed shelf of classic studio albums instead.
+    if (type === 'BOOK') return await openLibrarySearch('subject:fiction', 'rating');
+    if (type === 'ALBUM') return await musicBrainzSearch(POPULAR_ALBUM_QUERY, true);
   } catch {
     return [];
   }
@@ -287,8 +290,8 @@ function fromTmdb(row, type) {
   };
 }
 
-async function openLibrarySearch(query) {
-  const payload = await getJson(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12`);
+async function openLibrarySearch(query, sort) {
+  const payload = await getJson(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12${sort ? `&sort=${sort}` : ''}`);
   return (payload.docs || []).map((doc) => upsertExternal({
     mediaType: 'BOOK',
     title: doc.title || 'Untitled',
@@ -302,9 +305,19 @@ async function openLibrarySearch(query) {
   }));
 }
 
-async function musicBrainzSearch(query) {
-  const payload = await getJson(`https://musicbrainz.org/ws/2/release-group/?query=${encodeURIComponent(query)}&fmt=json&limit=12`);
-  return (payload['release-groups'] || []).map((group) => upsertExternal({
+const POPULAR_ALBUMS = [
+  ['Rumours', 'Fleetwood Mac'], ['Abbey Road', 'The Beatles'], ['Kind of Blue', 'Miles Davis'], ['Blonde', 'Frank Ocean'],
+  ['OK Computer', 'Radiohead'], ['Blue', 'Joni Mitchell'], ['Nevermind', 'Nirvana'], ['Purple Rain', 'Prince'],
+  ['To Pimp a Butterfly', 'Kendrick Lamar'], ['Back to Black', 'Amy Winehouse'], ['Thriller', 'Michael Jackson'], ['Discovery', 'Daft Punk'],
+];
+const POPULAR_ALBUM_QUERY = `primarytype:album AND status:official AND (${POPULAR_ALBUMS.map(([title, artist]) => `(releasegroup:"${title}" AND artist:"${artist}")`).join(' OR ')})`;
+
+async function musicBrainzSearch(query, studioOnly = false) {
+  const payload = await getJson(`https://musicbrainz.org/ws/2/release-group/?query=${encodeURIComponent(query)}&fmt=json&limit=${studioOnly ? 25 : 12}`);
+  let groups = payload['release-groups'] || [];
+  // Lives, compilations and demos of the same record score almost as high as the original.
+  if (studioOnly) groups = groups.filter((group) => !(group['secondary-types'] || []).length).slice(0, 12);
+  return groups.map((group) => upsertExternal({
     mediaType: 'ALBUM',
     title: group.title || 'Untitled',
     year: (group['first-release-date'] || '').slice(0, 4),

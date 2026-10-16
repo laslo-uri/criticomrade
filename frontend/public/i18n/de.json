@@ -1,5 +1,6 @@
 {
   "common": {
+    "skipToContent": "Zum Inhalt springen",
     "loading": "Wird geladen…",
     "searching": "Suche läuft…",
     "cancel": "Abbrechen",

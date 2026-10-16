@@ -12,6 +12,7 @@ import { FooterComponent } from '../components/footer/footer.component';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { UiService } from '../../core/services/ui.service';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-shell',
@@ -24,9 +25,10 @@ import { UiService } from '../../core/services/ui.service';
     DemoBannerComponent,
     WriteReviewModalComponent,
     FooterComponent,
+    TranslatePipe,
   ],
   template: `
-    <a href="#main" class="skip-link">Skip to content</a>
+    <a href="#main" class="skip-link">{{ 'common.skipToContent' | translate }}</a>
     <app-demo-banner />
     <app-navbar />
     <div class="mx-auto grid max-w-page px-4 md:grid-cols-[13.5rem_minmax(0,1fr)] md:gap-8 lg:gap-12 lg:px-6">

@@ -128,20 +128,20 @@ interface CommentView extends Comment {
             class="btn-ghost btn-sm gap-1.5 !px-2"
             [class.text-accent-ink]="liked()"
             [attr.aria-pressed]="liked()"
-            [attr.aria-label]="(liked() ? 'review.unlike' : 'review.like') | translate"
             (click)="toggleLike()"
           >
             <svg lucideHeart [size]="16" [class.fill-current]="liked()" />
+            <span class="sr-only">{{ (liked() ? 'review.unlike' : 'review.like') | translate }}</span>
             <span class="tabular-nums">{{ likeCount() }}</span>
           </button>
           <button
             type="button"
             class="btn-ghost btn-sm gap-1.5 !px-2"
             [attr.aria-expanded]="commentsOpen()"
-            [attr.aria-label]="'review.comments' | translate"
             (click)="toggleComments()"
           >
             <svg lucideMessageCircle [size]="16" />
+            <span class="sr-only">{{ 'review.comments' | translate }}</span>
             <span class="tabular-nums">{{ commentCount() }}</span>
           </button>
           @if (ownReview() && !editing()) {
@@ -172,7 +172,7 @@ interface CommentView extends Comment {
                 <div class="min-w-0 flex-1">
                   <p class="leading-snug">
                     <a [routerLink]="['/profile', commentAuthor(comment)]" class="font-semibold hover:text-accent-ink">{{ commentAuthor(comment) }}</a>
-                    <span class="ml-1.5 text-xs text-muted">{{ comment.createdAt | timeAgo }}</span>
+                    <span class="ml-1.5 text-xs text-muted">· {{ comment.createdAt | timeAgo }}</span>
                   </p>
                   <p class="mt-0.5 whitespace-pre-line text-text/90">{{ comment.text }}</p>
                 </div>

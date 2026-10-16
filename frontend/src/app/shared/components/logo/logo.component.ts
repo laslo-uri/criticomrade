@@ -32,7 +32,7 @@ export type LogoVariant = 'nav' | 'hero' | 'mark';
       @if (variant() !== 'mark') {
         <span
           class="font-display font-extrabold uppercase leading-none tracking-[0.02em]"
-          [class]="variant() === 'hero' ? 'text-[2.1rem]' : 'text-[1.45rem] max-[359px]:hidden'"
+          [class]="variant() === 'hero' ? 'text-[2.1rem]' : 'text-[1.45rem] max-[399px]:hidden'"
         >
           <span class="text-text">Criti</span><span class="text-accent-ink">comrade</span>
         </span>

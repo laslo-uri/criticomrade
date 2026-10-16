@@ -35,12 +35,11 @@ export class RuntimeService {
 
     const override = storage.get(OVERRIDE_KEY);
     if (override === 'on') return this.demo.set(true);
-    if (override === 'off') return this.demo.set(false);
-
     if (environment.demoMode === 'on') return this.demo.set(true);
-    if (environment.demoMode === 'off') return this.demo.set(false);
 
     const reachable = await this.probe();
+    // "off" never falls back to the in-browser demo, but still learns whether the API is the hosted demo.
+    if (override === 'off' || environment.demoMode === 'off') return this.demo.set(false);
     this.demo.set(!reachable);
     this.demoFallback.set(!reachable);
   }

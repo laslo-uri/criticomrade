@@ -37,9 +37,9 @@ import { PosterComponent } from '../poster/poster.component';
         }
       </div>
       <div class="mt-2 min-w-0 px-0.5">
-        <h3 class="truncate text-[14px] font-semibold leading-snug text-text group-hover:text-accent-ink">
+        <p role="heading" [attr.aria-level]="headingLevel()" class="truncate text-[14px] font-semibold leading-snug text-text group-hover:text-accent-ink">
           {{ item().title }}
-        </h3>
+        </p>
         <p class="truncate text-[12.5px] text-muted">{{ subtitle() }}</p>
       </div>
     </a>
@@ -47,6 +47,8 @@ import { PosterComponent } from '../poster/poster.component';
 })
 export class MediaCardComponent {
   readonly item = input.required<MediaItem>();
+  /** Heading level of the title: 3 under a section heading, 2 on pages where cards follow the h1 directly. */
+  readonly headingLevel = input<2 | 3>(3);
   readonly link = computed(() => mediaLink(this.item()));
   readonly subtitle = computed(() => {
     const { creator, year } = this.item();

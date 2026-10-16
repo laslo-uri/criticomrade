@@ -1,5 +1,6 @@
 {
   "common": {
+    "skipToContent": "Ugrás a tartalomra",
     "loading": "Betöltés…",
     "searching": "Keresés…",
     "cancel": "Mégse",

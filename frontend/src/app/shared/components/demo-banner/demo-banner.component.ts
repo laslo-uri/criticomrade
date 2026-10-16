@@ -12,7 +12,7 @@ const DISMISS_KEY = 'criticomrade_demo_banner_dismissed';
   imports: [TranslatePipe, LucideX],
   template: `
     @if (runtime.anyDemo() && !dismissed()) {
-      <div class="relative z-50 bg-brass text-ink">
+      <div class="relative z-50 bg-brass text-ink" role="region" [attr.aria-label]="'demo.badge' | translate">
         <div class="mx-auto flex max-w-page items-center gap-3 px-4 py-1.5 text-[13px] font-medium leading-snug lg:px-6">
           <p class="min-w-0 flex-1">
             <strong class="font-bold">{{ 'demo.badge' | translate }}</strong>
