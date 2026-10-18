@@ -8,4 +8,7 @@ export const environment = {
    * 'off'  — never use the demo backend.
    */
   demoMode: 'auto' as 'auto' | 'on' | 'off',
+  /** Google Tag Manager / GA4 IDs (`GTM-…` / `G-…`). Empty = no analytics, no cookie banner. */
+  gtmId: '',
+  gaId: '',
 };

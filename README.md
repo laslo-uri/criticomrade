@@ -38,6 +38,20 @@ Force the in-browser demo either way with `?demo=1` or `?demo=0` (remembered per
 1. Import the repository in Vercel. Keep the **root directory** as the repo root and leave the framework preset unset (not Angular or Vite).
 2. Deploy. Vercel runs `npm ci` and the production `ng build` in `frontend/`, serves `frontend/dist/frontend/browser` with SPA routing, and runs `api/` as the demo API.
 
+### Environment (Vercel)
+
+All optional. The demo API vars are read at runtime; the analytics IDs are baked into the frontend at build time by `frontend/scripts/analytics-env.mjs` (run by `npm run build:vercel`).
+
+| Variable | Used by | Purpose |
+|----------|---------|---------|
+| `TMDB_API_KEY` | `api/` | Live films and shows |
+| `DEMO_TOKEN_SECRET` | `api/` | Login tokens stay valid across instances |
+| `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` | `api/` | Album art |
+| `GTM_ID` | frontend build | Google Tag Manager container (`GTM-XXXXXXX`) |
+| `GA_ID` | frontend build | GA4 measurement ID (`G-XXXXXXXXXX`) |
+
+GA4/GTM: set the ID in Vercel and redeploy. Without an ID the site ships no analytics script, no cookie banner and no footer "Cookies" link. With one, the banner asks first (Google Consent Mode v2, everything denied by default); the tag loads only after "Accept", and the choice is kept in `localStorage` (`cookie-consent`). Logic: `frontend/src/app/core/analytics/consent.ts`, `core/services/consent.service.ts`, `shared/components/cookie-consent/`.
+
 **Use the real backend instead:** host the Spring Boot API (Render, Railway, Fly.io, a VPS…) and change the first rewrite in `vercel.json` to point at it:
 
 ```json

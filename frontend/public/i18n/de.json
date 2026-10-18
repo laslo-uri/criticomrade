@@ -501,5 +501,12 @@
     "title": "Auf dieser Rolle ist nichts",
     "text": "Die Seite, der du gefolgt bist, gibt es nicht oder sie ist umgezogen.",
     "home": "Zur Startseite"
+  },
+  "cookies": {
+    "title": "Cookies",
+    "text": "Wir verwenden Cookies für anonyme Besuchsstatistiken. Analytics läuft nur, wenn Sie zustimmen.",
+    "accept": "Akzeptieren",
+    "decline": "Ablehnen",
+    "settings": "Cookies"
   }
 }

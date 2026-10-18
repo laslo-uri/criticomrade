@@ -505,5 +505,12 @@
     "title": "Nothing on this reel",
     "text": "The page you followed doesn't exist or has moved.",
     "home": "Go home"
+  },
+  "cookies": {
+    "title": "Cookies",
+    "text": "We use cookies for anonymous visit statistics. Analytics runs only if you accept.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "settings": "Cookies"
   }
 }

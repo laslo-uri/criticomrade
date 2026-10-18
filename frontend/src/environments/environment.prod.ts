@@ -6,4 +6,10 @@ export const environment = {
    */
   apiUrl: '/api',
   demoMode: 'auto' as 'auto' | 'on' | 'off',
+  /**
+   * Analytics IDs, filled at build time by `scripts/analytics-env.mjs` from the GTM_ID / GA_ID
+   * env vars (Vercel). Empty = no analytics, no cookie banner.
+   */
+  gtmId: '',
+  gaId: '',
 };

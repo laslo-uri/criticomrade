@@ -498,5 +498,12 @@
     "title": "Ezen a tekercsen nincs semmi",
     "text": "Az oldal, amit kerestél, nem létezik vagy elköltözött.",
     "home": "Kezdőlap"
+  },
+  "cookies": {
+    "title": "Sütik",
+    "text": "Sütiket használunk anonim látogatási statisztikához. Az analitika csak akkor kapcsol be, ha elfogadja.",
+    "accept": "Elfogadom",
+    "decline": "Elutasítom",
+    "settings": "Sütik"
   }
 }

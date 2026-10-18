@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 import { LOCALES, Locale, TranslationService } from '../../../core/services/translation.service';
 import { RuntimeService } from '../../../core/services/runtime.service';
+import { ConsentService } from '../../../core/services/consent.service';
 import { AboutModalComponent } from '../about-modal/about-modal.component';
 import { APP_INFO } from '../../../core/constants/app-info';
 
@@ -16,6 +17,9 @@ import { APP_INFO } from '../../../core/constants/app-info';
         <a routerLink="/people" class="py-1 hover:text-text">{{ 'nav.people' | translate }}</a>
         <a routerLink="/stats" class="py-1 hover:text-text">{{ 'nav.stats' | translate }}</a>
         <button type="button" class="py-1 hover:text-text" (click)="aboutOpen.set(true)">{{ 'about.title' | translate }}</button>
+        @if (consent.enabled) {
+          <button type="button" class="py-1 hover:text-text" (click)="consent.openSettings()">{{ 'cookies.settings' | translate }}</button>
+        }
         <label class="ml-auto inline-flex items-center gap-2">
           <span class="sr-only">{{ 'settings.language' | translate }}</span>
           <select class="rounded-md border border-border bg-surface px-2 py-1 text-[13px] text-text" [value]="i18n.locale()" (change)="setLocale($event)">
@@ -42,6 +46,7 @@ import { APP_INFO } from '../../../core/constants/app-info';
 export class FooterComponent {
   readonly i18n = inject(TranslationService);
   readonly runtime = inject(RuntimeService);
+  readonly consent = inject(ConsentService);
   readonly locales = LOCALES;
   readonly version = APP_INFO.version;
   readonly aboutOpen = signal(false);

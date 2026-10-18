@@ -510,5 +510,12 @@
     "title": "Na ovoj traci nema ničega",
     "text": "Stranica koju si pratio ne postoji ili je premeštena.",
     "home": "Na početnu"
+  },
+  "cookies": {
+    "title": "Kolačići",
+    "text": "Koristimo kolačiće za anonimnu statistiku posete. Analitika se uključuje samo ako prihvatite.",
+    "accept": "Prihvatam",
+    "decline": "Odbijam",
+    "settings": "Kolačići"
   }
 }
