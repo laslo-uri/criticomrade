@@ -36,3 +36,7 @@ Thumbs.db
 
 # Vercel
 .vercel/
+
+# AI-assistant notes stay out of the repo (Next.js dev writes AGENTS.md on its own)
+/AGENTS.md
+/CLAUDE.md
