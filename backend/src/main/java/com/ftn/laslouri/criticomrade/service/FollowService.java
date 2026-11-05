@@ -28,6 +28,7 @@ public class FollowService {
     private final FollowRequestRepository followRequestRepository;
     private final NotificationService notificationService;
     private final SecurityUtils securityUtils;
+    private final UserService userService;
 
     @Transactional
     public FollowRequestDto sendFollowRequest(String targetUsername) {
@@ -111,6 +112,7 @@ public class FollowService {
         User viewer = securityUtils.getCurrentUser();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        userService.requireVisible(user, viewer);
         return user.getFollowers().stream()
                 .map(f -> DtoMapper.toUserProfile(f, viewer))
                 .collect(Collectors.toList());
@@ -121,6 +123,7 @@ public class FollowService {
         User viewer = securityUtils.getCurrentUser();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        userService.requireVisible(user, viewer);
         return user.getFollowing().stream()
                 .map(f -> DtoMapper.toUserProfile(f, viewer))
                 .collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package com.ftn.laslouri.criticomrade.service;
 
+import com.ftn.laslouri.criticomrade.util.Paging;
 import com.ftn.laslouri.criticomrade.dto.PageResponse;
 import com.ftn.laslouri.criticomrade.dto.UserProfileDto;
 import com.ftn.laslouri.criticomrade.dto.UserUpdateRequest;
@@ -26,12 +27,7 @@ public class UserService {
     public UserProfileDto getProfile(String username) {
         User viewer = securityUtils.getCurrentUserOptional().orElse(null);
         User user = findByUsername(username);
-        boolean self = viewer != null && user.getId().equals(viewer.getId());
-        boolean followed = viewer != null && user.getFollowers() != null
-                && user.getFollowers().stream().anyMatch(f -> f.getId().equals(viewer.getId()));
-        if (!user.isProfilePublic() && !self && !followed) {
-            throw new ForbiddenException("Profile is private");
-        }
+        requireVisible(user, viewer);
         return DtoMapper.toUserProfile(user, viewer);
     }
 
@@ -57,9 +53,26 @@ public class UserService {
     public PageResponse<UserProfileDto> searchUsers(String query, int page, int size) {
         User viewer = securityUtils.getCurrentUser();
         Page<User> users = userRepository.findByUsernameContainingIgnoreCaseOrFullNameContainingIgnoreCase(
-                query, query, PageRequest.of(page, size));
+                query, query, Paging.of(page, size));
         Page<UserProfileDto> mapped = users.map(u -> DtoMapper.toUserProfile(u, viewer));
         return DtoMapper.toPageResponse(mapped);
+    }
+
+    /** A private profile is open to its owner and to accepted followers only. */
+    public void requireVisible(User user, User viewer) {
+        boolean self = viewer != null && user.getId().equals(viewer.getId());
+        boolean followed = viewer != null && user.getFollowers() != null
+                && user.getFollowers().stream().anyMatch(f -> f.getId().equals(viewer.getId()));
+        if (!user.isProfilePublic() && !self && !followed) {
+            throw new ForbiddenException("Profile is private");
+        }
+    }
+
+    /** Looks a user up for a public read, enforcing profile privacy for the current viewer. */
+    public User findVisible(String username) {
+        User user = findByUsername(username);
+        requireVisible(user, securityUtils.getCurrentUserOptional().orElse(null));
+        return user;
     }
 
     public User findByUsername(String username) {

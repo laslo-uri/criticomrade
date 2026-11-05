@@ -1,5 +1,6 @@
 package com.ftn.laslouri.criticomrade.service;
 
+import com.ftn.laslouri.criticomrade.util.Paging;
 import com.ftn.laslouri.criticomrade.dto.NotificationDto;
 import com.ftn.laslouri.criticomrade.dto.PageResponse;
 import com.ftn.laslouri.criticomrade.exception.ForbiddenException;
@@ -45,7 +46,7 @@ public class NotificationService {
     public PageResponse<NotificationDto> getMyNotifications(int page, int size) {
         User user = securityUtils.getCurrentUser();
         Page<Notification> notifications = notificationRepository.findByRecipientOrderByCreatedAtDesc(
-                user, PageRequest.of(page, size));
+                user, Paging.of(page, size));
         Page<NotificationDto> mapped = notifications.map(n -> DtoMapper.toNotificationDto(n, user));
         return DtoMapper.toPageResponse(mapped);
     }

@@ -21,6 +21,7 @@ import java.util.Optional;
 public class PasswordResetService {
 
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final int MAX_CODE_ATTEMPTS = 5;
 
     private final UserRepository userRepository;
     private final PasswordResetTokenRepository tokenRepository;
@@ -56,7 +57,8 @@ public class PasswordResetService {
         emailService.sendPasswordResetCode(user.get().getEmail(), code, resetProperties.getExpiryMinutes());
     }
 
-    @Transactional
+    /** The failed-attempt count must survive the exception, so a wrong code does not roll back. */
+    @Transactional(noRollbackFor = BadRequestException.class)
     public void resetPassword(String email, String code, String newPassword) {
         String normalized = normalizeEmail(email);
 
@@ -69,6 +71,12 @@ public class PasswordResetService {
         }
 
         if (!passwordEncoder.matches(code, token.getCodeHash())) {
+            // A 6-digit code falls to guessing without a limit: burn it after a few misses.
+            token.setFailedAttempts(token.getFailedAttempts() + 1);
+            if (token.getFailedAttempts() >= MAX_CODE_ATTEMPTS) {
+                token.setUsed(true);
+            }
+            tokenRepository.save(token);
             throw new BadRequestException("Invalid or expired code");
         }
 

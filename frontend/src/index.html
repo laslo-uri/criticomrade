@@ -26,14 +26,7 @@
     <link rel="preload" href="fonts/big-shoulders-display.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="fonts/instrument-sans.woff" as="font" type="font/woff" crossorigin />
 
-    <script>
-      // Apply the saved theme before first paint to avoid a flash.
-      try {
-        var t = localStorage.getItem('criticomrade_theme');
-        if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
-      } catch (e) {}
-    </script>
+    <script src="theme-init.js"></script>
     <style>
       /* Boot screen: shown until Angular renders. */
       html { background: #151011; }

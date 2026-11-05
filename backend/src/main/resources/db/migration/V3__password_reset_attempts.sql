@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS password_reset_tokens ADD COLUMN IF NOT EXISTS failed_attempts INTEGER NOT NULL DEFAULT 0;

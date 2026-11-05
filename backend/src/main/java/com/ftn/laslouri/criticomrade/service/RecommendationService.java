@@ -78,6 +78,7 @@ public class RecommendationService {
         if (!recommendation.getToUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Not authorized");
         }
+        requireStatus(recommendation, RecommendationStatus.PENDING);
         recommendation.setStatus(RecommendationStatus.ACCEPTED);
         return DtoMapper.toRecommendationDto(recommendationRepository.save(recommendation), user);
     }
@@ -89,6 +90,7 @@ public class RecommendationService {
         if (!recommendation.getToUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Not authorized");
         }
+        requireStatus(recommendation, RecommendationStatus.PENDING, RecommendationStatus.ACCEPTED);
         recommendation.setStatus(RecommendationStatus.REJECTED);
         return DtoMapper.toRecommendationDto(recommendationRepository.save(recommendation), user);
     }
@@ -100,6 +102,7 @@ public class RecommendationService {
         if (!recommendation.getToUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Not authorized");
         }
+        requireStatus(recommendation, RecommendationStatus.ACCEPTED);
         recommendation.setStatus(RecommendationStatus.COMPLETED);
         Recommendation saved = recommendationRepository.save(recommendation);
         User fromUser = saved.getFromUser();
@@ -108,6 +111,12 @@ public class RecommendationService {
         notificationService.createNotification(fromUser, user, NotificationType.CHALLENGE_COMPLETED,
                 user.getUsername() + " completed your movie challenge", saved.getId());
         return DtoMapper.toRecommendationDto(saved, user);
+    }
+
+    private void requireStatus(Recommendation recommendation, RecommendationStatus... allowed) {
+        if (!List.of(allowed).contains(recommendation.getStatus())) {
+            throw new BadRequestException("This challenge can no longer change that way");
+        }
     }
 
     private Recommendation findRecommendation(Long id) {

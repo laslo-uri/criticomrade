@@ -21,5 +21,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByUser(User user);
 
-    Page<Review> findByMovieIdOrderByReviewTimeDesc(Long movieId, Pageable pageable);
+    /** Reviews on a title, leaving out private profiles the viewer does not follow. */
+    @Query("""
+            SELECT r FROM Review r JOIN r.user u
+            WHERE r.movie.id = :movieId
+              AND (u.isProfilePublic = true OR u.id = :viewerId
+                   OR EXISTS (SELECT 1 FROM User f JOIN f.following t WHERE f.id = :viewerId AND t.id = u.id))
+            ORDER BY r.reviewTime DESC
+            """)
+    Page<Review> findVisibleForMovie(@Param("movieId") Long movieId, @Param("viewerId") Long viewerId, Pageable pageable);
 }

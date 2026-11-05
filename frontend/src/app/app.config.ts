@@ -9,11 +9,13 @@ import {
   withComponentInputBinding,
   withInMemoryScrolling,
   withViewTransitions,
+  TitleStrategy,
 } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { routes } from './app.routes';
+import { AppTitleStrategy } from './core/services/app-title.strategy';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { demoInterceptor } from './core/demo/demo.interceptor';
 import { appIconsProvider } from './shared/icons/app-icons.provider';
@@ -47,6 +49,7 @@ export const appConfig: ApplicationConfig = {
     // authInterceptor runs first so the demo backend sees the bearer token.
     provideHttpClient(withInterceptors([authInterceptor, demoInterceptor])),
     appIconsProvider,
+    { provide: TitleStrategy, useExisting: AppTitleStrategy },
     provideAppInitializer(bootstrap),
   ],
 };

@@ -46,7 +46,7 @@ import { MEDIA_TYPE_KEYS } from '../../core/utils/media-link';
         @for (item of visible(); track item.id ?? item.tmdbId ?? item.title) {
           <div class="relative">
             <app-media-card [item]="item" [headingLevel]="2" />
-            <div class="mt-2 flex gap-1.5">
+            <div class="mt-2 flex flex-wrap gap-1.5">
               <button type="button" class="btn-secondary btn-sm flex-1 !px-2" (click)="ui.openReview(item)">
                 <svg lucidePenLine [size]="14" /> {{ 'watchlist.log' | translate }}
               </button>

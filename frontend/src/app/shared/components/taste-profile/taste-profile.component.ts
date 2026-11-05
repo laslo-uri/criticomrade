@@ -20,7 +20,7 @@ import { MediaType } from '../../../core/models/media-item.model';
         } @else {
           <ul class="mt-4 space-y-2.5">
             @for (genre of taste.genres.slice(0, 6); track genre.name; let i = $index) {
-              <li class="grid grid-cols-[7.5rem_1fr_2.75rem] items-center gap-3 text-sm">
+              <li class="grid grid-cols-[minmax(0,7.5rem)_minmax(2rem,1fr)_auto] items-center gap-3 text-sm">
                 <span class="truncate">{{ genre.name }}</span>
                 <span class="h-2.5 overflow-hidden rounded-sm bg-elevated">
                   <span class="block h-full rounded-sm" [class]="i === 0 ? 'bg-accent' : 'bg-brass/80'" [style.width.%]="barWidth(genre.percentage, taste.genres[0].percentage)"></span>

@@ -1,5 +1,6 @@
 package com.ftn.laslouri.criticomrade.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -14,8 +15,10 @@ public class RecommendationCreateRequest {
     private Long tmdbId;
 
     @Min(1)
+    @Max(90)
     private int challengeDurationDays = 7;
 
     @Min(0)
+    @Max(100)
     private int challengePoints = 10;
 }

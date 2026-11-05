@@ -80,7 +80,7 @@ cd backend
 | Service | URL |
 |---------|-----|
 | API | http://localhost:8080/api |
-| Swagger | http://localhost:8080/swagger-ui |
+| Swagger (set `API_DOCS_ENABLED=true`) | http://localhost:8080/swagger-ui |
 
 **Frontend:**
 

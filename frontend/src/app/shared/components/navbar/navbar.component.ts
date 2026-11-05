@@ -73,7 +73,7 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
               <svg lucideX [size]="20" />
             </button>
           } @else {
-            <button type="button" class="icon-btn md:hidden" (click)="openSearch()" [attr.aria-label]="'common.searchMedia' | translate">
+            <button #searchButton type="button" class="icon-btn md:hidden" (click)="openSearch()" [attr.aria-label]="'common.searchMedia' | translate">
               <svg lucideSearch [size]="20" />
             </button>
           }
@@ -104,32 +104,32 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
             <div class="relative" #menuRoot>
               <button
+                #menuButton
                 type="button"
                 class="ml-1 flex items-center rounded-full ring-offset-2 ring-offset-bg transition hover:ring-2 hover:ring-border"
                 [attr.aria-expanded]="menuOpen()"
-                aria-haspopup="menu"
                 [attr.aria-label]="'nav.accountMenu' | translate"
                 (click)="menuOpen.set(!menuOpen())"
               >
                 <app-avatar [name]="auth.currentUser()?.username" [url]="auth.currentUser()?.avatarUrl" [size]="36" />
               </button>
               @if (menuOpen()) {
-                <div class="motion-pop absolute right-0 mt-2 w-60 overflow-hidden rounded-panel border border-border bg-surface py-1.5 shadow-lift" role="menu">
+                <div class="motion-pop absolute right-0 mt-2 w-60 overflow-hidden rounded-panel border border-border bg-surface py-1.5 shadow-lift">
                   <div class="border-b border-border/70 px-4 pb-2.5 pt-1.5">
                     <p class="truncate font-semibold">{{ auth.currentUser()?.fullName || auth.currentUser()?.username }}</p>
                     <p class="truncate text-sm text-muted">&#64;{{ auth.currentUser()?.username }}</p>
                   </div>
-                  <a role="menuitem" [routerLink]="['/profile', auth.currentUser()?.username]" class="menu-item" (click)="menuOpen.set(false)">
+                  <a [routerLink]="['/profile', auth.currentUser()?.username]" class="menu-item" (click)="menuOpen.set(false)">
                     <svg lucideUser [size]="17" /> {{ 'nav.profile' | translate }}
                   </a>
-                  <a role="menuitem" routerLink="/settings" class="menu-item" (click)="menuOpen.set(false)">
+                  <a routerLink="/settings" class="menu-item" (click)="menuOpen.set(false)">
                     <svg lucideSettings [size]="17" /> {{ 'nav.settings' | translate }}
                   </a>
-                  <button role="menuitem" type="button" class="menu-item w-full sm:hidden" (click)="theme.toggle()">
+                  <button type="button" class="menu-item w-full sm:hidden" (click)="theme.toggle()">
                     @if (theme.theme() === 'dark') { <svg lucideSun [size]="17" /> } @else { <svg lucideMoon [size]="17" /> }
                     {{ (theme.theme() === 'dark' ? 'settings.themeLight' : 'settings.themeDark') | translate }}
                   </button>
-                  <button role="menuitem" type="button" class="menu-item w-full" (click)="logout()">
+                  <button type="button" class="menu-item w-full" (click)="logout()">
                     <svg lucideLogOut [size]="17" /> {{ 'nav.logOut' | translate }}
                   </button>
                 </div>
@@ -152,6 +152,8 @@ export class NavbarComponent {
 
   private readonly menuRoot = viewChild<ElementRef<HTMLElement>>('menuRoot');
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  private readonly menuButton = viewChild<ElementRef<HTMLButtonElement>>('menuButton');
+  private readonly searchButton = viewChild<ElementRef<HTMLButtonElement>>('searchButton');
 
   query = '';
   readonly menuOpen = signal(false);
@@ -166,8 +168,15 @@ export class NavbarComponent {
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
-    this.menuOpen.set(false);
-    this.searchOpen.set(false);
+    // Whatever closes must hand focus back, or keyboard users land at the top of the page.
+    if (this.menuOpen()) {
+      this.menuOpen.set(false);
+      this.menuButton()?.nativeElement.focus();
+    }
+    if (this.searchOpen()) {
+      this.searchOpen.set(false);
+      setTimeout(() => this.searchButton()?.nativeElement.focus());
+    }
   }
 
   openSearch(): void {

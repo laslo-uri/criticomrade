@@ -1,7 +1,13 @@
 const crypto = require('crypto');
 
-const SECRET = process.env.DEMO_TOKEN_SECRET || 'criticomrade-demo-secret';
+// Never fall back to a value from the repo: anyone could sign a token for any user.
+// Without the env var, sessions last until this instance goes cold, like the rest of the demo data.
+const SECRET = process.env.DEMO_TOKEN_SECRET || crypto.randomBytes(32).toString('hex');
 const UA = 'CritiComrade/1.0 (https://github.com/laslo-uri/CritiComrade)';
+
+function randomSecret() {
+  return crypto.randomBytes(16).toString('hex');
+}
 
 function hashPassword(password, salt) {
   return crypto.scryptSync(password, salt, 32).toString('hex');
@@ -91,8 +97,8 @@ const state = createState();
 
 function createState() {
   const demoSalt = 'demo-salt';
-  const miraSalt = 'mira-salt';
-  const nelaSalt = 'nela-salt';
+  const miraSalt = randomSecret();
+  const nelaSalt = randomSecret();
   const users = [
     {
       id: 1,
@@ -116,7 +122,8 @@ function createState() {
       profilePublic: true,
       gainedChallengePoints: 20,
       salt: miraSalt,
-      passwordHash: hashPassword('not-the-demo-password', miraSalt),
+      // Sample people only: nobody can sign in as them.
+      passwordHash: hashPassword(randomSecret(), miraSalt),
     },
     {
       id: 3,
@@ -128,7 +135,7 @@ function createState() {
       profilePublic: true,
       gainedChallengePoints: 0,
       salt: nelaSalt,
-      passwordHash: hashPassword('not-the-demo-password', nelaSalt),
+      passwordHash: hashPassword(randomSecret(), nelaSalt),
     },
   ];
   const media = [
@@ -197,8 +204,9 @@ function sign(userId) {
 }
 
 function verify(token) {
-  if (!token || !token.includes('.')) return null;
-  const [body, sig] = token.split('.');
+  const parts = String(token || '').split('.');
+  if (parts.length !== 2) return null;
+  const [body, sig] = parts;
   const expected = crypto.createHmac('sha256', SECRET).update(body).digest('base64url');
   const left = Buffer.from(sig);
   const right = Buffer.from(expected);
@@ -502,5 +510,6 @@ module.exports = {
   suggestions,
   listDto,
   notify,
+  randomSecret,
   upsertExternal,
 };

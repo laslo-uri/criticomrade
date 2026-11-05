@@ -29,4 +29,7 @@ public class PasswordResetToken {
     private Instant createdAt;
 
     private boolean used = false;
+
+    @Column(nullable = false, columnDefinition = "integer not null default 0")
+    private int failedAttempts = 0;
 }

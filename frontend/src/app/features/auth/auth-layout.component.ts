@@ -4,14 +4,16 @@ import { LogoComponent } from '../../shared/components/logo/logo.component';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { DemoBannerComponent } from '../../shared/components/demo-banner/demo-banner.component';
 import { PosterComponent } from '../../shared/components/poster/poster.component';
+import { SkipLinkComponent } from '../../shared/components/skip-link/skip-link.component';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { ThemeService } from '../../core/services/theme.service';
 
 /** Split screen: a poster wall on wide screens, the form on the right. */
 @Component({
   selector: 'app-auth-layout',
-  imports: [RouterOutlet, RouterLink, LogoComponent, ToastComponent, DemoBannerComponent, PosterComponent, TranslatePipe],
+  imports: [RouterOutlet, RouterLink, LogoComponent, ToastComponent, DemoBannerComponent, PosterComponent, SkipLinkComponent, TranslatePipe],
   template: `
+    <app-skip-link />
     <app-demo-banner />
     <div class="grid min-h-[calc(100dvh-2rem)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
       <aside class="relative hidden overflow-hidden bg-ink lg:block" aria-hidden="true">
@@ -38,7 +40,7 @@ import { ThemeService } from '../../core/services/theme.service';
           </p>
         </div>
       </aside>
-      <main class="flex flex-col px-5 py-8 sm:px-10">
+      <main id="main" tabindex="-1" class="flex min-w-0 flex-col px-5 py-8 sm:px-10">
         <div class="flex items-center justify-between">
           <app-logo variant="nav" />
           <a routerLink="/explore" class="btn-ghost btn-sm">{{ 'auth.side.browse' | translate }}</a>

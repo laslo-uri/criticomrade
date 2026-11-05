@@ -83,7 +83,7 @@ type SortMode = 'recent' | 'liked';
             }
             <div class="mt-3 flex flex-wrap gap-1.5">
               @for (g of genres(); track g) {
-                <a routerLink="/explore" [queryParams]="{ type: media.mediaType ?? 'FILM', genre: g }" class="tag bg-elevated text-[12px] text-text/90 hover:bg-border">{{ g }}</a>
+                <a routerLink="/explore" [queryParams]="{ type: media.mediaType ?? 'FILM', genre: g }" class="tag min-h-6 bg-elevated text-[12px] text-text/90 hover:bg-border">{{ g }}</a>
               }
               @if (media.network) { <span class="tag border border-border text-[12px] text-muted">{{ media.network }}</span> }
               @if (media.seasonCount) { <span class="tag border border-border text-[12px] text-muted">{{ 'movie.seasons' | translate: { count: media.seasonCount } }}</span> }

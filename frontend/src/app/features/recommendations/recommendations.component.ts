@@ -78,11 +78,11 @@ type RecTab = 'incoming' | 'outgoing';
               </a>
               <div class="min-w-0 flex-1">
                 <div class="flex flex-wrap items-start justify-between gap-2">
-                  <a [routerLink]="link(rec).commands" [queryParams]="link(rec).queryParams" class="font-display text-2xl font-bold uppercase leading-none hover:text-accent-ink">{{ rec.movie.title }}</a>
+                  <a [routerLink]="link(rec).commands" [queryParams]="link(rec).queryParams" class="min-w-0 max-w-full font-display text-2xl font-bold uppercase leading-none [overflow-wrap:anywhere] hover:text-accent-ink">{{ rec.movie.title }}</a>
                   <span class="tag text-[12px]" [class]="statusClass(rec.status)">{{ 'recommendations.status.' + rec.status | translate }}</span>
                 </div>
                 @if (tab() === 'incoming' ? rec.fromUser : rec.toUser; as other) {
-                  <p class="mt-2 flex items-center gap-2 text-sm">
+                  <p class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                     <app-avatar [name]="other.username" [url]="other.avatarUrl" [size]="22" />
                     <a [routerLink]="['/profile', other.username]" class="font-semibold hover:text-accent-ink">{{ other.username }}</a>
                     <span class="text-muted">{{ (tab() === 'incoming' ? 'recommendations.challengedYou' : 'recommendations.youChallenged') | translate }}, {{ rec.creationTime | timeAgo }}</span>

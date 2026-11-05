@@ -37,7 +37,7 @@ public class TasteProfileService {
 
     @Transactional(readOnly = true)
     public TasteProfileDto tasteProfile(String username) {
-        User user = userService.findByUsername(username);
+        User user = userService.findVisible(username);
         List<Review> reviews = reviewRepository.findByUser(user);
         Map<String, Integer> genres = new HashMap<>();
         Map<String, Integer> types = new HashMap<>();
@@ -72,7 +72,7 @@ public class TasteProfileService {
 
     @Transactional(readOnly = true)
     public DiaryStatsDto diaryStats(String username) {
-        User user = userService.findByUsername(username);
+        User user = userService.findVisible(username);
         List<Review> reviews = reviewRepository.findByUser(user);
         int[] buckets = new int[5];
         Map<String, Integer> types = new HashMap<>();
@@ -147,7 +147,7 @@ public class TasteProfileService {
     @Transactional(readOnly = true)
     public CompatibilityDto compatibility(String username) {
         User viewer = securityUtils.getCurrentUser();
-        User other = userService.findByUsername(username);
+        User other = userService.findVisible(username);
         Map<Long, Integer> mine = ratingsByMovie(reviewRepository.findByUser(viewer));
         Map<Long, Integer> theirs = ratingsByMovie(reviewRepository.findByUser(other));
         int shared = 0;

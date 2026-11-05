@@ -9,6 +9,7 @@ import { MediaCardComponent } from '../../shared/components/media-card/media-car
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { DemoBannerComponent } from '../../shared/components/demo-banner/demo-banner.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SkipLinkComponent } from '../../shared/components/skip-link/skip-link.component';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { AuthService } from '../../core/services/auth.service';
@@ -31,6 +32,7 @@ import { DEMO_PASSWORD, DEMO_USERNAME } from '../../core/demo/demo-seed';
     AvatarComponent,
     DemoBannerComponent,
     FooterComponent,
+    SkipLinkComponent,
     ToastComponent,
     TranslatePipe,
     LucideBookOpen,
@@ -38,6 +40,7 @@ import { DEMO_PASSWORD, DEMO_USERNAME } from '../../core/demo/demo-seed';
     LucideSwords,
   ],
   template: `
+    <app-skip-link />
     <app-demo-banner />
 
     <!-- Hero: the one loud moment. Always dark, like a poster on a wall. -->
@@ -53,7 +56,7 @@ import { DEMO_PASSWORD, DEMO_USERNAME } from '../../core/demo/demo-seed';
         </nav>
       </header>
 
-      <div class="mx-auto grid max-w-page items-center gap-12 px-4 pb-20 pt-10 sm:pt-14 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:px-6 lg:pb-28">
+      <div id="main" tabindex="-1" class="mx-auto grid max-w-page grid-cols-[minmax(0,1fr)] items-center gap-12 px-4 pb-20 pt-10 sm:pt-14 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:px-6 lg:pb-28">
         <div>
           <h1 id="landing-title" class="break-words font-display font-extrabold uppercase leading-[0.9] tracking-[0.004em] text-[clamp(3.4rem,10.5vw,7.4rem)]">
             <span class="block animate-fade-up">{{ 'landing.line1' | translate }}</span>
@@ -113,7 +116,7 @@ import { DEMO_PASSWORD, DEMO_USERNAME } from '../../core/demo/demo-seed';
       <section class="border-b border-border/70" [attr.aria-label]="'landing.typesLabel' | translate">
         <div class="mx-auto grid max-w-page grid-cols-2 gap-px bg-border/70 sm:grid-cols-4">
           @for (t of types; track t.type) {
-            <a routerLink="/explore" [queryParams]="{ type: t.type }" class="group bg-bg py-7 sm:py-9 lg:px-2">
+            <a routerLink="/explore" [queryParams]="{ type: t.type }" class="group min-w-0 bg-bg py-7 [overflow-wrap:anywhere] sm:py-9 lg:px-2">
               <span class="block px-4 font-display text-[clamp(2.4rem,6vw,4.4rem)] font-extrabold uppercase leading-none text-text transition group-hover:text-accent-ink">{{ t.labelKey | translate }}</span>
               <span class="mt-1 block px-4 text-sm text-muted">{{ t.hintKey | translate }}</span>
             </a>
@@ -159,7 +162,7 @@ import { DEMO_PASSWORD, DEMO_USERNAME } from '../../core/demo/demo-seed';
         </section>
       }
 
-      <section class="bg-accent text-paper">
+      <section class="bg-accent text-paper [--c-focus:var(--c-paper)]">
         <div class="mx-auto flex max-w-page flex-col items-start gap-6 px-4 py-14 sm:flex-row sm:items-center sm:justify-between lg:px-6">
           <p class="max-w-xl font-display text-[clamp(2.2rem,5vw,3.4rem)] font-extrabold uppercase leading-[0.9]">{{ 'landing.ctaTitle' | translate }}</p>
           @if (runtime.anyDemo()) {

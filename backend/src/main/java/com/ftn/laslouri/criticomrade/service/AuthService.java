@@ -1,5 +1,7 @@
 package com.ftn.laslouri.criticomrade.service;
 
+import org.springframework.security.authentication.BadCredentialsException;
+import java.util.Optional;
 import com.ftn.laslouri.criticomrade.dto.AuthLoginRequest;
 import com.ftn.laslouri.criticomrade.dto.AuthRegisterRequest;
 import com.ftn.laslouri.criticomrade.dto.AuthResponse;
@@ -63,12 +65,14 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public AuthResponse login(AuthLoginRequest request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                .or(() -> userRepository.findByEmail(request.getUsername()))
-                .orElseThrow(() -> new BadRequestException("Invalid credentials"));
+        Optional<User> found = userRepository.findByUsername(request.getUsername())
+                .or(() -> userRepository.findByEmail(request.getUsername()));
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), request.getPassword()));
+        // Unknown names also go through the provider, so the status, message and timing
+        // do not reveal which accounts exist.
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                found.map(User::getUsername).orElse(request.getUsername()), request.getPassword()));
+        User user = found.orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
         boolean rememberMe = Boolean.TRUE.equals(request.getRememberMe());
         String token = jwtService.generateToken(user, rememberMe);

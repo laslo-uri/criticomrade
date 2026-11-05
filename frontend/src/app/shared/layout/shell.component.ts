@@ -9,10 +9,10 @@ import { ToastComponent } from '../components/toast/toast.component';
 import { DemoBannerComponent } from '../components/demo-banner/demo-banner.component';
 import { WriteReviewModalComponent } from '../components/write-review-modal/write-review-modal.component';
 import { FooterComponent } from '../components/footer/footer.component';
+import { SkipLinkComponent } from '../components/skip-link/skip-link.component';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { UiService } from '../../core/services/ui.service';
-import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-shell',
@@ -25,10 +25,10 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
     DemoBannerComponent,
     WriteReviewModalComponent,
     FooterComponent,
-    TranslatePipe,
+    SkipLinkComponent,
   ],
   template: `
-    <a href="#main" class="skip-link">{{ 'common.skipToContent' | translate }}</a>
+    <app-skip-link />
     <app-demo-banner />
     <app-navbar />
     <div class="mx-auto grid max-w-page px-4 md:grid-cols-[13.5rem_minmax(0,1fr)] md:gap-8 lg:gap-12 lg:px-6">
@@ -37,7 +37,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
       </aside>
       <main id="main" class="min-w-0 pb-28 pt-6 md:pb-12 md:pt-8" tabindex="-1">
         <router-outlet />
-        <app-footer class="mt-16 hidden md:block" />
+        <app-footer class="mt-16 block" />
       </main>
     </div>
     <app-bottom-nav />

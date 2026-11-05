@@ -187,7 +187,7 @@ interface CommentView extends Comment {
             }
             @if (auth.isLoggedIn()) {
               <form class="flex gap-2" (submit)="addComment($event)">
-                <input class="input-field !min-h-10 !py-2 text-sm" name="comment" [(ngModel)]="draft" [placeholder]="'review.commentPlaceholder' | translate" maxlength="1000" autocomplete="off" />
+                <input class="input-field !min-h-10 !py-2 lg:text-sm" name="comment" [(ngModel)]="draft" [placeholder]="'review.commentPlaceholder' | translate" maxlength="1000" autocomplete="off" />
                 <button type="submit" class="btn-secondary btn-sm" [disabled]="!draft.trim() || busy()">{{ 'common.send' | translate }}</button>
               </form>
             } @else {

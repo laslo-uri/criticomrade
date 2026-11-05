@@ -16,7 +16,7 @@ import { ConsentService } from '../../../core/services/consent.service';
         role="dialog"
         aria-labelledby="cookie-consent-title"
         aria-describedby="cookie-consent-text"
-        class="fixed inset-x-0 bottom-[4.5rem] z-50 p-3 sm:p-4 md:bottom-0"
+        class="fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+4.5rem)] z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto p-3 sm:p-4 md:bottom-0"
       >
         <div class="panel mx-auto flex max-w-screen-md flex-col gap-3 p-4 shadow-lift sm:flex-row sm:items-center sm:gap-5">
           <div class="flex-1 text-sm">
@@ -25,7 +25,7 @@ import { ConsentService } from '../../../core/services/consent.service';
             </h2>
             <p id="cookie-consent-text" class="mt-1.5 text-muted">{{ 'cookies.text' | translate }}</p>
           </div>
-          <div class="flex shrink-0 gap-2">
+          <div class="flex shrink-0 flex-wrap gap-2">
             <button type="button" class="btn-secondary" (click)="consent.decide('denied')">{{ 'cookies.decline' | translate }}</button>
             <button #accept type="button" class="btn-primary" (click)="consent.decide('granted')">{{ 'cookies.accept' | translate }}</button>
           </div>

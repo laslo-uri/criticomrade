@@ -46,6 +46,7 @@
   --c-paper: 251 245 238;
   --c-success: 94 196 128;
   --c-danger: 255 111 97;
+  --c-focus: 242 169 59;
   --hero-ray-a: rgb(200 38 42 / 0.16);
   --hero-ray-b: rgb(21 16 17 / 0);
 }
@@ -67,6 +68,7 @@
   --c-paper: 251 245 238;
   --c-success: 30 128 70;
   --c-danger: 178 31 35;
+  --c-focus: 133 82 6;         /* brass is under 3:1 on the light background */
   --hero-ray-a: rgb(184 34 42 / 0.10);
   --hero-ray-b: rgb(239 236 231 / 0);
 }
@@ -92,6 +94,11 @@
   h2,
   h3 {
     @apply text-balance;
+    overflow-wrap: anywhere;
+  }
+
+  #main:focus {
+    outline: none;
   }
 
   a {
@@ -103,7 +110,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid rgb(var(--c-brass));
+    outline: 2px solid rgb(var(--c-focus));
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -133,6 +140,10 @@
     @apply mb-8 flex flex-wrap items-end justify-between gap-4;
   }
 
+  .page-header > * {
+    @apply min-w-0 max-w-full;
+  }
+
   .page-title {
     @apply font-display text-[2.6rem] font-extrabold uppercase leading-[0.9] tracking-[0.01em] text-text sm:text-5xl;
   }
@@ -145,6 +156,10 @@
     @apply mb-4 flex items-end justify-between gap-4;
   }
 
+  .section-heading > a {
+    @apply inline-flex min-h-6 shrink-0 items-center;
+  }
+
   .section-title {
     @apply font-display text-2xl font-bold uppercase leading-none tracking-[0.02em] text-text;
   }
@@ -155,7 +170,7 @@
 
   /* —— Buttons —— */
   .btn {
-    @apply inline-flex min-h-11 select-none items-center justify-center gap-2 whitespace-nowrap rounded-full px-5 text-sm font-semibold transition duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-11 max-w-full select-none items-center justify-center gap-2 rounded-full px-5 text-center text-sm font-semibold transition duration-150 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-primary {
@@ -175,7 +190,7 @@
   }
 
   .btn-sm {
-    @apply min-h-9 px-3.5 text-[13px];
+    @apply min-h-9 whitespace-nowrap px-3.5 text-[13px];
   }
 
   .icon-btn {
@@ -192,7 +207,7 @@
   }
 
   .input-field {
-    @apply block min-h-11 w-full rounded-[10px] border border-border bg-surface px-3.5 py-2.5 text-[15px] text-text transition placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15;
+    @apply block min-h-11 w-full rounded-[10px] border border-muted/70 bg-surface px-3.5 py-2.5 text-base text-text transition lg:text-[15px] placeholder:text-muted focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15;
   }
 
   .input-field:-webkit-autofill,
@@ -287,7 +302,8 @@
   }
 
   .bottom-nav-item {
-    @apply flex min-h-12 min-w-14 flex-col items-center justify-center gap-0.5 rounded-xl px-2 text-[11px] font-semibold text-muted transition;
+    @apply flex min-h-12 min-w-0 flex-auto flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-center text-[11px] font-semibold leading-tight text-muted transition;
+    overflow-wrap: anywhere;
   }
 
   .bottom-nav-active {
@@ -335,6 +351,7 @@
     background: rgb(var(--c-surface));
     color: rgb(var(--c-text));
     box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.6);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .modal-dialog[open] {
@@ -449,5 +466,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

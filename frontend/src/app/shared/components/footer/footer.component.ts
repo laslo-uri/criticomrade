@@ -4,6 +4,7 @@ import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 import { LOCALES, Locale, TranslationService } from '../../../core/services/translation.service';
 import { RuntimeService } from '../../../core/services/runtime.service';
 import { ConsentService } from '../../../core/services/consent.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { AboutModalComponent } from '../about-modal/about-modal.component';
 import { APP_INFO } from '../../../core/constants/app-info';
 
@@ -20,11 +21,14 @@ import { APP_INFO } from '../../../core/constants/app-info';
         @if (consent.enabled) {
           <button type="button" class="py-1 hover:text-text" (click)="consent.openSettings()">{{ 'cookies.settings' | translate }}</button>
         }
+        <button type="button" class="py-1 hover:text-text" (click)="theme.toggle()">
+          {{ (theme.theme() === 'dark' ? 'settings.themeLight' : 'settings.themeDark') | translate }}
+        </button>
         <label class="ml-auto inline-flex items-center gap-2">
           <span class="sr-only">{{ 'settings.language' | translate }}</span>
-          <select class="rounded-md border border-border bg-surface px-2 py-1 text-[13px] text-text" [value]="i18n.locale()" (change)="setLocale($event)">
+          <select class="min-h-9 rounded-md border border-muted/70 bg-surface px-2 py-1 text-base text-text lg:text-[13px]" (change)="setLocale($event)">
             @for (loc of locales; track loc.code) {
-              <option [value]="loc.code">{{ loc.label }}</option>
+              <option [value]="loc.code" [selected]="loc.code === i18n.locale()">{{ loc.label }}</option>
             }
           </select>
         </label>
@@ -47,6 +51,7 @@ export class FooterComponent {
   readonly i18n = inject(TranslationService);
   readonly runtime = inject(RuntimeService);
   readonly consent = inject(ConsentService);
+  readonly theme = inject(ThemeService);
   readonly locales = LOCALES;
   readonly version = APP_INFO.version;
   readonly aboutOpen = signal(false);

@@ -21,24 +21,24 @@ export const routes: Routes = [
       {
         path: 'login',
         canActivate: [guestGuard],
-        title: 'Sign in · CritiComrade',
+        title: 'auth.login.title',
         loadComponent: () => import('./features/auth/login.component').then((m) => m.LoginComponent),
       },
       {
         path: 'register',
         canActivate: [guestGuard],
-        title: 'Create account · CritiComrade',
+        title: 'auth.register.title',
         loadComponent: () => import('./features/auth/register.component').then((m) => m.RegisterComponent),
       },
       {
         path: 'forgot-password',
-        title: 'Reset password · CritiComrade',
+        title: 'auth.forgotPassword.title',
         loadComponent: () =>
           import('./features/auth/forgot-password.component').then((m) => m.ForgotPasswordComponent),
       },
       {
         path: 'reset-password',
-        title: 'New password · CritiComrade',
+        title: 'auth.resetPassword.title',
         loadComponent: () =>
           import('./features/auth/reset-password.component').then((m) => m.ResetPasswordComponent),
       },
@@ -53,17 +53,17 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         canActivate: [authGuard],
-        title: 'Home · CritiComrade',
+        title: 'nav.home',
         loadComponent: () => import('./features/home/home.component').then((m) => m.HomeComponent),
       },
       {
         path: 'explore',
-        title: 'Explore · CritiComrade',
+        title: 'nav.explore',
         loadComponent: () => import('./features/explore/explore.component').then((m) => m.ExploreComponent),
       },
       {
         path: 'people',
-        title: 'People · CritiComrade',
+        title: 'nav.people',
         loadComponent: () => import('./features/people/people.component').then((m) => m.PeopleComponent),
       },
       {
@@ -88,7 +88,7 @@ export const routes: Routes = [
       },
       {
         path: 'stats',
-        title: 'Stats · CritiComrade',
+        title: 'nav.stats',
         loadComponent: () => import('./features/stats/stats.component').then((m) => m.StatsComponent),
       },
       {
@@ -98,19 +98,19 @@ export const routes: Routes = [
       {
         path: 'diary',
         canActivate: [authGuard],
-        title: 'Diary · CritiComrade',
+        title: 'nav.diary',
         loadComponent: () => import('./features/lists/diary.component').then((m) => m.DiaryComponent),
       },
       {
         path: 'watchlist',
         canActivate: [authGuard],
-        title: 'Watchlist · CritiComrade',
+        title: 'nav.watchlist',
         loadComponent: () => import('./features/lists/watchlist.component').then((m) => m.WatchlistComponent),
       },
       {
         path: 'lists',
         canActivate: [authGuard],
-        title: 'Lists · CritiComrade',
+        title: 'nav.lists',
         loadComponent: () => import('./features/lists/my-lists.component').then((m) => m.MyListsComponent),
       },
       {
@@ -121,26 +121,26 @@ export const routes: Routes = [
       {
         path: 'notifications',
         canActivate: [authGuard],
-        title: 'Notifications · CritiComrade',
+        title: 'nav.notifications',
         loadComponent: () =>
           import('./features/notifications/notifications.component').then((m) => m.NotificationsComponent),
       },
       {
         path: 'recommendations',
         canActivate: [authGuard],
-        title: 'Challenges · CritiComrade',
+        title: 'nav.recommendations',
         loadComponent: () =>
           import('./features/recommendations/recommendations.component').then((m) => m.RecommendationsComponent),
       },
       {
         path: 'settings',
         canActivate: [authGuard],
-        title: 'Settings · CritiComrade',
+        title: 'nav.settings',
         loadComponent: () => import('./features/settings/settings.component').then((m) => m.SettingsComponent),
       },
       {
         path: '**',
-        title: 'Not found · CritiComrade',
+        title: 'notFound.title',
         loadComponent: () => import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),
       },
     ],

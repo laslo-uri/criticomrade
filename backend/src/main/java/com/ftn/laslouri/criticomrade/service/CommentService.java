@@ -52,7 +52,8 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentsForReview(Long reviewId) {
-        User viewer = securityUtils.getCurrentUser();
+        // The route is public, so a signed-out reader has no viewer.
+        User viewer = securityUtils.getCurrentUserOptional().orElse(null);
         Review review = reviewService.findReview(reviewId);
         return commentRepository.findByReviewOrderByCommentTimeAsc(review).stream()
                 .map(c -> toDto(c, viewer))

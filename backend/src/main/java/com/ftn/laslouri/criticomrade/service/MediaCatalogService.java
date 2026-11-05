@@ -75,6 +75,7 @@ public class MediaCatalogService {
 
     @Transactional(readOnly = true)
     public CreditsDto credits(MediaType type, String key) {
+        requireSafeKey(key);
         return switch (type) {
             case FILM -> CreditsDto.builder().cast(tmdbCast("/movie/" + key + "/credits")).tracks(List.of()).build();
             case SHOW -> CreditsDto.builder().cast(tmdbCast("/tv/" + key + "/credits")).tracks(List.of()).build();
@@ -88,6 +89,7 @@ public class MediaCatalogService {
         if (key == null || key.isBlank()) {
             throw new BadRequestException("Missing media key");
         }
+        requireSafeKey(key);
         if (type == MediaType.FILM && key.chars().allMatch(Character::isDigit)) {
             return movieService.getOrFetchByTmdbId(Long.parseLong(key));
         }
@@ -501,6 +503,13 @@ public class MediaCatalogService {
             return restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), Map.class).getBody();
         } catch (Exception ex) {
             return Map.of();
+        }
+    }
+
+    /** Keys go into upstream URL paths, next to our API key: no slashes, dots or query characters. */
+    private static void requireSafeKey(String key) {
+        if (key == null || !key.matches("[A-Za-z0-9:_-]{1,160}")) {
+            throw new BadRequestException("Invalid media key");
         }
     }
 

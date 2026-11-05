@@ -1,5 +1,6 @@
 package com.ftn.laslouri.criticomrade.service;
 
+import com.ftn.laslouri.criticomrade.util.Paging;
 import com.ftn.laslouri.criticomrade.dto.PageResponse;
 import com.ftn.laslouri.criticomrade.dto.ReviewCreateRequest;
 import com.ftn.laslouri.criticomrade.dto.ReviewDto;
@@ -62,6 +63,7 @@ public class ReviewService {
     public ReviewDto getReview(Long id) {
         User viewer = securityUtils.getCurrentUser();
         Review review = findReview(id);
+        userService.requireVisible(review.getUser(), viewer);
         return toDto(review, viewer);
     }
 
@@ -100,7 +102,7 @@ public class ReviewService {
         User viewer = securityUtils.getCurrentUser();
         List<User> feedUsers = new ArrayList<>(viewer.getFollowing());
         feedUsers.add(viewer);
-        Page<Review> reviews = reviewRepository.findFeedForUsers(feedUsers, PageRequest.of(page, size));
+        Page<Review> reviews = reviewRepository.findFeedForUsers(feedUsers, Paging.of(page, size));
         Page<ReviewDto> mapped = reviews.map(r -> toDto(r, viewer));
         return DtoMapper.toPageResponse(mapped);
     }
@@ -109,12 +111,8 @@ public class ReviewService {
     public PageResponse<ReviewDto> getUserReviews(String username, int page, int size) {
         User viewer = securityUtils.getCurrentUserOptional().orElse(null);
         User user = userService.findByUsername(username);
-        boolean followed = viewer != null && user.getFollowers() != null
-                && user.getFollowers().stream().anyMatch(f -> f.getId().equals(viewer.getId()));
-        if (!user.isProfilePublic() && (viewer == null || (!user.getId().equals(viewer.getId()) && !followed))) {
-            throw new ForbiddenException("Profile is private");
-        }
-        Page<Review> reviews = reviewRepository.findByUserOrderByReviewTimeDesc(user, PageRequest.of(page, size));
+        userService.requireVisible(user, viewer);
+        Page<Review> reviews = reviewRepository.findByUserOrderByReviewTimeDesc(user, Paging.of(page, size));
         Page<ReviewDto> mapped = reviews.map(r -> toDto(r, viewer));
         return DtoMapper.toPageResponse(mapped);
     }
@@ -123,7 +121,7 @@ public class ReviewService {
     public PageResponse<ReviewDto> getMovieReviews(Long movieId, int page, int size) {
         User viewer = securityUtils.getCurrentUserOptional().orElse(null);
         movieService.findEntityById(movieId);
-        Page<Review> reviews = reviewRepository.findByMovieIdOrderByReviewTimeDesc(movieId, PageRequest.of(page, size));
+        Page<Review> reviews = reviewRepository.findVisibleForMovie(movieId, viewer == null ? null : viewer.getId(), Paging.of(page, size));
         Page<ReviewDto> mapped = reviews.map(r -> toDto(r, viewer));
         return DtoMapper.toPageResponse(mapped);
     }

@@ -10,7 +10,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
       <p class="font-display text-[clamp(6rem,22vw,12rem)] font-extrabold leading-none text-accent">404</p>
       <h1 class="mt-2 font-display text-4xl font-extrabold uppercase leading-none">{{ 'notFound.title' | translate }}</h1>
       <p class="mx-auto mt-3 max-w-sm text-muted">{{ 'notFound.text' | translate }}</p>
-      <div class="mt-7 flex justify-center gap-2">
+      <div class="mt-7 flex flex-wrap justify-center gap-2">
         <a routerLink="/" class="btn-primary">{{ 'notFound.home' | translate }}</a>
         <a routerLink="/explore" class="btn-secondary">{{ 'nav.explore' | translate }}</a>
       </div>

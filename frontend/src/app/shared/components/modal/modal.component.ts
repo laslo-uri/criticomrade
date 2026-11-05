@@ -1,4 +1,4 @@
-import { Component, ElementRef, effect, input, output, viewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, effect, inject, input, output, viewChild } from '@angular/core';
 import { LucideX } from '@lucide/angular';
 import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
@@ -45,6 +45,9 @@ export class ModalComponent {
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
 
   constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      if (this.dialog().nativeElement.open) document.documentElement.classList.remove('overflow-hidden');
+    });
     effect(() => {
       const el = this.dialog().nativeElement;
       if (this.open() && !el.open) {

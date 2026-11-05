@@ -1,5 +1,6 @@
 package com.ftn.laslouri.criticomrade.controller;
 
+import jakarta.validation.Valid;
 import com.ftn.laslouri.criticomrade.dto.CompatibilityDto;
 import com.ftn.laslouri.criticomrade.dto.DiaryStatsDto;
 import com.ftn.laslouri.criticomrade.dto.MovieDto;
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public UserProfileDto updateProfile(@RequestBody UserUpdateRequest request) {
+    public UserProfileDto updateProfile(@Valid @RequestBody UserUpdateRequest request) {
         return userService.updateProfile(request);
     }
 

@@ -20,7 +20,7 @@ public class JwtService {
 
     public JwtService(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
-        this.secretKey = buildKey(jwtProperties.getSecret());
+        this.secretKey = buildKey(requireRealSecret(jwtProperties.getSecret()));
     }
 
     public String generateToken(User user) {
@@ -58,6 +58,14 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    /** A signing key that is public (empty, or a placeholder from the repo) lets anyone forge tokens. */
+    private static String requireRealSecret(String secret) {
+        if (secret == null || secret.isBlank() || secret.startsWith("change-me") || secret.startsWith("replace-with")) {
+            throw new IllegalStateException("JWT_SECRET must be set to a long random value");
+        }
+        return secret;
     }
 
     private SecretKey buildKey(String secret) {
