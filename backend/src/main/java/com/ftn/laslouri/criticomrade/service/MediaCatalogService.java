@@ -521,7 +521,7 @@ public class MediaCatalogService {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> getJson(String base, Map<String, String> query) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(base);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(base);
         query.forEach(builder::queryParam);
         HttpHeaders headers = new HttpHeaders();
         headers.set("User-Agent", "CritiComrade/1.0 (https://github.com/laslo-uri/CritiComrade)");

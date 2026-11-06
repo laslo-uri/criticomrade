@@ -37,6 +37,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    /** Goes up on a password reset. JWTs carrying an older value stop working. */
+    @Column(nullable = false, columnDefinition = "integer not null default 0")
+    private int tokenVersion = 0;
+
     private boolean isProfilePublic = true;
     private int gainedChallengePoints;
 

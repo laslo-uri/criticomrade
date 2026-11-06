@@ -15,6 +15,8 @@ import java.util.Date;
 @Service
 public class JwtService {
 
+    private static final String TOKEN_VERSION_CLAIM = "tv";
+
     private final JwtProperties jwtProperties;
     private final SecretKey secretKey;
 
@@ -33,6 +35,7 @@ public class JwtService {
         Date expiry = new Date(now.getTime() + ttl);
         return Jwts.builder()
                 .subject(user.getUsername())
+                .claim(TOKEN_VERSION_CLAIM, user.getTokenVersion())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(secretKey)
@@ -44,12 +47,13 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, User user) {
-        String username = extractUsername(token);
-        return username.equals(user.getUsername()) && !isTokenExpired(token);
-    }
-
-    private boolean isTokenExpired(String token) {
-        return parseClaims(token).getExpiration().before(new Date());
+        Claims claims = parseClaims(token);
+        // A token from before this claim existed counts as version 0, so the next reset revokes it too.
+        Integer version = claims.get(TOKEN_VERSION_CLAIM, Integer.class);
+        int tokenVersion = version == null ? 0 : version;
+        return claims.getSubject().equals(user.getUsername())
+                && tokenVersion == user.getTokenVersion()
+                && !claims.getExpiration().before(new Date());
     }
 
     private Claims parseClaims(String token) {

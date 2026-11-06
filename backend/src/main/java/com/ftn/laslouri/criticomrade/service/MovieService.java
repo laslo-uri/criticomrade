@@ -62,7 +62,7 @@ public class MovieService {
         if (tmdbApiKey == null || tmdbApiKey.isBlank()) {
             throw new BadRequestException("TMDB API key is not configured");
         }
-        String url = UriComponentsBuilder.fromHttpUrl(tmdbBaseUrl + "/search/movie")
+        String url = UriComponentsBuilder.fromUriString(tmdbBaseUrl + "/search/movie")
                 .queryParam("api_key", tmdbApiKey)
                 .queryParam("query", query)
                 .toUriString();
@@ -84,7 +84,7 @@ public class MovieService {
         if (tmdbApiKey == null || tmdbApiKey.isBlank()) {
             throw new BadRequestException("TMDB API key is not configured");
         }
-        String url = UriComponentsBuilder.fromHttpUrl(tmdbBaseUrl + "/movie/popular")
+        String url = UriComponentsBuilder.fromUriString(tmdbBaseUrl + "/movie/popular")
                 .queryParam("api_key", tmdbApiKey)
                 .toUriString();
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
@@ -110,7 +110,7 @@ public class MovieService {
         if (tmdbApiKey == null || tmdbApiKey.isBlank()) {
             throw new BadRequestException("TMDB API key is not configured");
         }
-        String url = UriComponentsBuilder.fromHttpUrl(tmdbBaseUrl + "/movie/" + tmdbId)
+        String url = UriComponentsBuilder.fromUriString(tmdbBaseUrl + "/movie/" + tmdbId)
                 .queryParam("api_key", tmdbApiKey)
                 .toUriString();
         Map<String, Object> data = restTemplate.getForObject(url, Map.class);
@@ -179,7 +179,7 @@ public class MovieService {
             return;
         }
         try {
-            String url = UriComponentsBuilder.fromHttpUrl(omdbBaseUrl)
+            String url = UriComponentsBuilder.fromUriString(omdbBaseUrl)
                     .queryParam("apikey", omdbApiKey)
                     .queryParam("i", imdbId)
                     .toUriString();

@@ -8,7 +8,7 @@ Rate what you finished in half stars, follow friends, see your taste match, and 
 | | |
 |---|---|
 | **Frontend** | Angular 21 (standalone components, signals), Tailwind CSS 3, Lucide icons |
-| **Backend** | Spring Boot 3.1, Java 17, JWT, PostgreSQL, Flyway |
+| **Backend** | Spring Boot 4.1, Java 17, JWT, PostgreSQL, Flyway |
 | **Integrations** | TMDB (films, shows, episodes), OMDb (ratings), Open Library (books), MusicBrainz and optional Spotify (albums) |
 | **Languages** | English, Srpski, Magyar, Deutsch |
 
