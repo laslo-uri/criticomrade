@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Things the plain context test cannot see, because its profile turns Flyway and the API docs off.
- * Flyway stops at the empty V1 here: V2 needs Postgres-only SQL and tables Hibernate creates.
+ * Flyway stops at the empty V1 here: V2 needs Postgres-only SQL (see {@link H2MigrationPathsTests}).
  */
 @SpringBootTest(properties = {
         "spring.datasource.url=jdbc:h2:mem:runtime-wiring;DB_CLOSE_DELAY=-1;MODE=PostgreSQL",

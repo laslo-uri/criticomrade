@@ -25,7 +25,10 @@ public class Movie {
     private String externalKey;
 
     private String creator;
+
+    @Column(length = 512)
     private String backdropApiLink;
+
     private String network;
     private Integer seasonCount;
     private Integer seasonNumber;
