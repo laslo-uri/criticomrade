@@ -2,12 +2,14 @@ package com.ftn.laslouri.criticomrade.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 @Data //@Getter, @Setter, and @RequiredArgsConstructor IN ONE!
+@EqualsAndHashCode(of = "id")
 public class Comment {
 
     @Id
@@ -27,7 +29,8 @@ public class Comment {
     @Column(name = "comment_time")
     private LocalDateTime commentTime;
 
-    @OneToMany(mappedBy = "comment")
+    /** Deleting a comment takes its reactions with it; they point at it with a foreign key. */
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private Set<CommentReaction> reactions;
 
 }

@@ -2,6 +2,7 @@ package com.ftn.laslouri.criticomrade.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode(of = "id")
 @Table(name = "reviews")
 public class Review {
 

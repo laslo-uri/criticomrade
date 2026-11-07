@@ -2,11 +2,13 @@ package com.ftn.laslouri.criticomrade.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode(of = "id")
 @Table(name = "movies")
 public class Movie {
 

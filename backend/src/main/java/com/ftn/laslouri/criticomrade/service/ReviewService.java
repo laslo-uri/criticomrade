@@ -13,6 +13,8 @@ import com.ftn.laslouri.criticomrade.model.Movie;
 import com.ftn.laslouri.criticomrade.model.Review;
 import com.ftn.laslouri.criticomrade.model.User;
 import com.ftn.laslouri.criticomrade.repository.CommentRepository;
+import com.ftn.laslouri.criticomrade.model.ReviewList;
+import com.ftn.laslouri.criticomrade.repository.ReviewListRepository;
 import com.ftn.laslouri.criticomrade.repository.ReviewReactionRepository;
 import com.ftn.laslouri.criticomrade.repository.ReviewRepository;
 import com.ftn.laslouri.criticomrade.util.SecurityUtils;
@@ -33,6 +35,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
     private final ReviewReactionRepository reviewReactionRepository;
+    private final ReviewListRepository reviewListRepository;
     private final MovieService movieService;
     private final MediaCatalogService mediaCatalogService;
     private final UserService userService;
@@ -93,6 +96,12 @@ public class ReviewService {
         Review review = findReview(id);
         if (!review.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Not authorized to delete this review");
+        }
+        // Diaries hold reviews through a join table the review does not own, so take it out of them first.
+        for (ReviewList list : reviewListRepository.findByReviewsContaining(review)) {
+            list.getReviews().remove(review);
+            list.setNumberOfElements(list.getReviews().size());
+            list.setLastModificationDate(LocalDateTime.now());
         }
         reviewRepository.delete(review);
     }

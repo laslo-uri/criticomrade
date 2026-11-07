@@ -1,6 +1,7 @@
 package com.ftn.laslouri.criticomrade.repository;
 
 import com.ftn.laslouri.criticomrade.model.ListType;
+import com.ftn.laslouri.criticomrade.model.Review;
 import com.ftn.laslouri.criticomrade.model.ReviewList;
 import com.ftn.laslouri.criticomrade.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,5 @@ public interface ReviewListRepository extends JpaRepository<ReviewList, Long> {
     List<ReviewList> findByOwnerAndListType(User owner, ListType listType);
 
     Optional<ReviewList> findFirstByOwnerAndListType(User owner, ListType listType);
+    List<ReviewList> findByReviewsContaining(Review review);
 }

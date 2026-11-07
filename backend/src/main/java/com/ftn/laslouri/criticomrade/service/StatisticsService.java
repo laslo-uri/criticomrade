@@ -23,25 +23,22 @@ public class StatisticsService {
     private final CommentReactionRepository commentReactionRepository;
     private final RecommendationRepository recommendationRepository;
 
+    /**
+     * Before the first scheduled recompute has stored a row (a new database), count live instead of saving one.
+     * Saving here used to fail: this transaction is read-only (500 on a fresh install).
+     */
     @Transactional(readOnly = true)
     public PlatformStatsDto getStats() {
-        return platformStatisticsRepository.findTopByOrderByIdDesc()
-                .map(DtoMapper::toPlatformStatsDto)
-                .orElseGet(this::recomputeAndReturn);
+        return DtoMapper.toPlatformStatsDto(platformStatisticsRepository.findTopByOrderByIdDesc().orElseGet(this::count));
     }
 
     @Scheduled(fixedRate = 3600000)
     @Transactional
     public void scheduledRecompute() {
-        recompute();
+        platformStatisticsRepository.save(count());
     }
 
-    @Transactional
-    public PlatformStatsDto recomputeAndReturn() {
-        return DtoMapper.toPlatformStatsDto(recompute());
-    }
-
-    private PlatformStatistics recompute() {
+    private PlatformStatistics count() {
         PlatformStatistics stats = new PlatformStatistics();
         stats.setUserCount((int) userRepository.count());
         stats.setMovieCount((int) movieRepository.count());
@@ -51,6 +48,6 @@ public class StatisticsService {
                 + reviewReactionRepository.count()
                 + commentReactionRepository.count()));
         stats.setRecommendationCount((int) recommendationRepository.count());
-        return platformStatisticsRepository.save(stats);
+        return stats;
     }
 }

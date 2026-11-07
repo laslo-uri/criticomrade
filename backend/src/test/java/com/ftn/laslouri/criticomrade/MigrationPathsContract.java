@@ -8,7 +8,11 @@ import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
@@ -23,6 +27,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * The two ways a database meets the migrations: a brand-new install, where the whole app boots on an empty database,
@@ -47,6 +56,9 @@ abstract class MigrationPathsContract {
     @Autowired
     MovieRepository movies;
 
+    @Autowired
+    WebApplicationContext context;
+
     /** A new, empty database on the same engine as the booted app, for the scenarios that build their own history. */
     abstract DataSource newDatabase();
 
@@ -70,6 +82,25 @@ abstract class MigrationPathsContract {
         movies.saveAndFlush(movie(null));
 
         assertThrows(DataIntegrityViolationException.class, () -> movies.saveAndFlush(movie("fresh-install-key")));
+    }
+
+    /** The frontend probes /api/stats to tell a real API from none; it must answer JSON before any stats row exists. */
+    @Test
+    void statsAnswerBeforeTheFirstRecompute() throws Exception {
+        jdbc.update("DELETE FROM platform_statistics");
+        MockMvc mvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
+
+        mvc.perform(get("/api/stats"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.userCount").isNumber())
+                .andExpect(jsonPath("$.movieCount").isNumber())
+                .andExpect(jsonPath("$.reviewCount").isNumber())
+                .andExpect(jsonPath("$.commentCount").isNumber())
+                .andExpect(jsonPath("$.reactionCount").isNumber())
+                .andExpect(jsonPath("$.recommendationCount").isNumber())
+                .andExpect(jsonPath("$.demo").doesNotExist());
+        assertEquals(0, jdbc.queryForObject("SELECT count(*) FROM platform_statistics", Integer.class));
     }
 
     @Test
